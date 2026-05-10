@@ -24,7 +24,14 @@
     "noAccount": "Kein Konto?",
     "loginSuccess": "Anmeldung erfolgreich!",
     "registerSuccess": "Konto erstellt!",
-    "logoutSuccess": "Abgemeldet"
+    "logoutSuccess": "Abgemeldet",
+    "fillAllFields": "Bitte alle Felder ausfüllen",
+    "namePlaceholder": "Ihr Name",
+    "emailPlaceholder": "email@beispiel.com",
+    "minPassword": "Mindestens 6 Zeichen",
+    "invalidCredentials": "Ungültige E-Mail oder Passwort",
+    "accountCreated": "Konto erfolgreich erstellt! 🎬",
+    "errorCreateAccount": "Fehler beim Erstellen des Kontos"
   },
   "movies": {
     "trending": "Im Trend",
@@ -56,7 +63,8 @@
     "edit": "Bearbeiten",
     "back": "Zurück",
     "retry": "Erneut versuchen",
-    "export": "Exportieren"
+    "export": "Exportieren",
+    "remove": "Entfernen"
   },
   "settings": {
     "title": "Einstellungen",
@@ -77,5 +85,49 @@
     "continue": "Weiter"
   },
   "export": { "title": "Daten exportieren" },
+  "home": {
+    "madeForYou": "FÜR DICH GEMACHT",
+    "trendingTitle": "IM TREND",
+    "popularTitle": "BELIEBT",
+    "topRatedTitle": "BESTBEWERTET"
+  },
+  "favorites": {
+    "myFavorites": "MEINE FAVORITEN",
+    "moviesSaved": "Filme gespeichert",
+    "noFavorites": "Noch keine Favoriten",
+    "addMovies": "Fügen Sie Filme zu Favoriten hinzu"
+  },
+  "watchlistPage": {
+    "toWatch": "ZUM ANSEHEN",
+    "moviesInList": "Filme in der Liste",
+    "emptyWatchlist": "Merkliste ist leer",
+    "addMovies": "Fügen Sie Filme zum späteren Ansehen hinzu"
+  },
+  "search": {
+    "exploreMovies": "FILME ENTDECKEN",
+    "tryAnother": "Versuchen Sie einen anderen Suchbegriff",
+    "previous": "Zurück",
+    "next": "Weiter"
+  },
+  "feedback": {
+    "addedFavorite": "Zu Favoriten hinzugefügt! ♥",
+    "removedFavorite": "Aus Favoriten entfernt",
+    "addedWatchlist": "Zur Merkliste hinzugefügt! 📋",
+    "removedWatchlist": "Von Merkliste entfernt",
+    "errorLoad": "Fehler beim Laden",
+    "errorRemove": "Fehler beim Entfernen",
+    "errorLoadMovies": "Fehler beim Laden der Trendfilme",
+    "reloading": "Wird neu geladen..."
+  },
+  "footer": {
+    "description": "Ihre KI-gestützte Film-Empfehlungsplattform.",
+    "navigation": "Navigation",
+    "resources": "Ressourcen",
+    "legal": "Rechtliches",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutz",
+    "about": "Über uns",
+    "rights": "Alle Rechte vorbehalten."
+  },
   "common": { "loading": "Laden...", "error": "Fehler", "success": "Erfolg", "noData": "Keine Daten", "all": "Alle" }
 }

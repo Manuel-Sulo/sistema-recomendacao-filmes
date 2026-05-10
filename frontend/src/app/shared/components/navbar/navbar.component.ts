@@ -89,16 +89,16 @@ import { ApiService } from '../../../core/services/api.service';
   styles: [`
     .navbar {
       position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
-      background: rgba(28, 17, 11, 0.4);
+      background: var(--glass-bg);
       backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-      border-bottom: 0.8px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      border-bottom: 0.8px solid var(--glass-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
       height: var(--navbar-height);
       transition: all 0.3s ease;
     }
     .navbar.scrolled {
-      background: rgba(28, 17, 11, 0.85);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      background: var(--glass-bg-solid, rgba(28, 17, 11, 0.85));
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
     }
     .navbar-inner {
       display: flex; justify-content: space-between; align-items: center; height: 100%;
@@ -134,7 +134,7 @@ import { ApiService } from '../../../core/services/api.service';
     .nav-right { display: flex; align-items: center; gap: 8px; }
     .lang-selector { position: relative; }
     .lang-select {
-      background: rgba(255, 255, 255, 0.06); border: 0.8px solid rgba(255, 255, 255, 0.12);
+      background: var(--glass-bg); border: 0.8px solid var(--glass-border);
       color: var(--text-primary); padding: 6px 10px; font-size: 12px; font-weight: 600;
       border-radius: var(--radius-full); cursor: pointer; outline: none;
       font-family: var(--font-primary); transition: all 0.25s ease;
@@ -146,8 +146,8 @@ import { ApiService } from '../../../core/services/api.service';
     .theme-toggle {
       width: 36px; height: 36px; font-size: 16px;
       border-radius: var(--radius-full);
-      background: rgba(255, 255, 255, 0.06);
-      border: 0.8px solid rgba(255, 255, 255, 0.12);
+      background: var(--glass-bg);
+      border: 0.8px solid var(--glass-border);
       display: flex; align-items: center; justify-content: center;
       transition: all 0.3s ease;
       &:hover { border-color: var(--accent); transform: rotate(30deg) scale(1.1); }

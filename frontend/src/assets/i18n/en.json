@@ -24,7 +24,14 @@
     "noAccount": "Don't have an account?",
     "loginSuccess": "Login successful!",
     "registerSuccess": "Account created!",
-    "logoutSuccess": "Logged out"
+    "logoutSuccess": "Logged out",
+    "fillAllFields": "Please fill in all fields",
+    "namePlaceholder": "Your name",
+    "emailPlaceholder": "email@example.com",
+    "minPassword": "Minimum 6 characters",
+    "invalidCredentials": "Invalid email or password",
+    "accountCreated": "Account created successfully! 🎬",
+    "errorCreateAccount": "Error creating account"
   },
   "movies": {
     "trending": "Trending",
@@ -56,7 +63,8 @@
     "edit": "Edit",
     "back": "Back",
     "retry": "Retry",
-    "export": "Export"
+    "export": "Export",
+    "remove": "Remove"
   },
   "settings": {
     "title": "Settings",
@@ -78,6 +86,50 @@
   },
   "export": {
     "title": "Export Data"
+  },
+  "home": {
+    "madeForYou": "MADE FOR YOU",
+    "trendingTitle": "TRENDING NOW",
+    "popularTitle": "POPULAR",
+    "topRatedTitle": "TOP RATED"
+  },
+  "favorites": {
+    "myFavorites": "MY FAVORITES",
+    "moviesSaved": "movies saved",
+    "noFavorites": "No favorites yet",
+    "addMovies": "Add movies to favorites to see them here"
+  },
+  "watchlistPage": {
+    "toWatch": "TO WATCH",
+    "moviesInList": "movies in list",
+    "emptyWatchlist": "Watchlist is empty",
+    "addMovies": "Add movies to watch later"
+  },
+  "search": {
+    "exploreMovies": "EXPLORE MOVIES",
+    "tryAnother": "Try a different search term",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "feedback": {
+    "addedFavorite": "Added to favorites! ♥",
+    "removedFavorite": "Removed from favorites",
+    "addedWatchlist": "Added to watchlist! 📋",
+    "removedWatchlist": "Removed from watchlist",
+    "errorLoad": "Error loading",
+    "errorRemove": "Error removing",
+    "errorLoadMovies": "Error loading trending movies",
+    "reloading": "Reloading..."
+  },
+  "footer": {
+    "description": "Your AI-powered movie recommendation platform.",
+    "navigation": "Navigation",
+    "resources": "Resources",
+    "legal": "Legal",
+    "terms": "Terms of Use",
+    "privacy": "Privacy",
+    "about": "About",
+    "rights": "All rights reserved."
   },
   "common": {
     "loading": "Loading...",

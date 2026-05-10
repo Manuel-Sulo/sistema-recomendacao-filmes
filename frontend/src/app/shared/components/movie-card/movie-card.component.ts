@@ -48,7 +48,7 @@ import { environment } from '../../../../environments/environment';
     .card-poster {
       position: relative; aspect-ratio: 2/3; border-radius: var(--radius-xl);
       overflow: hidden; background: var(--bg-surface);
-      border: 0.8px solid rgba(255, 255, 255, 0.08);
+      border: 0.8px solid var(--glass-border);
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       transition: all 0.4s ease;
     }
@@ -68,9 +68,10 @@ import { environment } from '../../../../environments/environment';
     }
     .card-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(28, 17, 11, 0.9) 0%, transparent 50%);
+      background: linear-gradient(to top, var(--bg-primary-rgb, rgba(28, 17, 11, 0.95)) 0%, transparent 60%);
       opacity: 0; transition: opacity 0.4s ease;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: 60px;
     }
     .movie-card:hover .card-overlay { opacity: 1; }
     .overlay-content {
@@ -95,7 +96,18 @@ import { environment } from '../../../../environments/environment';
     }
     .rating-star { color: var(--accent); }
     .rating-value { color: white; }
-    .card-info { padding: 10px 4px 0; }
+
+    /* Stitch-style slide-up info reveal */
+    .card-info {
+      padding: 10px 4px 0;
+      transform: translateY(4px);
+      opacity: 0.85;
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .movie-card:hover .card-info {
+      transform: translateY(0);
+      opacity: 1;
+    }
     .card-title {
       font-size: 13px; font-weight: 600; line-height: 1.3;
       display: -webkit-box; -webkit-line-clamp: 2;

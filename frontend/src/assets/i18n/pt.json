@@ -24,7 +24,14 @@
     "noAccount": "Não tem conta?",
     "loginSuccess": "Login efetuado com sucesso!",
     "registerSuccess": "Conta criada com sucesso!",
-    "logoutSuccess": "Sessão terminada"
+    "logoutSuccess": "Sessão terminada",
+    "fillAllFields": "Preencha todos os campos",
+    "namePlaceholder": "O seu nome",
+    "emailPlaceholder": "email@exemplo.com",
+    "minPassword": "Mínimo 6 caracteres",
+    "invalidCredentials": "Email ou password incorretos",
+    "accountCreated": "Conta criada com sucesso! 🎬",
+    "errorCreateAccount": "Erro ao criar conta"
   },
   "movies": {
     "trending": "Em Alta",
@@ -56,7 +63,8 @@
     "edit": "Editar",
     "back": "Voltar",
     "retry": "Tentar novamente",
-    "export": "Exportar"
+    "export": "Exportar",
+    "remove": "Remover"
   },
   "settings": {
     "title": "Definições",
@@ -78,6 +86,50 @@
   },
   "export": {
     "title": "Exportar Dados"
+  },
+  "home": {
+    "madeForYou": "FEITO PARA TI",
+    "trendingTitle": "EM ALTA",
+    "popularTitle": "POPULARES",
+    "topRatedTitle": "MELHOR AVALIADOS"
+  },
+  "favorites": {
+    "myFavorites": "MEUS FAVORITOS",
+    "moviesSaved": "filmes guardados",
+    "noFavorites": "Sem favoritos ainda",
+    "addMovies": "Adicione filmes aos favoritos para os ver aqui"
+  },
+  "watchlistPage": {
+    "toWatch": "PARA VER",
+    "moviesInList": "filmes na lista",
+    "emptyWatchlist": "Watchlist vazia",
+    "addMovies": "Adicione filmes para ver mais tarde"
+  },
+  "search": {
+    "exploreMovies": "EXPLORAR FILMES",
+    "tryAnother": "Tente outro termo de pesquisa",
+    "previous": "Anterior",
+    "next": "Seguinte"
+  },
+  "feedback": {
+    "addedFavorite": "Adicionado aos favoritos! ♥",
+    "removedFavorite": "Removido dos favoritos",
+    "addedWatchlist": "Adicionado à watchlist! 📋",
+    "removedWatchlist": "Removido da watchlist",
+    "errorLoad": "Erro ao carregar",
+    "errorRemove": "Erro ao remover",
+    "errorLoadMovies": "Erro ao carregar filmes em alta",
+    "reloading": "A recarregar..."
+  },
+  "footer": {
+    "description": "A sua plataforma de recomendação de filmes com inteligência artificial.",
+    "navigation": "Navegação",
+    "resources": "Recursos",
+    "legal": "Legal",
+    "terms": "Termos de Uso",
+    "privacy": "Privacidade",
+    "about": "Sobre",
+    "rights": "Todos os direitos reservados."
   },
   "common": {
     "loading": "A carregar...",

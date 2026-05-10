@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -23,15 +23,15 @@ import { ToastService } from '../../../core/services/toast.service';
           <form (ngSubmit)="onSubmit()" class="auth-form">
             <div class="form-group">
               <label class="form-label">{{ 'auth.name' | translate }}</label>
-              <input type="text" class="input" [(ngModel)]="name" name="name" required placeholder="O seu nome" autocomplete="name">
+              <input type="text" class="input" [(ngModel)]="name" name="name" required [placeholder]="'auth.namePlaceholder' | translate" autocomplete="name">
             </div>
             <div class="form-group">
               <label class="form-label">{{ 'auth.email' | translate }}</label>
-              <input type="email" class="input" [(ngModel)]="email" name="email" required placeholder="email@exemplo.com" autocomplete="email">
+              <input type="email" class="input" [(ngModel)]="email" name="email" required [placeholder]="'auth.emailPlaceholder' | translate" autocomplete="email">
             </div>
             <div class="form-group">
               <label class="form-label">{{ 'auth.password' | translate }}</label>
-              <input type="password" class="input" [(ngModel)]="password" name="password" required placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+              <input type="password" class="input" [(ngModel)]="password" name="password" required [placeholder]="'auth.minPassword' | translate" autocomplete="new-password">
             </div>
             <div *ngIf="error" class="error-banner animate-fade-in">
               <span>⚠</span> <span>{{ error }}</span>
@@ -76,25 +76,25 @@ import { ToastService } from '../../../core/services/toast.service';
 export class RegisterComponent {
   name = ''; email = ''; password = ''; error = ''; loading = false;
 
-  constructor(private auth: AuthService, private router: Router, private toast: ToastService) {}
+  constructor(private auth: AuthService, private router: Router, private toast: ToastService, private t: TranslateService) {}
 
   onSubmit(): void {
     if (!this.name || !this.email || !this.password) {
-      this.error = 'Preencha todos os campos'; this.toast.warning('Preencha todos os campos'); return;
+      this.error = this.t.instant('auth.fillAllFields'); this.toast.warning(this.error); return;
     }
     if (this.password.length < 6) {
-      this.error = 'A password deve ter pelo menos 6 caracteres'; this.toast.warning(this.error); return;
+      this.error = this.t.instant('auth.minPassword'); this.toast.warning(this.error); return;
     }
     this.loading = true; this.error = '';
     this.auth.register(this.name, this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.toast.success('Conta criada com sucesso! 🎬');
+        this.toast.success(this.t.instant('auth.accountCreated'));
         this.router.navigate(['/onboarding']);
       },
       error: (err) => {
         this.loading = false;
-        const msg = err.error?.message || 'Erro ao criar conta';
+        const msg = err.error?.message || this.t.instant('auth.errorCreateAccount');
         this.error = msg; this.toast.error(msg);
       },
     });

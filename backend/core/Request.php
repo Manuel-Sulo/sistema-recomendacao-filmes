@@ -24,14 +24,26 @@ class Request
     private function parseUri(): string
     {
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        // Remove possible base paths
-        $basePaths = ['/EngSof-lab4/backend/public', '/EngSof-lab4/backend'];
-        foreach ($basePaths as $basePath) {
-            if (strpos($uri, $basePath) === 0) {
-                $uri = substr($uri, strlen($basePath));
+
+        // Auto-detect base path from SCRIPT_NAME (works on WAMP, XAMPP, any Apache)
+        // SCRIPT_NAME will be e.g. "/srf-movies/backend/public/index.php"
+        // We extract the directory part as the base path to strip from REQUEST_URI
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $basePath = rtrim(dirname($scriptName), '/\\');
+
+        // Also support configured base paths for backwards compatibility
+        $basePaths = array_filter([
+            $basePath,
+            Env::get('APP_BASE_PATH', ''),
+        ]);
+
+        foreach ($basePaths as $bp) {
+            if ($bp && strpos($uri, $bp) === 0) {
+                $uri = substr($uri, strlen($bp));
                 break;
             }
         }
+
         // Remove query string
         $uri = strtok($uri, '?');
         // Normalize
@@ -95,7 +107,20 @@ class Request
 
     public function getBearerToken(): ?string
     {
+        // Try standard header first
         $auth = $this->getHeader('authorization');
+
+        // Fallback: Apache mod_rewrite puts it in REDIRECT_HTTP_AUTHORIZATION
+        if (!$auth && isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+            $auth = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+        }
+
+        // Fallback: apache_request_headers() (works with mod_php)
+        if (!$auth && function_exists('apache_request_headers')) {
+            $apacheHeaders = apache_request_headers();
+            $auth = $apacheHeaders['Authorization'] ?? $apacheHeaders['authorization'] ?? null;
+        }
+
         if ($auth && strpos($auth, 'Bearer ') === 0) {
             return substr($auth, 7);
         }

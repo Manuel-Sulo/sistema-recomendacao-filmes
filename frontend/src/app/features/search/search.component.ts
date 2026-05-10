@@ -15,7 +15,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
     <div class="search-page container">
       <div class="search-header animate-fade-up">
         <span class="section-label">🔍 {{ 'nav.search' | translate }}</span>
-        <h1 class="text-h1">EXPLORAR FILMES</h1>
+        <h1 class="text-h1">{{ 'search.exploreMovies' | translate }}</h1>
         <div class="search-bar mt-4">
           <span class="search-icon">🔍</span>
           <input type="text" class="input search-input" [(ngModel)]="query"
@@ -25,7 +25,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
       <!-- Genre Chips -->
       <div class="genre-chips mt-6 animate-fade-up" style="animation-delay:0.1s" *ngIf="genres.length">
-        <button class="genre-chip" [class.active]="!selectedGenre" (click)="selectGenre(null)">Todos</button>
+        <button class="genre-chip" [class.active]="!selectedGenre" (click)="selectGenre(null)">{{ 'common.all' | translate }}</button>
         <button class="genre-chip" *ngFor="let g of genres" [class.active]="selectedGenre === g.id"
                 (click)="selectGenre(g.id)">{{ g.name }}</button>
       </div>
@@ -42,16 +42,16 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
       <!-- Pagination -->
       <div class="pagination mt-8" *ngIf="totalPages > 1 && results.length">
-        <button class="btn btn-secondary" [disabled]="page <= 1" (click)="changePage(page-1)">← Anterior</button>
+        <button class="btn btn-secondary" [disabled]="page <= 1" (click)="changePage(page-1)">← {{ 'search.previous' | translate }}</button>
         <span class="page-info">{{ page }} / {{ totalPages }}</span>
-        <button class="btn btn-secondary" [disabled]="page >= totalPages" (click)="changePage(page+1)">Seguinte →</button>
+        <button class="btn btn-secondary" [disabled]="page >= totalPages" (click)="changePage(page+1)">{{ 'search.next' | translate }} →</button>
       </div>
 
       <!-- Empty state -->
       <div *ngIf="searched && !results.length && !loading" class="empty-state text-center mt-16 animate-fade-up">
         <p style="font-size:48px">🎬</p>
         <p class="text-h3 mt-4">{{ 'movies.noResults' | translate }}</p>
-        <p class="text-muted mt-2">Tente outro termo de pesquisa</p>
+        <p class="text-muted mt-2">{{ 'search.tryAnother' | translate }}</p>
       </div>
     </div>
   `,

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 
@@ -139,20 +139,21 @@ export class LoginComponent {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private t: TranslateService
   ) {}
 
   onSubmit(): void {
     if (!this.email || !this.password) {
-      this.error = 'Preencha todos os campos';
-      this.toast.warning('Preencha o email e a palavra-passe');
+      this.error = this.t.instant('auth.fillAllFields');
+      this.toast.warning(this.error);
       return;
     }
     this.loading = true; this.error = '';
     this.auth.login(this.email, this.password).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.toast.success('Login efetuado com sucesso! 🎬');
+        this.toast.success(this.t.instant('auth.loginSuccess'));
         const user = res?.data?.user || res?.user;
         if (user && !user.onboarded) {
           this.router.navigate(['/onboarding']);
@@ -162,7 +163,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.loading = false;
-        const msg = err.error?.message || 'Email ou palavra-passe incorretos';
+        const msg = err.error?.message || this.t.instant('auth.invalidCredentials');
         this.error = msg;
         this.toast.error(msg);
       },

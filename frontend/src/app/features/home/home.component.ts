@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
@@ -53,7 +53,7 @@ import { environment } from '../../../environments/environment';
         <div *ngIf="loadError" class="error-state card-glass p-8 mt-8 text-center animate-fade-up">
           <p class="text-h3 mb-4">⚠️ {{ 'common.error' | translate }}</p>
           <p class="text-muted mb-4">{{ loadError }}</p>
-          <button class="btn btn-primary" (click)="retryLoad()">Tentar novamente</button>
+          <button class="btn btn-primary" (click)="retryLoad()">{{ 'actions.retry' | translate }}</button>
         </div>
 
         <!-- Recommendations Row -->
@@ -61,7 +61,7 @@ import { environment } from '../../../environments/environment';
           <div class="section-header">
             <div>
               <span class="section-label">✨ {{ 'movies.recommended' | translate }}</span>
-              <h2 class="text-h2">FEITO PARA TI</h2>
+              <h2 class="text-h2">{{ 'home.madeForYou' | translate }}</h2>
             </div>
           </div>
           <div class="movie-grid">
@@ -74,7 +74,7 @@ import { environment } from '../../../environments/environment';
           <div class="section-header">
             <div>
               <span class="section-label">🔥 {{ 'movies.trending' | translate }}</span>
-              <h2 class="text-h2">EM ALTA</h2>
+              <h2 class="text-h2">{{ 'home.trendingTitle' | translate }}</h2>
             </div>
           </div>
           <div class="movie-grid" *ngIf="trending.length; else skeleton">
@@ -87,7 +87,7 @@ import { environment } from '../../../environments/environment';
           <div class="section-header">
             <div>
               <span class="section-label">🎬 {{ 'movies.popular' | translate }}</span>
-              <h2 class="text-h2">POPULARES</h2>
+              <h2 class="text-h2">{{ 'home.popularTitle' | translate }}</h2>
             </div>
           </div>
           <div class="movie-grid" *ngIf="popular.length; else skeleton">
@@ -100,7 +100,7 @@ import { environment } from '../../../environments/environment';
           <div class="section-header">
             <div>
               <span class="section-label">⭐ {{ 'movies.topRated' | translate }}</span>
-              <h2 class="text-h2">MELHOR AVALIADOS</h2>
+              <h2 class="text-h2">{{ 'home.topRatedTitle' | translate }}</h2>
             </div>
           </div>
           <div class="movie-grid" *ngIf="topRated.length; else skeleton">
@@ -193,7 +193,7 @@ export class HomeComponent implements OnInit {
   genreMap: { [id: number]: string } = {};
   loadError = '';
 
-  constructor(private api: ApiService, private toast: ToastService) {}
+  constructor(private api: ApiService, private toast: ToastService, private translate: TranslateService) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -217,7 +217,7 @@ export class HomeComponent implements OnInit {
       },
       error: (err) => {
         this.loadError = err.error?.message || 'Não foi possível carregar os filmes. Verifique a ligação ao servidor.';
-        this.toast.error('Erro ao carregar filmes em alta');
+        this.toast.error(this.getTranslation('feedback.errorLoadMovies'));
       },
     });
 
@@ -239,18 +239,22 @@ export class HomeComponent implements OnInit {
 
   retryLoad(): void {
     this.loadData();
-    this.toast.info('A recarregar...');
+    this.toast.info(this.getTranslation('feedback.reloading'));
   }
 
   getGenreName(id: number): string { return this.genreMap[id] || ''; }
+
+  private getTranslation(key: string): string {
+    return this.translate.instant(key);
+  }
 
   addToWatchlist(movie: any): void {
     this.api.addToWatchlist({
       tmdb_id: movie.id, movie_title: movie.title,
       poster_path: movie.poster_path, release_year: movie.release_date?.slice(0, 4),
     }).subscribe({
-      next: () => this.toast.success('Adicionado à watchlist! 📋'),
-      error: () => this.toast.error('Erro ao adicionar à watchlist'),
+      next: () => this.toast.success(this.getTranslation('feedback.addedWatchlist')),
+      error: () => this.toast.error(this.getTranslation('feedback.errorLoad')),
     });
   }
 }
