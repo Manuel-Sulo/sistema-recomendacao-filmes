@@ -1,0 +1,237 @@
+## 1. Análise do tema à luz dos requisitos
+
+O sistema deve ser um **Sistema de Recomendação de Filmes**, respeitando integralmente o caderno de encargos do Lab #04. As mesmas regras aplicam‑se: frontend Angular, backend PHP puro, SQL, autenticação completa, ≥3 tabelas com CRUD, API externa, interface responsiva, modo claro/escuro, i18n, exportação CSV/PDF e clara separação de responsabilidades. A natureza do problema (recomendação pessoal) **não justifica papéis de utilizador**, pelo que se mantém um único tipo de conta.
+
+---
+
+## 2. Escopo funcional
+
+1. **Autenticação** – registo, login, logout, recuperação de senha via email.
+2. **Pesquisa e exploração de filmes** – search box, listagem de filmes populares, detalhes (sinopse, elenco, trailer, avaliação média do TMDB). Tudo via API externa.
+3. **Avaliação de filmes** (CRUD) – utilizador atribui nota de 1 a 5 estrelas. Pode criar, consultar, alterar ou remover a sua avaliação.
+4. **Lista de favoritos / “Para ver”** (CRUD) – guardar filmes numa watchlist. Adicionar, listar e remover.
+5. **Recomendações personalizadas** – com base nos géneros dos filmes bem avaliados (≥4 estrelas), sugerir filmes em alta nesses géneros que o utilizador ainda não avaliou.
+6. **Exportação de dados** – exportar a lista de filmes avaliados ou recomendações em CSV.
+7. **Preferências de UI** – alternância claro/escuro, seleção de idioma (PT/EN).
+
+---
+
+## 3. API externa escolhida
+
+**The Movie Database (TMDB) API v3**  
+- Gratuita, exige chave (registo simples).  
+- Endpoints: `/movie/popular`, `/search/movie`, `/movie/{id}`, `/genre/movie/list`, `/discover/movie` (filtro por género).  
+- Fornece todos os dados necessários (título, capa, sinopse, géneros, nota).  
+- Limite generoso para um uso académico.
+
+O backend funciona como **proxy** – o frontend nunca expõe a chave da API.
+
+---
+
+## 4. Arquitetura
+
+```
+[Angular SPA] -- HTTP/JSON --> [PHP Backend REST]
+                                     |        |
+                                  [MySQL]   [TMDB API]
+                                     |
+                              [Email SMTP]
+```
+
+- Autenticação via JWT.
+- Camadas no backend: `Controllers` → `Services` → `Models/DB`.
+- Recomendações calculadas no serviço `RecommendationService`, combinando dados do TMDB com as avaliações locais.
+
+---
+
+## 5. Estrutura de pastas e ficheiros
+
+### 5.1 Frontend Angular
+
+```
+src/
+├── app/
+│   ├── core/
+│   │   ├── guards/          (auth.guard.ts)
+│   │   ├── interceptors/    (jwt.interceptor.ts, error.interceptor.ts)
+│   │   ├── services/        (auth.service.ts, theme.service.ts, language.service.ts)
+│   │   └── models/          (user.model.ts, movie.model.ts, rating.model.ts)
+│   ├── shared/
+│   │   ├── components/      (header, footer, loader, confirm-dialog, theme-toggle, star-rating)
+│   │   └── pipes/           (year-format.pipe.ts, truncate.pipe.ts)
+│   ├── features/
+│   │   ├── auth/            (auth.module.ts, login, register, forgot-password, reset-password)
+│   │   ├── dashboard/       (dashboard.module.ts, recommendations, popular)
+│   │   ├── movie-search/    (search.module.ts, search-results)
+│   │   ├── movie-detail/    (movie-detail.module.ts, detail)
+│   │   ├── ratings/         (ratings.module.ts, my-ratings)
+│   │   ├── watchlist/       (watchlist.module.ts, watchlist)
+│   │   └── export/          (button, serviço reutilizável)
+│   ├── app-routing.module.ts
+│   ├── app.component.ts
+│   └── app.module.ts
+├── assets/
+│   ├── i18n/  (pt.json, en.json)
+│   └── images/
+├── styles.scss
+```
+
+**Princípios:**  
+- Cada `feature` é um módulo lazy.  
+- `StarRatingComponent` em `shared` (5 estrelas clicáveis, reutilizável).  
+- `ExportService` no `core` faz o pedido de download.  
+- Serviço `MovieService` comunica com o backend (e este sim ao TMDB).
+
+### 5.2 Backend PHP puro
+
+```
+backend/
+├── public/
+│   ├── index.php          (front controller)
+│   └── .htaccess
+├── src/
+│   ├── Config/            (database.php, app.php, cors.php)
+│   ├── Controllers/       (AuthController, MovieController, RatingController, WatchlistController, RecommendationController, ExportController)
+│   ├── Models/            (User, Rating, Watchlist, PasswordReset)
+│   ├── Services/
+│   │   ├── AuthService.php
+│   │   ├── MovieService.php          (proxy TMDB)
+│   │   ├── RatingService.php
+│   │   ├── WatchlistService.php
+│   │   ├── RecommendationService.php (lógica de sugestão)
+│   │   └── EmailService.php
+│   ├── Middleware/        (AuthMiddleware.php)
+│   └── Helpers/           (Response, JWT, Validator)
+├── vendor/
+├── composer.json
+└── .env
+```
+
+---
+
+## 6. Base de dados
+
+### 6.1 Tabelas (≥3, todas com CRUD)
+
+```sql
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    language ENUM('pt','en') DEFAULT 'pt',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,               -- id do TMDB
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_movie (user_id, movie_id)
+);
+
+CREATE TABLE watchlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,               -- id do TMDB
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_watchlist (user_id, movie_id)
+);
+
+CREATE TABLE password_resets (
+    email VARCHAR(100) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email (email)
+);
+```
+
+- **users** – operações de registo e update (idioma).  
+- **ratings** – CRUD completo (add, view, edit, delete).  
+- **watchlist** – CRUD (add, view, delete).  
+- `movie_id` é um `INT` vindo do TMDB; não guardamos metadados do filme localmente, mantendo a base leve.
+
+---
+
+## 7. Cumprimento dos requisitos obrigatórios
+
+| Requisito | Implementação |
+|-----------|---------------|
+| **Autenticação** | Registo, login, logout, forgot/reset password via JWT e email. |
+| **≥3 tabelas + CRUD** | `users` (R/U), `ratings` (C/R/U/D), `watchlist` (C/R/D). |
+| **API externa** | TMDB via `MovieService.php`. |
+| **Interface responsiva** | Bootstrap 5 + grid fluido. |
+| **Modo claro/escuro** | Serviço `ThemeService`, variáveis CSS, toggle no header. |
+| **Múltiplos idiomas** | `ngx-translate`, PT e EN cobrindo toda a interface. |
+| **Exportação CSV** | Endpoints `/export/ratings` e `/export/recommendations` geram ficheiro CSV com `fputcsv()`. |
+| **Componentes reutilizáveis** | `star-rating`, `header`, `footer`, `loader`, `confirm-dialog`, `theme-toggle`. |
+| **Separação backend** | Controllers → Services → Models; endpoints REST padronizados. |
+| **Frontend modular** | Lazy loading, serviços injetáveis, sem lógica de negócio nos componentes de apresentação. |
+| **Versionamento** | Git com autoria individual clara. |
+
+**Nota:** O enunciado permite PDF; se desejado, pode-se integrar **Dompdf** para gerar relatório das recomendações em PDF, mas CSV cumpre o requisito mínimo.
+
+---
+
+## 8. Navegação e rotas
+
+**Rotas públicas:**  
+`/login`, `/register`, `/forgot-password`, `/reset-password`
+
+**Rotas protegidas (AuthGuard):**  
+- `/dashboard` – página inicial com recomendações e filmes populares  
+- `/search` – pesquisa de filmes  
+- `/movie/:id` – detalhe do filme (com opção de avaliar/adicionar à watchlist)  
+- `/my-ratings` – lista das minhas avaliações (editar/remover)  
+- `/watchlist` – a minha lista de favoritos  
+- `/export/ratings` – download CSV das avaliações
+
+**Menu:**  
+Início · Pesquisar · Minhas Avaliações · Watchlist · [tema] [idioma] [logout]
+
+---
+
+## 9. Algoritmo de recomendação (simples e didático)
+
+No backend, o método `getRecommendations(userId)`:
+1. Obtém do TMDB a lista de todos os géneros (`/genre/movie/list`).
+2. Consulta as avaliações do utilizador com nota ≥ 4 (baseado em `ratings`).
+3. Para cada filme bem avaliado, vai ao TMDB buscar os `genre_ids` (pode ser cache).
+4. Determina os 3 géneros mais frequentes.
+5. Usa o endpoint `discover/movie` do TMDB com `with_genres`, ordenado por popularidade, e exclui filmes que o utilizador já avaliou ou que estão na watchlist (para evitar duplicados).
+6. Retorna os 10 primeiros resultados.
+
+Isto satisfaz o “sistema de recomendação” sem dependência de IA externa, e é inteiramente implementável com as tecnologias exigidas.
+
+---
+
+## 10. Exportação de dados
+
+- `GET /api/export/ratings` → CSV com colunas: Título, Géneros (ou ids), Nota, Data.
+- O controlador autentica o utilizador, carrega as avaliações do seu `user_id`, e para cada linha obtém do TMDB (ou de cache) o título actual. O frontend dispara o download via `window.open()` ou `Blob`.
+
+---
+
+## 11. Web scraping e IA no sistema
+
+- **Web scraping:** Não será usado. O TMDB oferece uma API robusta e gratuita. O regulamento pede integração com API externa, e o scraping não é fiável nem respeita os termos de serviço.
+- **Funcionalidade de IA:** O laboratório só exige que o processo de desenvolvimento seja assistido por IA. **Não é obrigatório incorporar IA no produto.** O sistema de recomendação baseado em géneros e avaliações é suficiente e adequado aos objetivos de Engenharia de Software. Não se incluirá, portanto, nenhum módulo de IA preditiva ou chatbot, a menos que o grupo o deseje como *extra* não vinculativo.
+
+---
+
+## 12. Verificação final
+
+- Todos os itens obrigatórios do Lab #04 foram mapeados para a arquitetura.
+- A estrutura de pastas e camadas respeita a separação de responsabilidades.
+- As três tabelas garantem CRUD completo.
+- A API TMDB foi escolhida como a melhor opção gratuita para filmes.
+- O algoritmo de recomendação é simples, credível e implementável.
+- Não foram adicionados requisitos inexistentes (como admin ou IA obrigatória).
+
+**A especificação está completa, pronta para ser usada como guia de implementação para o prazo de 10 de maio de 2026.**

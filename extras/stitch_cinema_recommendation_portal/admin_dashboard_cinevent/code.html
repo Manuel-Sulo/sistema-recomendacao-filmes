@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CINEVENT | Administrative Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#434b00",
+                        "outline": "#a78b7d",
+                        "error": "#ffb4ab",
+                        "primary-container": "#f97316",
+                        "surface-container-high": "#352720",
+                        "on-secondary-container": "#e6ecff",
+                        "surface-bright": "#45362f",
+                        "surface": "#1c110b",
+                        "on-tertiary-fixed": "#1a1e00",
+                        "on-background": "#f6ded3",
+                        "inverse-primary": "#9d4300",
+                        "tertiary-container": "#92a300",
+                        "surface-dim": "#1c110b",
+                        "secondary-container": "#0566d9",
+                        "outline-variant": "#584237",
+                        "on-surface": "#f6ded3",
+                        "on-error": "#690005",
+                        "error-container": "#93000a",
+                        "background": "#1c110b",
+                        "tertiary": "#bcd200",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary-fixed-dim": "#ffb690",
+                        "on-secondary-fixed": "#001a42",
+                        "tertiary-fixed": "#d7ef00",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-container": "#291d16",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary": "#2d3400",
+                        "surface-variant": "#40322a",
+                        "on-surface-variant": "#e0c0b1",
+                        "surface-tint": "#ffb690",
+                        "on-primary-fixed-variant": "#783200",
+                        "surface-container-highest": "#40322a",
+                        "inverse-surface": "#f6ded3",
+                        "inverse-on-surface": "#3c2d26",
+                        "primary-fixed": "#ffdbca",
+                        "on-tertiary-container": "#2f3600",
+                        "on-primary-container": "#582200",
+                        "tertiary-fixed-dim": "#bcd200",
+                        "on-primary-fixed": "#341100",
+                        "on-primary": "#552100",
+                        "surface-container-lowest": "#160c06",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "on-secondary": "#002e6a",
+                        "primary": "#ffb690",
+                        "surface-container-low": "#251913",
+                        "secondary": "#adc6ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "96px",
+                        "sm": "24px",
+                        "margin": "48px",
+                        "gutter": "24px",
+                        "base": "12px",
+                        "xs": "12px",
+                        "md": "36px",
+                        "lg": "60px"
+                    },
+                    "fontFamily": {
+                        "display-xl": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-xl": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "900"}],
+                        "display-lg": ["80px", {"lineHeight": "88px", "letterSpacing": "-0.03em", "fontWeight": "900"}],
+                        "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                        "display-lg-mobile": ["48px", {"lineHeight": "52px", "fontWeight": "900"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "800"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-inner-border { border: 0.8px solid rgba(255, 255, 255, 0.2); }
+        .glass-outer-border { border: 1.6px solid #2A2A30; }
+        .glass-surface { background: rgba(28, 17, 11, 0.4); backdrop-filter: blur(40px); }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 0.8px solid rgba(255, 255, 255, 0.1); }
+        body { background-color: #1c110b; color: #f6ded3; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-screen w-72 glass-surface z-40 border-r border-outline-variant flex flex-col p-6">
+<div class="mb-10 px-4">
+<span class="font-display-lg-mobile text-display-lg-mobile font-black tracking-tighter text-primary-container">CINEVENT</span>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-full bg-primary-container text-on-primary-container font-bold transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-on-surface-variant font-medium hover:text-primary transition-all duration-300 group" href="#">
+<span class="material-symbols-outlined" data-icon="movie">movie</span>
+<span class="font-body-md text-body-md">Content Management</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-on-surface-variant font-medium hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">User Reports</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-full text-on-surface-variant font-medium hover:text-primary transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">System Settings</span>
+</a>
+</nav>
+<div class="mt-auto p-4 glass-card rounded-xl flex items-center gap-4">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary-container">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a modern executive in a high-tech office environment. The lighting is soft and cinematic, with a color palette dominated by deep earth tones and a splash of primary orange. The subject has a confident expression, representing leadership in a premium streaming media company." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5_h2x7hrfigpN2Ewy0Z64HN-wHTNil81eQEM3DIZIZ_-yXlGZqnBVixt5bfM-3g21-HcPa7pe7e6eJwwUtZzgIOugiFQk2zQOFi1N3bhfzLObrlcLlIbc2oJGcWXUC58_88CRTQk9BAUVaqMJyKFm3bKk4xNSiD6og4EGaHWROcPtkYZAg5elvzpD4j0OaaeCUZg6Asu2CyFQ0Oonnd_f86W__UDwweuEVPMDyIuu1cxAFsh7wlmzQ32MSowAxWRFklnBldZqWSW0"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-widest">Admin User</span>
+<span class="text-[10px] text-on-surface-variant">Standard Access</span>
+</div>
+<button class="ml-auto text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 min-h-screen p-margin flex flex-col gap-lg">
+<!-- Header -->
+<header class="flex justify-between items-center">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Analytics Overview</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Join the movement and monitor real-time growth indicators.</p>
+</div>
+<div class="flex items-center gap-base">
+<div class="glass-card flex items-center px-4 py-2 rounded-full glass-outer-border">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md text-on-surface placeholder:text-outline-variant w-64" placeholder="Search analytics..." type="text"/>
+</div>
+<button class="bg-primary-container text-on-primary-container font-bold py-3 px-8 rounded-full hover:scale-95 transition-all duration-200">
+                    Join the Movement
+                </button>
+</div>
+</header>
+<!-- Stats Grid (Bento Style) -->
+<section class="grid grid-cols-12 gap-gutter">
+<!-- Active Users Card -->
+<div class="col-span-12 md:col-span-4 glass-card p-lg rounded-xl glass-outer-border relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="trending_up">trending_up</span>
+</div>
+<div class="flex flex-col gap-base relative z-10">
+<span class="font-label-sm text-label-sm text-primary-container tracking-[0.2em] uppercase">Active Users</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">12.4k</span>
+<span class="font-body-md text-body-md text-tertiary">+14%</span>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full mt-4">
+<div class="w-3/4 h-full bg-primary-container rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Total Movies Card -->
+<div class="col-span-12 md:col-span-4 glass-card p-lg rounded-xl glass-outer-border relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="theaters">theaters</span>
+</div>
+<div class="flex flex-col gap-base relative z-10">
+<span class="font-label-sm text-label-sm text-primary-container tracking-[0.2em] uppercase">Total Movies</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">3.8k</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Verified</span>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full mt-4">
+<div class="w-1/2 h-full bg-secondary-container rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Subscriptions Card -->
+<div class="col-span-12 md:col-span-4 glass-card p-lg rounded-xl glass-outer-border relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]" data-icon="payments">payments</span>
+</div>
+<div class="flex flex-col gap-base relative z-10">
+<span class="font-label-sm text-label-sm text-primary-container tracking-[0.2em] uppercase">Subscriptions</span>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">$84k</span>
+<span class="font-body-md text-body-md text-tertiary">MRR</span>
+</div>
+<div class="w-full h-1 bg-outline-variant rounded-full mt-4">
+<div class="w-2/3 h-full bg-tertiary rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Content Table Section -->
+<section class="glass-card rounded-xl glass-outer-border overflow-hidden">
+<div class="px-lg py-md border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-md text-headline-md text-on-surface">Latest Content</h3>
+<div class="flex gap-base">
+<button class="p-2 glass-card rounded-lg text-on-surface-variant hover:text-primary-container">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-2 glass-card rounded-lg text-on-surface-variant hover:text-primary-container">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-lg py-base font-label-sm text-label-sm text-outline tracking-widest uppercase">Content Title</th>
+<th class="px-lg py-base font-label-sm text-label-sm text-outline tracking-widest uppercase">Category</th>
+<th class="px-lg py-base font-label-sm text-label-sm text-outline tracking-widest uppercase">Status</th>
+<th class="px-lg py-base font-label-sm text-label-sm text-outline tracking-widest uppercase">Analytics</th>
+<th class="px-lg py-base font-label-sm text-label-sm text-outline tracking-widest uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-base">
+<div class="flex items-center gap-4">
+<div class="w-12 h-16 rounded overflow-hidden flex-shrink-0">
+<img alt="Movie Poster" class="w-full h-full object-cover" data-alt="A cinematic movie poster with neon blue and orange lighting, featuring a silhouette of a protagonist standing against a futuristic cityscape. The visual style is polished and high-contrast, designed to match the premium streaming experience of CINEVENT." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBl_TvmEC7K8QQOwnT0-48D9tS335UVchqH2lD0Ln4C9Jq-OnDzIQ85XkRnCX_xqwJ2vYccTjXSdRy5xxTvr9VHqfpRygxdf54I7dqFaL-PSkwmykPugMtCOcGCMtB2KlI_S9nhipXKQFyzLx_PRFCTCLvMk3kpZj4wsvlf1LvKMl2gy91WGnCOpLC0eNtfVpw55ZpWf0iHF7CC2V_tH3gsF3jZCx3y--WbiLHVVmWJwkFiIi9PCuDoFldwG4nBNqBMEtcgl4JQRn-V"/>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Neon Echoes</span>
+</div>
+</td>
+<td class="px-lg py-base font-body-md text-body-md text-on-surface-variant">Sci-Fi Thriller</td>
+<td class="px-lg py-base">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-tertiary/20 text-tertiary border border-tertiary/30">PUBLISHED</span>
+</td>
+<td class="px-lg py-base text-on-surface-variant">
+<span class="material-symbols-outlined align-middle mr-1 text-[18px]" data-icon="visibility">visibility</span> 42k
+                            </td>
+<td class="px-lg py-base text-right">
+<div class="flex justify-end gap-base opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-base">
+<div class="flex items-center gap-4">
+<div class="w-12 h-16 rounded overflow-hidden flex-shrink-0">
+<img alt="Movie Poster" class="w-full h-full object-cover" data-alt="A vintage-style film poster for a modern drama, showing grainy textures and warm, cinematic lighting. The color scheme focuses on deep ambers and rich blacks, creating a sense of nostalgia and prestige quality typical for curated festival content." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLPAEiry0DIwSkWkEU6IAS9SLTYhOtxmmfWxsz_W3dBgXgW8JY_fVj1xkJrTJaDOxliil3oF-tovSkLSTcpNFKncKtFKgJWLk6AiOyiHb6mtA5fngvKzgzUad0ldE3As4NcSQqPctEW3_mYIhQJobyxQFeVtHLpsQFCNQ7eWTtS1_XcRZIvODIc4RpTWtTcf-TtB73rYTCQly8e3gllTxLzDLZQLur5QwJtQE-E7-xh-02pwY_RFgVw64vF7ve5J25paV9JVHObDtR"/>
+</div>
+<span class="font-body-md text-body-md text-on-surface">The Last Frame</span>
+</div>
+</td>
+<td class="px-lg py-base font-body-md text-body-md text-on-surface-variant">Documentary</td>
+<td class="px-lg py-base">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-primary-container/20 text-primary-container border border-primary-container/30">PENDING</span>
+</td>
+<td class="px-lg py-base text-on-surface-variant">
+<span class="material-symbols-outlined align-middle mr-1 text-[18px]" data-icon="visibility">visibility</span> 0
+                            </td>
+<td class="px-lg py-base text-right">
+<div class="flex justify-end gap-base opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="px-lg py-base">
+<div class="flex items-center gap-4">
+<div class="w-12 h-16 rounded overflow-hidden flex-shrink-0">
+<img alt="Movie Poster" class="w-full h-full object-cover" data-alt="A dramatic black and white cinematic still from an arthouse film, capturing a moment of intense emotion. The visual composition uses extreme shadows and high-contrast light to convey depth and urgency, embodying the 'Join the Movement' aesthetic for independent cinema enthusiasts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV7mSvB3qgaeQqdjCwZhTbfaSg46CB63_MLl6ujby8dUZpv_CRHEa_7tUWhPiIalKj_s_ZpY-UamOSseLjCuoiCQZC5nvSizzKOSciSzd7wTubQ60JE0amdcYm_AZn3L6Q9fvWDf797s9M6oyVJLudKR8fS0-4ysBeuIzcW3YvEzwVwa2B8fKs2dSaJFP0Fb8K1oGDq3aUIH6h80mUd4ciENC4-AyhgvNc4jP_mrqvJV1oXT05fU1RSbLu8tYghwb23YSFQubH7qkv"/>
+</div>
+<span class="font-body-md text-body-md text-on-surface">Velvet Shadows</span>
+</div>
+</td>
+<td class="px-lg py-base font-body-md text-body-md text-on-surface-variant">Indie Noir</td>
+<td class="px-lg py-base">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold bg-tertiary/20 text-tertiary border border-tertiary/30">PUBLISHED</span>
+</td>
+<td class="px-lg py-base text-on-surface-variant">
+<span class="material-symbols-outlined align-middle mr-1 text-[18px]" data-icon="visibility">visibility</span> 12.8k
+                            </td>
+<td class="px-lg py-base text-right">
+<div class="flex justify-end gap-base opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-lg py-base border-t border-outline-variant flex justify-between items-center bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Showing 1-10 of 3.8k entries</span>
+<div class="flex gap-2">
+<button class="px-4 py-2 glass-card rounded-lg hover:text-primary-container transition-colors">Previous</button>
+<button class="px-4 py-2 glass-card rounded-lg hover:text-primary-container transition-colors">Next</button>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-xl px-0 flex flex-col md:flex-row justify-between items-center gap-base border-t border-outline-variant mt-auto">
+<span class="font-display-lg-mobile text-[24px] font-black text-on-surface tracking-tighter">CINEVENT</span>
+<div class="flex gap-base">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Help Center</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 CINEVENT. ALL RIGHTS RESERVED.</p>
+</footer>
+</main>
+<!-- FAB for Quick Actions -->
+<button class="fixed bottom-margin right-margin w-16 h-16 bg-primary-container text-on-primary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 z-50">
+<span class="material-symbols-outlined text-[32px]" data-icon="add" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</body></html>

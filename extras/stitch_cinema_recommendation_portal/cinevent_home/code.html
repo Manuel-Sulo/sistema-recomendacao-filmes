@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#f6ded3",
+                    "surface-container": "#291d16",
+                    "surface-tint": "#ffb690",
+                    "surface-container-low": "#251913",
+                    "surface-container-lowest": "#160c06",
+                    "on-tertiary-fixed": "#1a1e00",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container-high": "#352720",
+                    "tertiary-fixed-dim": "#bcd200",
+                    "background": "#1c110b",
+                    "on-primary-fixed": "#341100",
+                    "on-surface-variant": "#e0c0b1",
+                    "secondary": "#adc6ff",
+                    "outline": "#a78b7d",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#9d4300",
+                    "on-secondary-fixed-variant": "#004395",
+                    "inverse-on-surface": "#3c2d26",
+                    "secondary-container": "#0566d9",
+                    "on-primary-container": "#582200",
+                    "tertiary": "#bcd200",
+                    "surface-bright": "#45362f",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "primary-fixed-dim": "#ffb690",
+                    "on-background": "#f6ded3",
+                    "inverse-surface": "#f6ded3",
+                    "on-secondary-fixed": "#001a42",
+                    "outline-variant": "#584237",
+                    "on-primary": "#552100",
+                    "on-tertiary-fixed-variant": "#434b00",
+                    "tertiary-fixed": "#d7ef00",
+                    "tertiary-container": "#92a300",
+                    "on-tertiary-container": "#2f3600",
+                    "on-tertiary": "#2d3400",
+                    "error-container": "#93000a",
+                    "primary": "#ffb690",
+                    "on-primary-fixed-variant": "#783200",
+                    "surface-container-highest": "#40322a",
+                    "surface-dim": "#1c110b",
+                    "on-secondary-container": "#e6ecff",
+                    "primary-fixed": "#ffdbca",
+                    "surface-variant": "#40322a",
+                    "on-secondary": "#002e6a",
+                    "surface": "#1c110b",
+                    "primary-container": "#f97316",
+                    "error": "#ffb4ab"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "60px",
+                    "base": "12px",
+                    "gutter": "24px",
+                    "sm": "24px",
+                    "xl": "96px",
+                    "margin": "48px",
+                    "md": "36px",
+                    "xs": "12px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-xl": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["80px", {"lineHeight": "88px", "letterSpacing": "-0.03em", "fontWeight": "900"}],
+                    "display-lg-mobile": ["48px", {"lineHeight": "52px", "fontWeight": "900"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "display-xl": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "900"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-shine {
+            border: 0.8px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 1.6px #2A2A30;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin py-base bg-surface/40 backdrop-blur-xl border-b border-white/20 shadow-[0_8px_32px_0_rgba(10,10,12,0.8)]">
+<div class="flex items-center gap-md">
+<span class="font-display-lg-mobile text-display-lg-mobile font-black tracking-tighter text-primary-container">CINEVENT</span>
+<div class="hidden md:flex gap-gutter items-center">
+<a class="text-primary-container font-bold border-b-2 border-primary-container font-body-md text-body-md" href="#">Trending</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300 font-body-md text-body-md" href="#">Categories</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300 font-body-md text-body-md" href="#">Watchlist</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300 font-body-md text-body-md" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-base">
+<div class="hidden lg:flex items-center bg-surface-container-highest/40 backdrop-blur-md px-base py-xs rounded-full border border-white/10">
+<span class="material-symbols-outlined text-on-surface-variant mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-48 placeholder:text-on-surface-variant" placeholder="Explore the movement..." type="text"/>
+</div>
+<button class="bg-primary-container text-on-primary-fixed px-sm py-xs rounded-full font-label-sm text-label-sm font-bold uppercase transition-transform active:scale-95">Join the Movement</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a diverse, stylish individual with soft cinematic lighting hitting the side of their face. The background is a dark, moody environment with subtle hints of orange and blue bokeh. The image has a high-quality, professional photography feel with a sharp focus on the eyes and a soft blur on the edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkpivqEKvdZkNhupZwBgplzEnj6zfUJylZazdshYaJDKukYUWqNi5i3fsDPJKBcO2XKh1bXcxQiXlqt0OBOYLOrcaSEwv5cz-0ojIpbUQPBHQyn2GTLhpcTp850J37aDmKdnTbHAosO-ZCVKVwIXTVhVUpx1krbixdwC4nprD5gkgtL_6fXwNIA4z9ovR8jX6FYCp215MXDB-Em3Y6aePjfjV8zVrpRcnhzJtrK6mm_XIwK6QwSL2KH_m1WeaC0PWCjV_FLp9lRvP1"/>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center px-margin pt-xl">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+<img alt="Hero Background" class="w-full h-full object-cover" data-alt="An expansive, epic cinematic wide shot of a futuristic neon-drenched cityscape under a dark, stormy sky. Vibrant orange and deep blue light reflects off wet pavement and sleek glass skyscrapers. In the distance, a massive glowing hologram of a movie title pulses with light. The overall mood is high-stakes, dramatic, and intensely atmospheric, following the Cinevent brand's cinematic movement aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdR86cmRcwT4nuIRIJ-juOQnsFWSgvnFm33t8an_ogyO7mmdCVbtdyLWzrhHrWvMhvrtwg-v2kh68JiQygcTOr74Pu2kH3taWbvXiXysehO0ZtjnrgXo4_i1VsMVk31NnYg6k_haJtI0FLfk-hMuudY-Ufiqh9jwnahGYrdwM8FyRcaoNvuGY7Krm-WDj8p44BObqlx5xdHzB27gIJ6avD0yaHapah0Uurr5LHykhVST-gPYdQLqHe3e7jHmfe3DTcisyO4zov4nwC"/>
+</div>
+<div class="relative z-20 max-w-4xl">
+<div class="inline-flex items-center bg-primary-container/20 backdrop-blur-md px-base py-xs rounded-full border border-primary-container/40 mb-base">
+<span class="material-symbols-outlined text-primary-container mr-2" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+<span class="text-primary-container font-label-sm text-label-sm uppercase tracking-widest">Trending Now</span>
+</div>
+<h1 class="font-display-lg text-display-lg mb-gutter max-w-3xl">REVOLUTIONIZE YOUR CINEMA.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-lg max-w-2xl">Don't just watch movies. Experience the cultural shift. Join thousands of cinephiles discovering the next masterpiece in our community-driven ecosystem.</p>
+<div class="flex flex-wrap gap-base">
+<button class="bg-primary-container text-on-primary-fixed px-lg py-md rounded-full font-headline-md text-headline-md font-black hover:scale-105 transition-transform">Join the Movement</button>
+<button class="bg-white/10 backdrop-blur-xl border border-white/20 px-lg py-md rounded-full font-headline-md text-headline-md font-bold flex items-center gap-xs hover:bg-white/20 transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                    Watch Trailer
+                </button>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="py-xl px-margin bg-surface-container-lowest">
+<h2 class="font-headline-lg text-headline-lg mb-xl text-center">CHOOSE YOUR GENRE</h2>
+<div class="flex flex-wrap justify-center gap-lg">
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">rocket_launch</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter">Sci-Fi</span>
+</div>
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">skull</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter">Horror</span>
+</div>
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer text-primary-container">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">theater_comedy</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter text-primary-container">Drama</span>
+</div>
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">swords</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter">Action</span>
+</div>
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">sentiment_very_satisfied</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter">Comedy</span>
+</div>
+<div class="flex flex-col items-center gap-base">
+<div class="w-32 h-32 rounded-full glass-shine flex items-center justify-center bg-surface/40 backdrop-blur-xl hover:bg-primary-container hover:text-on-primary transition-all duration-300 group cursor-pointer">
+<span class="material-symbols-outlined text-4xl group-hover:scale-110 transition-transform">explore</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-tighter">Indie</span>
+</div>
+</div>
+</section>
+<!-- Trending Section -->
+<section class="py-xl px-margin">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<span class="text-tertiary font-label-sm text-label-sm uppercase tracking-widest">Hot Hits</span>
+<h2 class="font-headline-lg text-headline-lg">LATEST RELEASES</h2>
+</div>
+<button class="text-primary font-bold flex items-center gap-xs hover:gap-base transition-all">
+                VIEW ALL <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Movie Card 1 -->
+<div class="group relative aspect-[2/3] overflow-hidden rounded-full glass-shine bg-surface-container transition-transform hover:-translate-y-2 cursor-pointer">
+<img alt="Interstellar Vibe" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A vertical cinematic poster of a lone astronaut standing on a glowing crystalline planet under a sprawling purple nebula. The colors are rich and saturated with deep purples, oranges, and teals. The astronaut's suit reflects the ambient light of the environment. High-contrast lighting creates a dramatic, high-energy mood typical of a premium blockbuster film poster." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8Mg5cMcff09GiIWjgtiFTBI5CmgoP8_zwTh6RaBUNbc5B5wDDFVcd6PjM_d50ImO1gER3uEQ6SEtUZvUBm6CS1KpkckTz8nI0WDxdmDklzjYzCX4Aipl3AM5xU7TfRG56lVLBSVxO37MbuBtkI47fF-UJiednr1vVQfkxac361lZ0kNBikMd6fn3nPwHspRJh96taNSeaZ2GVjBcdyuTA7VGQ6UywUEwQD2HWFGzYBzXnJYaLIWmvJdV-gum-xah1ADLoFWqY3qXk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-lg">
+<div class="bg-white/10 backdrop-blur-xl p-md rounded-full glass-shine text-center">
+<h3 class="font-headline-md text-headline-md mb-xs">NEBULA</h3>
+<div class="flex justify-center items-center gap-xs text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">9.2</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="group relative aspect-[2/3] overflow-hidden rounded-full glass-shine bg-surface-container transition-transform hover:-translate-y-2 cursor-pointer">
+<img alt="Cyberpunk Noir" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A vertical cinematic film poster featuring a sleek, chrome-armored figure leaning against a hovering vehicle in a rain-slicked futuristic city. Glowing neon signs in Kanji and English flicker in the background, casting pink and cyan reflections on every surface. The lighting is low-key and high-contrast, creating an immersive, high-velocity noir atmosphere with a modern cinematic finish." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsUKtlJsCuXHrMTqL2ShYyoFjNogB1av6GoQwxhXRZCvNj1Em8jp8tpq2o41BXQw5eB6XjEer_8HJJQx34DK1aADMcYtU0kWDyCSoGi2G0II1IlDbSE6Cc4lSNJpUstoVcbkaQkdpzZXN0D5Jv01gB2qD4pqujjqzFJlDBt-Y2pABQOoz2XCf-_EU_XJnX2ny3WgJyDoqEzrI9Ccxcn3q7b7Jfb4xpPTH0uHI8fhaRM2oT0UW5qs3kBptLCag03OENDtMuD6v-Ue45"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-lg">
+<div class="bg-white/10 backdrop-blur-xl p-md rounded-full glass-shine text-center">
+<h3 class="font-headline-md text-headline-md mb-xs">CHROME</h3>
+<div class="flex justify-center items-center gap-xs text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">8.7</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 3 -->
+<div class="group relative aspect-[2/3] overflow-hidden rounded-full glass-shine bg-surface-container transition-transform hover:-translate-y-2 cursor-pointer">
+<img alt="Historical Epic" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A cinematic poster for a grand historical epic, showing a vast desert army silhouetted against a massive, burning golden sun on the horizon. Dust clouds swirl in the foreground, illuminated by the orange heat. The visual style is warm, grainy, and highly textured, evoking a sense of ancient power and grand-scale cinematic drama with a premium, high-energy aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPzpA1bvmBhsGWl0RUSTj-9NkT49mg1sEDqfxPnuVLiEKwGbtPS0aWuffZ0lxRtXtpGUzRRPVx4NPCOkPB7vHksUopl7TmnCO8iXqzlRsYUYsF5nC62DZCxMpW0VnRSGsES_2RcdlMV-aF_Lz4-NdIEXqgaQY4FBJ60zR_awts7eyOi9IM-nuuE9_5HFUPPT-BF786E0NxuHx1NxcwfNenTtxqOAVEUyQNP4NBGrgqIPAvwXNAlGdNq6jBKtjVtYSLRFaIZ-QgnCUV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-lg">
+<div class="bg-white/10 backdrop-blur-xl p-md rounded-full glass-shine text-center">
+<h3 class="font-headline-md text-headline-md mb-xs">DYNASTY</h3>
+<div class="flex justify-center items-center gap-xs text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">9.5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Movie Card 4 -->
+<div class="group relative aspect-[2/3] overflow-hidden rounded-full glass-shine bg-surface-container transition-transform hover:-translate-y-2 cursor-pointer">
+<img alt="Horror Mystery" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A moody, atmospheric cinematic poster featuring a dense, foggy forest at twilight. A single, small lantern glows in the distance, casting long, eerie shadows through the twisted trees. The color palette is dominated by deep forest greens and cold grays, with the warm orange of the lantern as a focal point. The mood is mysterious, unsettling, and highly cinematic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb1k0apJHD52NZBokuPBmlvshbFkYuVwMDJAMLDh1LinvxoWNvQZu_uxG1LTwS4N_qMN644ro7BJxAbqD-G1Cql2BZPDtZ1K0XVP-luCkn_MG-r5Yen0gHfKnJsIEisolDFZnRHn6blEFXB9F4RSOXUrgnV2GJ5RfmO3cdGPJ7QNCXr-aSwZm1v2KONSfsfJb_WB3oSgnmCuHfeJkmZ362E4ceUVhjO3SEgIuvVifcrsdT89dJX-ta0BByztDwzKo-PQRalRHHL1xo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-lg">
+<div class="bg-white/10 backdrop-blur-xl p-md rounded-full glass-shine text-center">
+<h3 class="font-headline-md text-headline-md mb-xs">WHISPER</h3>
+<div class="flex justify-center items-center gap-xs text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold">8.4</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Section -->
+<section class="py-xl px-margin bg-surface-container-low">
+<h2 class="font-headline-lg text-headline-lg mb-xl text-center">WHY CINEVENT?</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-gutter h-[800px]">
+<div class="md:col-span-2 md:row-span-1 rounded-full glass-shine bg-primary-container p-lg flex items-center justify-center text-on-primary-container relative overflow-hidden group">
+<div class="absolute inset-0 opacity-10 group-hover:scale-110 transition-transform">
+<img alt="Crowd" class="w-full h-full object-cover" data-alt="A high-angle shot of a large, ecstatic crowd in a dark theater, their faces illuminated by the bright, flickering light of a cinema screen. The scene is filled with energy, motion blur, and a sense of collective excitement. Warm orange light spills over the silhouettes in the foreground, creating a powerful feeling of community and shared experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuiAB5ch2bw3rZZTAXjGG9TqSLxrFu-2V1_kOdy3-zrTErQ9RI2d_PCVdd9poHWNO65j7HH0r2qiMSl0O4bOlTMJi4NcHQ_sa6BUIYYjFyBDABaH2h6ZlZPRSRjaOQo_1a68HIZxz3SJW3uG6gMq2EuWcfPJtfUu0Grkk3UK67xdF2XtsL99F6dd2iWDeH06msNE1obEwQD9SZiSpX-2xCmIwFratxwmEuIOuq3BdLWasRxVyOAs6iYnvtq1BjfVU78yQYHqK5wRQx"/>
+</div>
+<div class="relative z-10 text-center">
+<h3 class="font-display-lg-mobile text-display-lg-mobile mb-base">GLOBAL MOVEMENT</h3>
+<p class="font-body-lg text-body-lg max-w-lg">Connect with millions of cinema enthusiasts worldwide and share your passion for the big screen.</p>
+</div>
+</div>
+<div class="md:col-span-1 md:row-span-2 rounded-full glass-shine bg-surface/20 backdrop-blur-3xl p-lg flex flex-col justify-between border border-white/10 group">
+<div class="flex flex-col gap-base">
+<span class="material-symbols-outlined text-6xl text-primary-container">auto_awesome</span>
+<h3 class="font-headline-lg text-headline-lg">AI CURATION</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Our advanced neural networks analyze your emotional response to films to suggest the perfect next watch.</p>
+</div>
+<div class="w-full h-48 rounded-full overflow-hidden border border-white/20">
+<img alt="AI Neural" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" data-alt="A sophisticated 3D visualization of a neural network or digital brain pulsing with orange light against a deep black background. Thousands of glowing data points connect with fine, crystalline lines, creating a sense of advanced technology and complex intelligence. The style is ultra-modern, high-contrast, and perfectly aligned with a premium digital streaming platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByva3NgLRXegpmhC3onQD0H_audQ3e8uIP-nT4Z2XnUDyySpLdXUs86EKeniwaxEu_oQJ0JaEi9BzeSU1j7bg16hrMG9RrbV3HLPSRYfPOBL2J3ye-nxHLTeaYpezmvbrm2tOg8UW8RkdPYFszMx3lZsF6FlVAZmXeax2DOZ_qfAFMRe9lPxm7k59aN9arYgUZirElR9kurKCQ-wjDQRI0dnTg_wQbU1oK1ImTVSvwfQxqvZAbl8g8cX-zgy8LHFkhuGFovbtnYij3"/>
+</div>
+</div>
+<div class="md:col-span-1 md:row-span-1 rounded-full glass-shine bg-tertiary-container p-lg flex flex-col justify-center items-center text-on-tertiary-container">
+<span class="material-symbols-outlined text-5xl mb-base">verified</span>
+<h3 class="font-headline-md text-headline-md">EXCLUSIVES</h3>
+<p class="text-center font-label-sm text-label-sm uppercase tracking-widest mt-base">Only on Cinevent</p>
+</div>
+<div class="md:col-span-1 md:row-span-1 rounded-full glass-shine bg-surface/20 backdrop-blur-2xl p-lg flex items-center justify-center border border-white/10 group overflow-hidden">
+<div class="text-center">
+<h4 class="font-display-lg-mobile text-display-lg-mobile text-primary-container">4K+</h4>
+<p class="font-label-sm text-label-sm uppercase">Curated Films</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin flex flex-col md:flex-row justify-between items-center gap-base bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col items-center md:items-start gap-xs">
+<span class="font-display-lg-mobile text-display-lg-mobile text-on-surface">CINEVENT</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">© 2024 CINEVENT. ALL RIGHTS RESERVED.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-widest" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-widest" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-widest" href="#">Help Center</a>
+<a class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors uppercase tracking-widest" href="#">Contact Us</a>
+</div>
+<div class="flex gap-base">
+<div class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center hover:bg-primary hover:text-on-primary transition-all cursor-pointer">
+<span class="material-symbols-outlined">alternate_email</span>
+</div>
+</div>
+</footer>
+</body></html>

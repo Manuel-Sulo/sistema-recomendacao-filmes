@@ -1,0 +1,171 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterLink, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterLink, TranslateModule],
+  template: `
+    <div class="auth-page">
+      <div class="auth-bg"></div>
+      <div class="auth-content animate-fade-up">
+        <!-- Branding -->
+        <div class="auth-branding">
+          <img src="assets/images/logo.png" alt="Sulo Movies" class="auth-brand-logo">
+          <h1 class="auth-brand-title">SULO MOVIES</h1>
+          <p class="auth-brand-subtitle">{{ 'auth.subtitle' | translate }}</p>
+        </div>
+
+        <!-- Login Card -->
+        <div class="auth-card card-glass">
+          <form (ngSubmit)="onSubmit()" class="auth-form">
+            <div class="form-group">
+              <label class="form-label">{{ 'auth.email' | translate }}</label>
+              <input
+                type="email"
+                class="input"
+                [(ngModel)]="email"
+                name="email"
+                required
+                [placeholder]="'auth.emailPlaceholder' | translate"
+                autocomplete="email">
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label">{{ 'auth.password' | translate }}</label>
+                <a routerLink="/auth/forgot-password" class="form-link">{{ 'auth.forgotPassword' | translate }}</a>
+              </div>
+              <input
+                type="password"
+                class="input"
+                [(ngModel)]="password"
+                name="password"
+                required
+                placeholder="••••••••"
+                autocomplete="current-password">
+            </div>
+
+            <div *ngIf="error" class="error-banner animate-fade-in">
+              <span class="error-icon">⚠</span>
+              <span>{{ error }}</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login" [disabled]="loading">
+              <span *ngIf="!loading">{{ 'auth.login' | translate }}</span>
+              <span *ngIf="loading" class="spinner"></span>
+            </button>
+
+            <p class="auth-footer-text">
+              {{ 'auth.noAccount' | translate }}
+              <a routerLink="/auth/register" class="auth-footer-link">{{ 'auth.register' | translate }}</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .auth-page {
+      min-height: 100vh; display: flex; align-items: center;
+      justify-content: center; position: relative; padding: var(--space-6);
+    }
+    .auth-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background: var(--bg-primary);
+      background-image:
+        radial-gradient(ellipse at 30% 20%, rgba(249, 115, 22, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(255, 182, 144, 0.05) 0%, transparent 50%);
+    }
+    .auth-content { max-width: 440px; width: 100%; }
+    .auth-branding { text-align: center; margin-bottom: var(--space-8); }
+    .auth-brand-logo { height: 50px; margin: 0 auto var(--space-4); }
+    .auth-brand-title {
+      font-size: 36px; font-weight: 900; letter-spacing: -0.03em;
+      color: var(--accent); font-family: var(--font-display);
+    }
+    .auth-brand-subtitle {
+      font-size: 14px; color: var(--text-muted); margin-top: var(--space-2);
+      letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500;
+    }
+    .auth-card { padding: var(--space-10); border-radius: var(--radius-xl); }
+    .auth-form { display: flex; flex-direction: column; gap: var(--space-5); }
+    .form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+    .form-label {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .form-label-row {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .form-link {
+      font-size: 11px; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      &:hover { text-decoration: underline; opacity: 1; }
+    }
+    .error-banner {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4); font-size: 13px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: var(--radius-md); color: var(--error); font-weight: 500;
+    }
+    .error-icon { font-size: 16px; }
+    .btn-login {
+      height: 56px; font-size: 16px; font-weight: 800;
+      letter-spacing: 0.03em; margin-top: var(--space-2);
+    }
+    .spinner {
+      width: 22px; height: 22px; border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .auth-footer-text {
+      text-align: center; font-size: 14px; color: var(--text-muted);
+      margin-top: var(--space-2);
+    }
+    .auth-footer-link { font-weight: 700; color: var(--accent); }
+  `],
+})
+export class LoginComponent {
+  email = ''; password = ''; error = ''; loading = false;
+
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private toast: ToastService
+  ) {}
+
+  onSubmit(): void {
+    if (!this.email || !this.password) {
+      this.error = 'Preencha todos os campos';
+      this.toast.warning('Preencha o email e a palavra-passe');
+      return;
+    }
+    this.loading = true; this.error = '';
+    this.auth.login(this.email, this.password).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+        this.toast.success('Login efetuado com sucesso! 🎬');
+        const user = res?.data?.user || res?.user;
+        if (user && !user.onboarded) {
+          this.router.navigate(['/onboarding']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+        const msg = err.error?.message || 'Email ou palavra-passe incorretos';
+        this.error = msg;
+        this.toast.error(msg);
+      },
+    });
+  }
+}

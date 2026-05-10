@@ -1,0 +1,89 @@
+{
+  "nav": {
+    "home": "Início",
+    "search": "Pesquisar",
+    "favorites": "Favoritos",
+    "watchlist": "Para Ver",
+    "ratings": "Avaliações",
+    "history": "Histórico",
+    "reports": "Relatórios",
+    "settings": "Definições",
+    "admin": "Admin",
+    "logout": "Sair",
+    "login": "Entrar"
+  },
+  "auth": {
+    "login": "Entrar",
+    "register": "Criar Conta",
+    "email": "Email",
+    "password": "Password",
+    "name": "Nome",
+    "forgotPassword": "Esqueceu a password?",
+    "resetPassword": "Redefinir Password",
+    "hasAccount": "Já tem conta?",
+    "noAccount": "Não tem conta?",
+    "loginSuccess": "Login efetuado com sucesso!",
+    "registerSuccess": "Conta criada com sucesso!",
+    "logoutSuccess": "Sessão terminada"
+  },
+  "movies": {
+    "trending": "Em Alta",
+    "popular": "Populares",
+    "topRated": "Melhor Avaliados",
+    "recommended": "Recomendados",
+    "similar": "Filmes Semelhantes",
+    "details": "Ver Detalhes",
+    "search": "Pesquisar filmes...",
+    "noResults": "Nenhum resultado encontrado",
+    "cast": "Elenco",
+    "overview": "Sinopse",
+    "releaseDate": "Data de Lançamento",
+    "runtime": "Duração",
+    "genres": "Géneros",
+    "rating": "Avaliação",
+    "votes": "votos"
+  },
+  "actions": {
+    "addFavorite": "Adicionar Favorito",
+    "removeFavorite": "Remover Favorito",
+    "addWatchlist": "Adicionar à Lista",
+    "removeWatchlist": "Remover da Lista",
+    "markWatched": "Marcar Visto",
+    "rate": "Avaliar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Voltar",
+    "retry": "Tentar novamente",
+    "export": "Exportar"
+  },
+  "settings": {
+    "title": "Definições",
+    "appearance": "Aparência",
+    "language": "Idioma",
+    "theme": "Tema",
+    "dark": "Escuro",
+    "light": "Claro",
+    "profile": "Perfil",
+    "changePassword": "Alterar Password",
+    "saved": "Definições guardadas!",
+    "currentPassword": "Password Atual",
+    "newPassword": "Nova Password"
+  },
+  "onboarding": {
+    "title": "Escolha os seus géneros favoritos",
+    "subtitle": "Selecione pelo menos 3 para personalizarmos as recomendações",
+    "continue": "Continuar"
+  },
+  "export": {
+    "title": "Exportar Dados"
+  },
+  "common": {
+    "loading": "A carregar...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "noData": "Sem dados",
+    "all": "Todos"
+  }
+}

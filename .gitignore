@@ -1,0 +1,12 @@
+# .gitignore
+backend/.env
+backend/storage/cache/*
+backend/storage/exports/*
+backend/storage/logs/*
+backend/vendor/
+!backend/storage/cache/.gitkeep
+!backend/storage/exports/.gitkeep
+!backend/storage/logs/.gitkeep
+node_modules/
+dist/
+.angular/

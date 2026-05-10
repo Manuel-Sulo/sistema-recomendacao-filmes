@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "search": "Cerca",
+    "favorites": "Preferiti",
+    "watchlist": "Da vedere",
+    "ratings": "Valutazioni",
+    "history": "Cronologia",
+    "reports": "Report",
+    "settings": "Impostazioni",
+    "admin": "Admin",
+    "logout": "Esci",
+    "login": "Accedi"
+  },
+  "auth": {
+    "login": "Accedi",
+    "register": "Crea account",
+    "email": "Email",
+    "password": "Password",
+    "name": "Nome",
+    "forgotPassword": "Password dimenticata?",
+    "resetPassword": "Reimposta password",
+    "hasAccount": "Hai già un account?",
+    "noAccount": "Non hai un account?",
+    "loginSuccess": "Accesso riuscito!",
+    "registerSuccess": "Account creato!",
+    "logoutSuccess": "Disconnesso"
+  },
+  "movies": {
+    "trending": "Di tendenza",
+    "popular": "Popolari",
+    "topRated": "Più votati",
+    "recommended": "Consigliati",
+    "similar": "Film simili",
+    "details": "Dettagli",
+    "search": "Cerca film...",
+    "noResults": "Nessun risultato",
+    "cast": "Cast",
+    "overview": "Trama",
+    "releaseDate": "Data di uscita",
+    "runtime": "Durata",
+    "genres": "Generi",
+    "rating": "Voto",
+    "votes": "voti"
+  },
+  "actions": {
+    "addFavorite": "Aggiungi ai preferiti",
+    "removeFavorite": "Rimuovi dai preferiti",
+    "addWatchlist": "Aggiungi alla lista",
+    "removeWatchlist": "Rimuovi dalla lista",
+    "markWatched": "Segna come visto",
+    "rate": "Valuta",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "back": "Indietro",
+    "retry": "Riprova",
+    "export": "Esporta"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "appearance": "Aspetto",
+    "language": "Lingua",
+    "theme": "Tema",
+    "dark": "Scuro",
+    "light": "Chiaro",
+    "profile": "Profilo",
+    "changePassword": "Cambia password",
+    "saved": "Impostazioni salvate!",
+    "currentPassword": "Password attuale",
+    "newPassword": "Nuova password"
+  },
+  "onboarding": {
+    "title": "Scegli i tuoi generi preferiti",
+    "subtitle": "Seleziona almeno 3 per personalizzare",
+    "continue": "Continua"
+  },
+  "export": { "title": "Esporta dati" },
+  "common": { "loading": "Caricamento...", "error": "Errore", "success": "Successo", "noData": "Nessun dato", "all": "Tutti" }
+}

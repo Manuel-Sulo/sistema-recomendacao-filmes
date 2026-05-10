@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "favorites": "Favoris",
+    "watchlist": "À voir",
+    "ratings": "Évaluations",
+    "history": "Historique",
+    "reports": "Rapports",
+    "settings": "Paramètres",
+    "admin": "Admin",
+    "logout": "Déconnexion",
+    "login": "Connexion"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "name": "Nom",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser",
+    "hasAccount": "Vous avez déjà un compte ?",
+    "noAccount": "Pas de compte ?",
+    "loginSuccess": "Connexion réussie !",
+    "registerSuccess": "Compte créé !",
+    "logoutSuccess": "Déconnecté"
+  },
+  "movies": {
+    "trending": "Tendances",
+    "popular": "Populaires",
+    "topRated": "Mieux notés",
+    "recommended": "Recommandés",
+    "similar": "Films similaires",
+    "details": "Voir détails",
+    "search": "Rechercher des films...",
+    "noResults": "Aucun résultat",
+    "cast": "Distribution",
+    "overview": "Synopsis",
+    "releaseDate": "Date de sortie",
+    "runtime": "Durée",
+    "genres": "Genres",
+    "rating": "Note",
+    "votes": "votes"
+  },
+  "actions": {
+    "addFavorite": "Ajouter aux favoris",
+    "removeFavorite": "Retirer des favoris",
+    "addWatchlist": "Ajouter à la liste",
+    "removeWatchlist": "Retirer de la liste",
+    "markWatched": "Marquer vu",
+    "rate": "Évaluer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "retry": "Réessayer",
+    "export": "Exporter"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "theme": "Thème",
+    "dark": "Sombre",
+    "light": "Clair",
+    "profile": "Profil",
+    "changePassword": "Changer le mot de passe",
+    "saved": "Paramètres enregistrés !",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe"
+  },
+  "onboarding": {
+    "title": "Choisissez vos genres préférés",
+    "subtitle": "Sélectionnez au moins 3 pour personnaliser",
+    "continue": "Continuer"
+  },
+  "export": { "title": "Exporter les données" },
+  "common": { "loading": "Chargement...", "error": "Erreur", "success": "Succès", "noData": "Aucune donnée", "all": "Tous" }
+}

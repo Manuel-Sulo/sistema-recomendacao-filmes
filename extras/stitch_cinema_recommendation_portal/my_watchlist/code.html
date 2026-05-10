@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#f6ded3",
+                    "surface-container": "#291d16",
+                    "surface-tint": "#ffb690",
+                    "surface-container-low": "#251913",
+                    "surface-container-lowest": "#160c06",
+                    "on-tertiary-fixed": "#1a1e00",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#d8e2ff",
+                    "surface-container-high": "#352720",
+                    "tertiary-fixed-dim": "#bcd200",
+                    "background": "#1c110b",
+                    "on-primary-fixed": "#341100",
+                    "on-surface-variant": "#e0c0b1",
+                    "secondary": "#adc6ff",
+                    "outline": "#a78b7d",
+                    "on-error-container": "#ffdad6",
+                    "inverse-primary": "#9d4300",
+                    "on-secondary-fixed-variant": "#004395",
+                    "inverse-on-surface": "#3c2d26",
+                    "secondary-container": "#0566d9",
+                    "on-primary-container": "#582200",
+                    "tertiary": "#bcd200",
+                    "surface-bright": "#45362f",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "primary-fixed-dim": "#ffb690",
+                    "on-background": "#f6ded3",
+                    "inverse-surface": "#f6ded3",
+                    "on-secondary-fixed": "#001a42",
+                    "outline-variant": "#584237",
+                    "on-primary": "#552100",
+                    "on-tertiary-fixed-variant": "#434b00",
+                    "tertiary-fixed": "#d7ef00",
+                    "tertiary-container": "#92a300",
+                    "on-tertiary-container": "#2f3600",
+                    "on-tertiary": "#2d3400",
+                    "error-container": "#93000a",
+                    "primary": "#ffb690",
+                    "on-primary-fixed-variant": "#783200",
+                    "surface-container-highest": "#40322a",
+                    "surface-dim": "#1c110b",
+                    "on-secondary-container": "#e6ecff",
+                    "primary-fixed": "#ffdbca",
+                    "surface-variant": "#40322a",
+                    "on-secondary": "#002e6a",
+                    "surface": "#1c110b",
+                    "primary-container": "#f97316",
+                    "error": "#ffb4ab"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "60px",
+                    "base": "12px",
+                    "gutter": "24px",
+                    "sm": "24px",
+                    "xl": "96px",
+                    "margin": "48px",
+                    "md": "36px",
+                    "xs": "12px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-xl": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["80px", {"lineHeight": "88px", "letterSpacing": "-0.03em", "fontWeight": "900"}],
+                    "display-lg-mobile": ["48px", {"lineHeight": "52px", "fontWeight": "900"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                    "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "800"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "display-xl": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "900"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #1c110b;
+            color: #f6ded3;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px);
+            border: 0.8px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(10, 10, 12, 0.8), inset 0 0 0 1.6px #2A2A30;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-margin py-base bg-surface/40 backdrop-blur-xl border-b border-white/20 shadow-2xl shadow-background">
+<div class="flex items-center gap-md">
+<span class="font-display-lg-mobile text-display-lg-mobile font-black tracking-tighter text-primary-container">CINEVENT</span>
+<div class="hidden md:flex gap-gutter items-center">
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300" href="#">Trending</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300" href="#">Categories</a>
+<a class="text-primary-container font-bold border-b-2 border-primary-container hover:text-primary transition-all duration-300" href="#">Watchlist</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-all duration-300" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-gutter">
+<div class="relative hidden lg:block">
+<input class="bg-surface-container-highest/30 border border-outline-variant px-sm py-xs rounded-full w-64 focus:outline-none focus:border-primary-container transition-all" placeholder="Search movies..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+</div>
+<button class="bg-primary-container text-on-primary-container px-sm py-xs rounded-full font-bold hover:scale-105 active:scale-95 transition-all">Join the Movement</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary-container overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A high-quality 3D rendered avatar of a stylish young male cinephile with short dark hair and modern glasses, set against a vibrant orange and deep black cinematic gradient background. The character wears a sleek black leather jacket, reflecting a premium and creative aesthetic consistent with a high-end streaming service user profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5mTHiC_u9soGaYRm80i7Nil7grAk2wxKb_eEc6VdsdUfAaEtdRm6qS9n9Ad0E_jfnuOZHlIol7jh0YLfz_TfL2W_WrThNZEXL5IDNl-5od_A-wBC88uVEhpGhGfdkYfOodw0Y57PaUGrq93t4w-IjmEqL5a3PbRSJfJo43p6Jn1BF5xcJ8v1i-fKmrkNoTGc3SUYwwEa__bIzIVdhtG3CXySUq-IQ7gDuM6O8IBsmblAM-l_MmwCTlAltFlwzRS0eODNDO6Y45OPC"/>
+</div>
+</div>
+</nav>
+<main class="pt-xl min-h-screen">
+<!-- Profile Header -->
+<header class="px-margin pt-xl pb-lg flex flex-col md:flex-row items-center md:items-end gap-md">
+<div class="relative">
+<div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-primary-container p-1 shadow-2xl">
+<img class="w-full h-full rounded-full object-cover bg-surface-container" data-alt="A detailed digital illustration of a character avatar for a premium film platform, featuring a cool and sophisticated male with modern accessories. The lighting is dramatic and moody, using the primary orange and surface black colors of the brand to create depth and a cinematic atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgA991w8tK6wAJmDiQd5ZTMzHeE_kvluDcofpxjDu2En9Zc2-6kQ6uY2ffXGWY88src0BSJnQJFIEZa955DSpdxpiu2N-yreCwGIPhdYSq8CMVOJjRM7E6JF9eQTQKlZquQh3Tsp27KlB3eBHDB8A1M2pJgwCvgsrULO2WTFKuCu45ryLFNgJoQa0mTsv4rpUlso_3_VWZvB6mcBQmP0j8Nih5dS98XBF1wUVmF5SHm-UbiKPXUgBY-ruzW5bYGA1LFlWFFNHUe19T"/>
+</div>
+<div class="absolute bottom-2 right-2 bg-primary-container p-2 rounded-full border-4 border-background">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">edit</span>
+</div>
+</div>
+<div class="flex-1 text-center md:text-left mb-base">
+<div class="flex items-center justify-center md:justify-start gap-xs">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">Alex Rivera</h1>
+<span class="bg-tertiary-container text-on-tertiary-container px-xs py-1 rounded-full text-label-sm">PRO MOVER</span>
+</div>
+<p class="text-on-surface-variant font-body-lg mt-2">Curating the future of cinema, one frame at a time. | 124 Movies Watched</p>
+</div>
+<div class="flex gap-base">
+<div class="glass-card px-md py-sm rounded-xl text-center">
+<span class="block font-headline-md text-primary-container">42</span>
+<span class="text-label-sm uppercase tracking-widest text-on-surface-variant">Following</span>
+</div>
+<div class="glass-card px-md py-sm rounded-xl text-center">
+<span class="block font-headline-md text-primary-container">892</span>
+<span class="text-label-sm uppercase tracking-widest text-on-surface-variant">Karma</span>
+</div>
+</div>
+</header>
+<!-- Content Tabs -->
+<section class="px-margin sticky top-[80px] z-40 bg-background/80 backdrop-blur-md py-base">
+<div class="flex gap-gutter border-b border-outline-variant/30 overflow-x-auto no-scrollbar">
+<button class="pb-base px-2 text-primary-container border-b-2 border-primary-container font-bold whitespace-nowrap">My Watchlist</button>
+<button class="pb-base px-2 text-on-surface-variant hover:text-on-surface font-medium whitespace-nowrap transition-colors">Recently Viewed</button>
+<button class="pb-base px-2 text-on-surface-variant hover:text-on-surface font-medium whitespace-nowrap transition-colors">Recommendations</button>
+<button class="pb-base px-2 text-on-surface-variant hover:text-on-surface font-medium whitespace-nowrap transition-colors">Reviews</button>
+</div>
+</section>
+<!-- Movie Grid -->
+<section class="px-margin py-lg">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-gutter">
+<!-- Movie Card 1 -->
+<div class="group relative aspect-[2/3] rounded-xl overflow-hidden glass-card cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A dramatic cinematic movie poster shot of a neon-drenched futuristic city street at night. The lighting is a high-contrast blend of electric blue and vibrant orange, reflecting off rainy pavement. A mysterious silhouette of a person in a long coat stands in the center, creating a sense of suspense and noir atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWIx1OgPP2lHwCZsd_MutFNtpgNeil-jDQihmQn99vZgvt7Q3LQW2zRlsr1s2JjhRAj1lGng_ECSj3oOEgbRMzW6VO8uzUJ1afYRbnPSCIRcT6ReUhSGVeiWs55OCHQjrMqJf9srbnt4EiTFh6-3jDVoeLsBK_TgwSexf7CqR0seXcAsMLs537jiAiNGgsxEuzGx2zPTd-oirXSJbhXHQt5kuCxLZXyNeiKnYdmz3eq-GOChWxlch0p-O6bcoTx0O4qwNCTecSns5f"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-0 left-0 w-full p-sm translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">SCI-FI</span>
+<h3 class="font-headline-md text-on-surface text-[18px] leading-tight">NEON DRIFT</h3>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 2 -->
+<div class="group relative aspect-[2/3] rounded-xl overflow-hidden glass-card cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A stunning high-concept film still featuring an ethereal landscape of floating monolithic stones under a lavender and amber sky. The aesthetic is surreal and cinematic, with soft, diffused lighting and a color palette that emphasizes deep purples and glowing oranges, evoking a sense of wonder and epic discovery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABl-qlkYjk9lh3o3c9gJhFMYgmYmxgGLQwNiMbtukQkeoJBEPayDLxM2S_TDt4LR27N9VJRwkSoTN3RXT-soXDQ6GIOhnvlGA763Bo9fHBiF7dtx66f0P5dxtAV3Z3GhwkWLxTSwE9sq5PJzXAoNCDnaGXkFnwZqpjFWBbf-aSqHb1tYIhmOE5TYkmTh0NhAe0WwLaEg8q5Kv8NxskdeIJf95mr6m4iRaDOJ5aEK4AI4A3HoYjA4HtHYnoIPZVtqzgZzP8n0P5wSGy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-0 left-0 w-full p-sm translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">FANTASY</span>
+<h3 class="font-headline-md text-on-surface text-[18px] leading-tight">ETHEREUM</h3>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 3 -->
+<div class="group relative aspect-[2/3] rounded-xl overflow-hidden glass-card cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A minimalist cinematic composition showing a single vintage film projector in a dimly lit, dusty warehouse space. A sharp beam of light cuts through the darkness, illuminating swirling dust particles. The style is moody and nostalgic, with deep blacks and warm golden highlights, capturing the soul of classic cinema." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNVem0ru2_7EbPt84RJh9fdZT6PGFW1phA5itgERfp_pQM4uRr-_WvBFNLFgHJEFYoQTYIhi73orGkgJ61tZHmu9MQMXt5KCRAnehDokW130LZkvYfTxXmb4BircUBvHaMQqMTsDW8Gr8i0whJ1jI3BOcTAm2SYQNMPHpkoUrWA_EADD1FBP2E6lKXYdcvqadLCN6_t7CYVRGwHVmvh0-I8r5m7k0MVtI82yov0RVZpClc2EG8Dz21hwg212Ocv4eg4g4UuNRLX-5s"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-0 left-0 w-full p-sm translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">DOCUMENTARY</span>
+<h3 class="font-headline-md text-on-surface text-[18px] leading-tight">THE LAST REEL</h3>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 4 -->
+<div class="group relative aspect-[2/3] rounded-xl overflow-hidden glass-card cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A fast-paced action movie scene featuring a high-speed car chase on a coastal highway at sunset. The lighting is warm and intense, with the orange sun reflecting off the sleek metallic surfaces of the vehicles. Motion blur creates a sense of extreme velocity and high-stakes excitement." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKT4Iwyrvcs8Qb2UZBLkX0xfNwc_2etMfhd18jnr1qdWWHVyTms7mZZOFoPqFKl1TK0RgikisHs39PsVq9QmycLtd37462DvDJ3fEiOCaxv0_F8bhS0I35uBdjekZnD3QQ45SME-r1V5LLHXMwhTJEQsroQ1iyK19LpTsb6eUeaf29RBubb6QTAHX49WuWUnxDW4R4Y0KgBOeDC2MMt55GBNxDekpE9l_iqNjh1GyHsZTNTC2fXsciWugMsaQT0St7xHY5m6hSG-v1"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-0 left-0 w-full p-sm translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">ACTION</span>
+<h3 class="font-headline-md text-on-surface text-[18px] leading-tight">VELOCITY</h3>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Movie Card 5 -->
+<div class="group relative aspect-[2/3] rounded-xl overflow-hidden glass-card cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A tender and intimate film still of two people silhouetted against a massive, glowing moon in a dark forest clearing. The mood is romantic and quiet, with deep teal shadows and a soft, warm moonlight glow that creates a magical, storybook atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAaVfp4Osq8OF6e5HwEgOl14ivlmwZti1dePVoblKDLw8cOgp04RLGAcO7j4tyNF1szFzlA5i_AVIZOEe3OFCqNi0mj8ga-GxXDGyRnXhHfXTKAEqC4YvlLqKFnISdsIAdi_mGBDP-SbWcFUEfIb1QgWgD8omoP_hfVaCgMkJb85EAhbrS1cgcj_GIefR1c6t7qUOQoY7psVTovr3UUvG7sp5IAfEoaJu8QmhFbtvX1EU8KlLAR-_1gVxNQSaQs9QW1-__O1u-CGFw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-0 left-0 w-full p-sm translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-0.5 rounded-full mb-2 inline-block">ROMANCE</span>
+<h3 class="font-headline-md text-on-surface text-[18px] leading-tight">LUNAR TIDE</h3>
+</div>
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Suggested Collections (Bento Style) -->
+<section class="px-margin py-xl">
+<h2 class="font-headline-lg text-headline-lg mb-lg">Recommended for You</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-gutter h-[600px]">
+<div class="md:col-span-2 md:row-span-2 relative rounded-xl overflow-hidden glass-card group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A gritty and immersive horror-themed digital painting of an abandoned gothic mansion under a violent lightning storm. The color palette is dominated by deep blacks, dark greys, and flashes of stark electric white and primary orange, creating a high-energy and terrifying visual experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANKrIiU7bGxn0r3oWXLbBtsUkpvDT6u2hws8E5xd3bSVK6quLxCP18dqy-Hi4708V7SpTJSeZtRamIAkF792AicoaIRhucFvePC99-m1daQ9u6V4FbpFZWhgCG7DBREX4wXZCpvq6vd3mXVpgnAtP8nHpXiiImTlWL90nNZNYJNpCr48RoneqMcuvcbrgTBrR-4C-02yTjhrg5etNGINa5m5LMYxUROcoH7bnPhLSP30nk1yhx5KCsfIAgVjXVyAGLRZjTZGORvuWB"/>
+<div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+<div class="absolute bottom-0 left-0 p-lg">
+<h3 class="font-display-lg-mobile text-display-lg-mobile text-white leading-tight">NIGHTMARE REELS</h3>
+<p class="text-on-surface-variant font-body-lg">A curated collection of psychological thrillers.</p>
+<button class="mt-sm bg-white text-black px-md py-xs rounded-full font-bold hover:bg-primary-container transition-colors">Explore Collection</button>
+</div>
+</div>
+<div class="md:col-span-2 relative rounded-xl overflow-hidden glass-card group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A majestic landscape of sand dunes in a vast desert during the blue hour, with the first stars appearing in the deep indigo sky. The lighting is soft and otherworldly, highlighting the flowing curves of the dunes with subtle orange accents, evoking a sense of epic cinematic scale." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASttgbSOCqoLBNgrMTS3gsXCdwiCFqiTr_ZXdxRfqZ6jNcdH47UMmCh0BEWvAfTBnKP0rznE98URBbEn4BP6WFklFh5SZPmPqXW1pOq98zOpFVBZNO3EFcdvqttfCbv9B6ojeSaK0TwVx7S9AQEFimCmAuBAii_BwdOw29OFW9NykY-tKFBEEO43EmoY-pr9x-BQIsed50jCu6kUFuaVh3N7TEr5q3qc1BAv6R8qL5ncpNZmzxV0S3T_iN68H27TGrbCAB-lgzMkK6"/>
+<div class="absolute inset-0 bg-black/30"></div>
+<div class="absolute bottom-0 left-0 p-md">
+<h3 class="font-headline-md text-on-surface">EPIC LANDSCAPES</h3>
+</div>
+</div>
+<div class="md:col-span-1 relative rounded-xl overflow-hidden glass-card group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A vibrant and energetic close-up of a high-tech robotic interface, with glowing orange circuits and blue holographic displays. The style is ultra-modern and tech-focused, representing the cutting edge of digital cinema and movement-based technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRrAZHH-xjkCLouEih-HM6PbBhTHo5dpJGhHs0-G33N2W7Pr-sUDc3TJuEL_5WGEqhlDsmt4dq52TmpfiSxxEjBhBYos8wXyHYOhjVbtwn9jbI8Y830uDYCsK69zWY1adfTcb_YEB6x_IJLGxkfCMc237VGm47qrjpWxyp8gqRciQy_Tj9SjXWHwSgrowMlQp-qbcIecdy703AJHC1__stcK3wfQe_2-mSry7-PRto2A8FcD8FB10L4Jxj45EAbP2uaIMXYnT8n5j7"/>
+<div class="absolute inset-0 bg-black/30"></div>
+<div class="absolute bottom-0 left-0 p-md">
+<h3 class="font-headline-md text-on-surface text-[20px]">TECH NOIR</h3>
+</div>
+</div>
+<div class="md:col-span-1 relative rounded-xl overflow-hidden glass-card group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An artistic and colorful film production set with professional cameras, lights, and crew members in silhouette. The background is a wash of vibrant neon colors, creating a sense of high-energy creative movement and the magic of filmmaking." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7-J1I92ISXGFJJi1D6A2aoruOgyTXMzxfHjObXSrLOUKSEL2ri-W5S7RdlJpdOocj9UcvwVRXTwbh1VBr3ENln3suEBEDU-w-Lk6jM7sy9kuNi1rq6k2ahgIWDGOK2dYnCX_I3-WguPI5c67pzUSmTd5VhTtP5n-PMMCATDi9w4r8yvDkNhxmNPb9UE8kLRKfa1QUhpt0jsYH2e-MXO6OQaLBpBhlfmdtyr1tRrZkXhgyoGAlSrSeFNGUQb4Y8NfH7k1UHxk3pWZX"/>
+<div class="absolute inset-0 bg-black/30"></div>
+<div class="absolute bottom-0 left-0 p-md">
+<h3 class="font-headline-md text-on-surface text-[20px]">BEHIND SCENES</h3>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin flex flex-col md:flex-row justify-between items-center gap-base bg-surface-container-lowest border-t border-outline-variant">
+<div>
+<span class="font-display-lg-mobile text-display-lg-mobile text-on-surface">CINEVENT</span>
+<p class="text-on-surface-variant text-label-sm mt-2">JOIN THE MOVEMENT. WATCH THE FUTURE.</p>
+</div>
+<div class="flex gap-gutter">
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Help Center</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+<div class="text-on-surface-variant font-label-sm">
+            © 2024 CINEVENT. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+<!-- Bottom Nav (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-surface/40 backdrop-blur-xl border-t border-white/20 px-margin py-base flex justify-between items-center">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">HOME</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold">EXPLORE</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">bookmarks</span>
+<span class="text-[10px] font-bold">MY LIST</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">PROFILE</span>
+</button>
+</div>
+</body></html>

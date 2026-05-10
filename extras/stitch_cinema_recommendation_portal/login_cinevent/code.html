@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1c110b;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 0.8px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(10, 10, 12, 0.8), inset 0 0 0 1.6px #2a2a30;
+        }
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1.6px solid #2a2a30;
+            transition: border-color 0.3s ease;
+        }
+        .glass-input:focus {
+            outline: none;
+            border-color: #f97316;
+        }
+        .glass-button {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 0.8px solid rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 0 1.6px #2a2a30;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#434b00",
+                      "outline": "#a78b7d",
+                      "error": "#ffb4ab",
+                      "primary-container": "#f97316",
+                      "surface-container-high": "#352720",
+                      "on-secondary-container": "#e6ecff",
+                      "surface-bright": "#45362f",
+                      "surface": "#1c110b",
+                      "on-tertiary-fixed": "#1a1e00",
+                      "on-background": "#f6ded3",
+                      "inverse-primary": "#9d4300",
+                      "tertiary-container": "#92a300",
+                      "surface-dim": "#1c110b",
+                      "secondary-container": "#0566d9",
+                      "outline-variant": "#584237",
+                      "on-surface": "#f6ded3",
+                      "on-error": "#690005",
+                      "error-container": "#93000a",
+                      "background": "#1c110b",
+                      "tertiary": "#bcd200",
+                      "secondary-fixed": "#d8e2ff",
+                      "primary-fixed-dim": "#ffb690",
+                      "on-secondary-fixed": "#001a42",
+                      "tertiary-fixed": "#d7ef00",
+                      "on-secondary-fixed-variant": "#004395",
+                      "surface-container": "#291d16",
+                      "on-error-container": "#ffdad6",
+                      "on-tertiary": "#2d3400",
+                      "surface-variant": "#40322a",
+                      "on-surface-variant": "#e0c0b1",
+                      "surface-tint": "#ffb690",
+                      "on-primary-fixed-variant": "#783200",
+                      "surface-container-highest": "#40322a",
+                      "inverse-surface": "#f6ded3",
+                      "inverse-on-surface": "#3c2d26",
+                      "primary-fixed": "#ffdbca",
+                      "on-tertiary-container": "#2f3600",
+                      "on-primary-container": "#582200",
+                      "tertiary-fixed-dim": "#bcd200",
+                      "on-primary-fixed": "#341100",
+                      "on-primary": "#552100",
+                      "surface-container-lowest": "#160c06",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "on-secondary": "#002e6a",
+                      "primary": "#ffb690",
+                      "surface-container-low": "#251913",
+                      "secondary": "#adc6ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "96px",
+                      "sm": "24px",
+                      "margin": "48px",
+                      "gutter": "24px",
+                      "base": "12px",
+                      "xs": "12px",
+                      "md": "36px",
+                      "lg": "60px"
+              },
+              "fontFamily": {
+                      "display-xl": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "display-xl": ["120px", {"lineHeight": "110px", "letterSpacing": "-0.04em", "fontWeight": "900"}],
+                      "display-lg": ["80px", {"lineHeight": "88px", "letterSpacing": "-0.03em", "fontWeight": "900"}],
+                      "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "700"}],
+                      "display-lg-mobile": ["48px", {"lineHeight": "52px", "fontWeight": "900"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "body-lg": ["20px", {"lineHeight": "32px", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "800"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- Cinematic Background Container -->
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="A cinematic, wide-angle shot of a grand, dark theater interior with velvet curtains and subtle golden lighting catching dust motes in the air. The atmosphere is prestigious and moody, utilizing deep shadows and rich textures to create a high-contrast cinematic experience. Vibrant orange and deep brown tones dominate the palette, aligning with the CINEVENT brand identity of movement and cultural discovery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVrjPWwc6hXCTJ-WdaQfuW23SYkRK5GW2msxvEETcNkjDaiQkJsUAJIJjU4cG9SHD6_S6Q-rEvHFjYWTtti0LmAHB6aB1LW8-JmEuSGWNg-9l_Vjsf4rssBF2ZDjrjGzx6AggwM0ecTPQXLAas4SsEJ_A_Z8suG7noDHPGQZV7HQdVHu-Jp1t4uWvN3Scsme1WfqukqFYPNy9EBgXdrC88r2k8m-eaCo9YqKEA9mofEyP1tBGR-s0w9yifu4_Vf6v2o3aUom6Y8l8F"/>
+</div>
+<!-- Main Content Canvas -->
+<main class="relative z-20 flex-grow flex items-center justify-center px-6 py-xl">
+<div class="w-full max-w-[480px]">
+<!-- Branding Header -->
+<div class="text-center mb-md">
+<h1 class="font-display-lg-mobile text-display-lg-mobile font-black tracking-tighter text-primary-container mb-xs">
+                    CINEVENT
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant font-medium">
+                    JOIN THE MOVEMENT
+                </p>
+</div>
+<!-- Login Card -->
+<div class="glass-card p-lg rounded-xl flex flex-col gap-base">
+<form class="flex flex-col gap-sm">
+<div class="flex flex-col gap-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant px-sm">EMAIL OR USERNAME</label>
+<input class="glass-input rounded-full h-[56px] px-sm text-on-surface font-body-md text-body-md placeholder:text-outline-variant" placeholder="Enter your credentials" type="text"/>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="flex justify-between items-center px-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant">PASSWORD</label>
+<a class="font-label-sm text-label-sm text-primary-container hover:underline transition-all" href="#">FORGOT?</a>
+</div>
+<input class="glass-input rounded-full h-[56px] px-sm text-on-surface font-body-md text-body-md placeholder:text-outline-variant" placeholder="••••••••" type="password"/>
+</div>
+<button class="bg-primary-container text-on-primary-container font-headline-md text-[20px] h-[64px] rounded-full mt-base font-extrabold hover:scale-[1.02] active:scale-95 transition-all duration-300" type="submit">
+                        SIGN IN
+                    </button>
+</form>
+<!-- Divider -->
+<div class="flex items-center gap-base py-base">
+<div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">OR CONTINUE WITH</span>
+<div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-base">
+<button class="glass-button h-[56px] rounded-full flex items-center justify-center gap-xs font-label-sm text-label-sm text-on-surface hover:bg-white/10 transition-all duration-300">
+<img alt="Google" class="w-5 h-5 grayscale brightness-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOY_pwAdkcyEZj_u9-oF92g_OvsAu39R1nsVpwmgGDzoQ4bc9qFdskld9K2aR5KHuYXilAjbJDwvzq77Mdcz-PaWILFHeoNFNEMLZEQLVaOKMhEy64jsFmDnPj0ZwQ4g7_N1gpKDtd9KE097FZqicw2cDY_4mgYD9iswEGsHw5EZuo6iPVC4fEoV9ENbqtWbAaxeS1B5ojyIfi_JvJBusefgv3P1i6YWK29sHw-uJccTjwr4BTSCxR6l40tphxhGI-sR2pAuEq9VHY"/>
+                        GOOGLE
+                    </button>
+<button class="glass-button h-[56px] rounded-full flex items-center justify-center gap-xs font-label-sm text-label-sm text-on-surface hover:bg-white/10 transition-all duration-300">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">ios</span>
+                        APPLE
+                    </button>
+</div>
+<div class="text-center mt-sm">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        NEW TO THE MOVEMENT? 
+                        <a class="text-primary-container font-bold hover:underline" href="#">JOIN NOW</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Segment (As mandated by Shared Components) -->
+<footer class="relative z-20 w-full py-xl px-margin flex flex-col md:flex-row justify-between items-center gap-base border-t border-outline-variant bg-surface-container-lowest">
+<div class="font-display-lg-mobile text-[24px] font-black tracking-tighter text-on-surface">CINEVENT</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Help Center</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">
+            © 2024 CINEVENT. ALL RIGHTS RESERVED.
+        </div>
+</footer>
+</body></html>

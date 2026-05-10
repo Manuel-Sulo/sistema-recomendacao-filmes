@@ -1,0 +1,1370 @@
+# Sistema de Recomendação de Filmes — Plano Técnico Final
+
+A base do projeto continua a mesma do Lab #04: **Angular no frontend**, **PHP puro no backend**, **SQL relacional**, troca de dados por **HTTP/JSON**, **autenticação completa**, **CRUD**, **API externa**, **modo claro/escuro**, **2 idiomas**, **exportação CSV/PDF**, e código organizado com separação real de responsabilidades. O PDF também deixa claro que existe liberdade nas funcionalidades do sistema, desde que ele seja útil, coerente e com fluxo lógico consistente. 
+
+## 1) Conceito funcional do sistema
+
+Para o tema **Sistema de Recomendação de Filmes**, a proposta mais sólida é um sistema onde o utilizador pesquisa filmes, guarda favoritos, avalia filmes, cria uma lista pessoal e recebe recomendações baseadas no seu histórico, gostos e géneros preferidos. Isto encaixa bem no objetivo do lab porque cria interação real, fluxo lógico e um problema claro a resolver dentro do tema. 
+
+A proposta funcional não é imposta pelo PDF; é uma escolha técnica coerente com a liberdade que ele concede. 
+
+---
+
+## 2) O que o Lab obriga neste sistema
+
+O sistema tem de cumprir obrigatoriamente:
+
+* autenticação completa: registo, login, logout e recuperação de senha;
+* base de dados relacional com pelo menos 3 tabelas e CRUD;
+* integração com pelo menos uma API externa, quando aplicável;
+* interface responsiva;
+* modo claro e escuro;
+* suporte a pelo menos 2 idiomas;
+* exportação de dados ou relatórios em CSV ou PDF. 
+
+Quando fizer sentido para o tema, também deve haver distinção entre utilizadores e permissões diferentes. Para filmes, isso pode ser justificado com `user` e `admin`. 
+
+---
+
+## 3) Estrutura geral recomendada
+
+```text
+movie-recommendation-system/
+├─ frontend/
+│  ├─ src/
+│  │  ├─ app/
+│  │  │  ├─ core/
+│  │  │  ├─ shared/
+│  │  │  ├─ features/
+│  │  │  │  ├─ auth/
+│  │  │  │  ├─ dashboard/
+│  │  │  │  ├─ movies/
+│  │  │  │  ├─ recommendations/
+│  │  │  │  ├─ favorites/
+│  │  │  │  ├─ ratings/
+│  │  │  │  ├─ watchlist/
+│  │  │  │  ├─ reviews/
+│  │  │  │  ├─ reports/
+│  │  │  │  └─ settings/
+│  │  │  ├─ layouts/
+│  │  │  ├─ services/
+│  │  │  ├─ guards/
+│  │  │  ├─ interceptors/
+│  │  │  ├─ models/
+│  │  │  └─ app-routing.module.ts
+│  │  ├─ assets/
+│  │  ├─ environments/
+│  │  └─ styles/
+│  └─ angular.json
+├─ backend/
+│  ├─ public/
+│  │  └─ index.php
+│  ├─ app/
+│  │  ├─ Controllers/
+│  │  ├─ Services/
+│  │  ├─ Repositories/
+│  │  ├─ Models/
+│  │  ├─ Middleware/
+│  │  ├─ Validators/
+│  │  └─ Helpers/
+│  ├─ config/
+│  ├─ routes/
+│  ├─ database/
+│  │  ├─ migrations/
+│  │  └─ seeds/
+│  └─ storage/
+├─ docs/
+│  ├─ database.sql
+│  └─ technical-report.md
+└─ README.md
+```
+
+Esta estrutura respeita a exigência do lab de separar interface, lógica e serviços no frontend, e lógica de negócio, acesso a dados e endpoints no backend. 
+
+---
+
+## 4) Arquitetura técnica
+
+### Frontend Angular
+
+* `core/`: auth, guards, interceptors, config global;
+* `shared/`: botões, cards, modais, tabelas, pipes, diretivas;
+* `features/`: módulos por funcionalidade;
+* `layouts/`: shell visual do app;
+* `services/`: chamadas HTTP;
+* `models/`: contratos de dados.
+
+### Backend PHP puro
+
+* `Controllers/`: recebem requests e devolvem JSON;
+* `Services/`: regras de negócio;
+* `Repositories/`: queries SQL;
+* `Models/`: entidades;
+* `Middleware/`: autenticação, autorização, CORS;
+* `Validators/`: validação de input;
+* `Helpers/`: respostas, utilitários, formatação.
+
+Fluxo:
+`Angular → HTTP JSON → PHP Controller → Service → Repository → SQL → Response JSON`
+
+---
+
+## 5) Base de dados relacional
+
+O lab exige pelo menos 3 tabelas; aqui vale construir uma base normalizada, sem redundância inútil. 
+
+### Tabelas principais
+
+#### `users`
+
+* `id`
+* `name`
+* `email`
+* `password_hash`
+* `role`
+* `preferred_language`
+* `theme`
+* `reset_token`
+* `created_at`
+* `updated_at`
+
+#### `movies`
+
+* `id`
+* `external_tmdb_id`
+* `title`
+* `original_title`
+* `overview`
+* `poster_path`
+* `release_date`
+* `runtime`
+* `vote_average`
+* `popularity`
+* `created_at`
+* `updated_at`
+
+#### `genres`
+
+* `id`
+* `external_genre_id`
+* `name`
+
+#### `movie_genres`
+
+* `movie_id`
+* `genre_id`
+
+#### `user_ratings`
+
+* `id`
+* `user_id`
+* `movie_id`
+* `rating`
+* `review_text`
+* `created_at`
+* `updated_at`
+
+#### `favorites`
+
+* `id`
+* `user_id`
+* `movie_id`
+* `created_at`
+
+#### `watchlists`
+
+* `id`
+* `user_id`
+* `movie_id`
+* `created_at`
+
+#### `recommendations`
+
+* `id`
+* `user_id`
+* `movie_id`
+* `score`
+* `reason`
+* `generated_at`
+
+#### `export_logs`
+
+* `id`
+* `user_id`
+* `report_type`
+* `format`
+* `created_at`
+
+### Relacionamentos
+
+* `users 1:N favorites`
+* `users 1:N ratings`
+* `users 1:N watchlists`
+* `users 1:N recommendations`
+* `users 1:N export_logs`
+* `movies 1:N ratings`
+* `movies 1:N favorites`
+* `movies 1:N watchlists`
+* `movies 1:N recommendations`
+* `movies N:N genres` via `movie_genres`
+
+### Normalização
+
+A estrutura acima fica bem posicionada para **3FN**: filmes, géneros, utilizadores e relações entre eles ficam separados; não há repetição desnecessária de dados do filme em ratings/favorites/watchlist. Isso reduz inconsistência e facilita manutenção.
+
+---
+
+## 6) Funcionalidades recomendadas
+
+### Núcleo do sistema
+
+* pesquisa de filmes;
+* detalhe do filme;
+* filmes populares / em destaque;
+* favoritos;
+* watchlist;
+* avaliações e reviews;
+* recomendações personalizadas;
+* histórico de recomendações;
+* exportação de relatórios;
+* preferências do utilizador.
+
+### Admin
+
+* gerir filmes locais em cache;
+* gerir géneros;
+* moderar reviews;
+* acompanhar logs.
+
+### Autenticação
+
+* registo;
+* login;
+* logout;
+* recuperação de senha;
+* redefinição de senha.
+
+---
+
+## 7) API externa: melhor escolha
+
+A API mais forte para este sistema é a **TMDb API**. A documentação oficial indica que ela cobre **movie, tv, actor e image API**, permite **search/movie**, **movie details**, **discover/movie**, **genre list**, **recommendations**, **reviews** e **watch providers**. A própria FAQ diz que a API pode ser usada para aplicações com dados/imagens de filmes e que é gratuita para uso não comercial, com atribuição obrigatória. ([The Movie Database (TMDB)][1])
+
+### Decisão técnica
+
+**TMDb deve ser a API principal**, porque cobre exatamente o tipo de sistema que estás a montar: pesquisa, detalhe, géneros, recomendações e até dados de disponibilidade em streaming. ([The Movie Database (TMDB)][2])
+
+### API secundária possível
+
+A **OMDb API** também é útil como complemento, porque é um serviço REST para informação sobre filmes; a página oficial indica também que o **Poster API** existe, mas é restrito a patrons. Isso torna a OMDb mais indicada como apoio do que como fonte principal. ([omdbapi.com][3])
+
+### Opcional avançado
+
+A **JustWatch Partner API** suporta lookup por **TMDb ID** e **JustWatch ID**, e o site posiciona-se como base de dados de streaming. Porém, por ser partner API, o acesso não deve ser assumido como livre; para este projeto eu trataria isso como **[bloqueado]** até haver acesso confirmado. ([JustWatch][4])
+
+---
+
+## 8) Scraping: permitido ou não?
+
+**[bloqueado]** O PDF não autoriza nem proíbe scraping explicitamente. Ele só exige integração com API externa quando aplicável. Portanto, não dá para afirmar que scraping está permitido como requisito do lab. 
+
+### Recomendação técnica
+
+Não usar scraping como base do projeto. Para este tema, a solução mais defensável é:
+
+* TMDb como fonte principal;
+* eventual OMDb como complemento;
+* backend a centralizar os dados;
+* frontend nunca falar diretamente com APIs externas.
+
+Essa é uma inferência técnica, não uma exigência do PDF. 
+
+---
+
+## 9) IA no sistema
+
+O PDF diz que a IA deve ser usada como apoio ao desenvolvimento, de forma crítica, mas não obriga a adicionar IA como funcionalidade do sistema. 
+
+### Melhor decisão
+
+IA no produto final é **opcional**. Para este sistema, só faria sentido se acrescentasse valor real, por exemplo:
+
+* resumo automático de sinopse longa;
+* explicação do motivo de uma recomendação;
+* classificação de preferências do utilizador;
+* assistente de descoberta de filmes.
+
+Se o objetivo for maximizar estabilidade e tempo, a melhor decisão é **não depender de IA no core**.
+
+---
+
+## 10) Endpoints REST recomendados
+
+### Auth
+
+* `POST /api/auth/register`
+* `POST /api/auth/login`
+* `POST /api/auth/logout`
+* `POST /api/auth/forgot-password`
+* `POST /api/auth/reset-password`
+
+### Perfil e preferências
+
+* `GET /api/users/profile`
+* `PUT /api/users/profile`
+* `PUT /api/users/theme`
+* `PUT /api/users/language`
+
+### Filmes
+
+* `GET /api/movies`
+* `GET /api/movies/{id}`
+* `GET /api/movies/search?q=`
+* `GET /api/movies/popular`
+* `GET /api/movies/trending`
+* `GET /api/movies/recommendations`
+
+### Favoritos
+
+* `GET /api/favorites`
+* `POST /api/favorites`
+* `DELETE /api/favorites/{id}`
+
+### Watchlist
+
+* `GET /api/watchlist`
+* `POST /api/watchlist`
+* `DELETE /api/watchlist/{id}`
+
+### Ratings/Reviews
+
+* `GET /api/ratings`
+* `POST /api/ratings`
+* `PUT /api/ratings/{id}`
+* `DELETE /api/ratings/{id}`
+
+### Relatórios
+
+* `GET /api/reports/export/csv`
+* `GET /api/reports/export/pdf`
+
+### Admin
+
+* `GET /api/admin/movies`
+* `POST /api/admin/movies`
+* `PUT /api/admin/movies/{id}`
+* `DELETE /api/admin/movies/{id}`
+
+---
+
+## 11) Estratégia de recomendação
+
+A lógica de recomendação pode começar simples e eficiente:
+
+### Versão 1
+
+* géneros preferidos;
+* filmes mais bem avaliados pelo utilizador;
+* filmes semelhantes aos favoritos;
+* popularidade + afinidade de género.
+
+### Versão 2
+
+* peso por rating;
+* peso por frequência de géneros;
+* penalização por filmes já vistos;
+* score final por recomendação.
+
+### Modelo de score
+
+Exemplo conceptual:
+`score = afinidade_genro + media_ratings_similares + popularidade_normalizada - penalizacao_filmes_vistos`
+
+Isto não é requisito do PDF; é a forma mais limpa de cumprir o objetivo do sistema com boa explicabilidade.
+
+---
+
+## 12) Interface e navegação
+
+### Navegação principal
+
+```text
+Login/Register
+      ↓
+Dashboard
+ ├─ Filmes populares
+ ├─ Pesquisa
+ ├─ Recomendações
+ ├─ Favoritos
+ ├─ Watchlist
+ ├─ Reviews
+ ├─ Relatórios
+ └─ Configurações
+```
+
+### Componentes reutilizáveis
+
+* `movie-card`
+* `movie-grid`
+* `movie-table`
+* `rating-stars`
+* `genre-chip`
+* `theme-toggle`
+* `language-switcher`
+* `confirm-dialog`
+* `loading-spinner`
+* `empty-state`
+
+O lab pede explicitamente que isto seja visível no frontend. 
+
+---
+
+## 13) Dark mode e idiomas
+
+O PDF exige modo claro/escuro e mínimo de dois idiomas. 
+
+### Implementação recomendada
+
+* `light` e `dark` em HTML root ou body;
+* guardar preferência em `localStorage` e na BD;
+* idiomas: `pt` e `en`;
+* estrutura Angular com `assets/i18n/pt.json` e `assets/i18n/en.json`.
+
+---
+
+## 14) Exportação
+
+O sistema deve exportar:
+
+* favoritos;
+* watchlist;
+* ratings/reviews;
+* recomendações;
+* histórico de utilização.
+
+### Formatos
+
+* CSV para dados tabulares;
+* PDF para relatório final.
+
+O PDF aceita CSV ou PDF; usar ambos fortalece bastante o projeto. 
+
+---
+
+## 15) Autenticação e permissões
+
+### Utilizador normal
+
+* ver filmes;
+* avaliar;
+* guardar favoritos;
+* usar watchlist;
+* receber recomendações;
+* exportar dados.
+
+### Admin
+
+* gerir catálogo interno;
+* moderar reviews;
+* gerir géneros;
+* ver logs e estatísticas.
+
+Isto faz sentido para o tema e está dentro da liberdade funcional do lab. 
+
+---
+
+## 16) O que evitar
+
+* queries SQL dentro de controllers;
+* frontend chamando API externa diretamente;
+* componentes Angular gigantes;
+* PHP “spaghetti”;
+* duplicação de lógica entre páginas;
+* navegação sem hierarquia;
+* dark mode só visual, sem persistência;
+* idioma só parcial;
+* exportação “falsa” sem dados reais.
+
+---
+
+## 17) Melhor estratégia para nota alta
+
+O lab valoriza qualidade estrutural, clareza, organização, evolução progressiva e autoria visível no GitHub. 
+
+Para este tema, a melhor estratégia não é tentar fazer tudo; é fazer:
+
+* um sistema de recomendações limpo;
+* autenticação robusta;
+* BD bem modelada;
+* integração real com TMDb;
+* UI forte e responsiva;
+* exportação funcional;
+* commits pequenos e claros.
+
+---
+
+## 18) Itens ainda [bloqueados]
+
+* **[bloqueado]** Permissão explícita para scraping: o PDF não diz. 
+* **[bloqueado]** API secundária definitiva: OMDb é viável, mas o uso depende da necessidade real e do plano. ([omdbapi.com][3])
+* **[bloqueado]** JustWatch como fonte operacional principal: a documentação é de partner API, então o acesso não deve ser assumido. ([JustWatch][4])
+* **[bloqueado]** A técnica exata de autenticação: o lab exige autenticação completa, mas não fixa JWT ou sessão. 
+
+Se quiseres, no próximo passo eu converto isto num **schema SQL completo + árvore final de ficheiros + lista exacta de componentes Angular + mapa de serviços PHP**, já pronto para desenvolvimento.
+
+[1]: https://developer.themoviedb.org/docs/getting-started?utm_source=chatgpt.com "Getting Started - TMDB"
+[2]: https://developer.themoviedb.org/reference/movie-details?utm_source=chatgpt.com "Details"
+[3]: https://www.omdbapi.com/?utm_source=chatgpt.com "OMDb API - The Open Movie Database"
+[4]: https://apis.justwatch.com/docs/api/?utm_source=chatgpt.com "API | JustWatch Documentation"
+
+-----------------------------
+
+# Sistema de Recomendação de Filmes — Estrutura Técnica Completa
+
+---
+
+# 1) Estrutura Final do Frontend Angular
+
+```text id="qq7wbi"
+frontend/
+│
+├── src/
+│   ├── app/
+│   │
+│   ├── core/
+│   │   ├── guards/
+│   │   │   ├── auth.guard.ts
+│   │   │   └── admin.guard.ts
+│   │   │
+│   │   ├── interceptors/
+│   │   │   ├── auth.interceptor.ts
+│   │   │   ├── error.interceptor.ts
+│   │   │   └── loading.interceptor.ts
+│   │   │
+│   │   ├── services/
+│   │   │   ├── api.service.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── storage.service.ts
+│   │   │   ├── notification.service.ts
+│   │   │   └── theme.service.ts
+│   │   │
+│   │   ├── models/
+│   │   │   ├── user.model.ts
+│   │   │   ├── movie.model.ts
+│   │   │   ├── rating.model.ts
+│   │   │   ├── recommendation.model.ts
+│   │   │   └── genre.model.ts
+│   │   │
+│   │   └── layouts/
+│   │       ├── main-layout/
+│   │       └── auth-layout/
+│   │
+│   ├── shared/
+│   │   ├── components/
+│   │   │
+│   │   ├── movie-card/
+│   │   ├── movie-grid/
+│   │   ├── movie-table/
+│   │   ├── rating-stars/
+│   │   ├── genre-chip/
+│   │   ├── navbar/
+│   │   ├── sidebar/
+│   │   ├── footer/
+│   │   ├── search-bar/
+│   │   ├── loading-spinner/
+│   │   ├── confirm-dialog/
+│   │   ├── empty-state/
+│   │   ├── language-switcher/
+│   │   └── theme-toggle/
+│   │
+│   │   ├── pipes/
+│   │   │   ├── truncate.pipe.ts
+│   │   │   ├── rating.pipe.ts
+│   │   │   └── date-format.pipe.ts
+│   │   │
+│   │   ├── directives/
+│   │   │   └── lazy-image.directive.ts
+│   │   │
+│   │   └── utils/
+│   │
+│   ├── features/
+│   │
+│   │   ├── auth/
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   ├── forgot-password/
+│   │   │   ├── reset-password/
+│   │   │   └── auth-routing.module.ts
+│   │   │
+│   │   ├── dashboard/
+│   │   │   ├── pages/
+│   │   │   ├── components/
+│   │   │   └── dashboard-routing.module.ts
+│   │   │
+│   │   ├── movies/
+│   │   │   ├── pages/
+│   │   │   │   ├── movie-list/
+│   │   │   │   ├── movie-details/
+│   │   │   │   └── movie-search/
+│   │   │   │
+│   │   │   ├── services/
+│   │   │   └── movies-routing.module.ts
+│   │   │
+│   │   ├── recommendations/
+│   │   │   ├── pages/
+│   │   │   ├── services/
+│   │   │   └── recommendations-routing.module.ts
+│   │   │
+│   │   ├── favorites/
+│   │   ├── watchlist/
+│   │   ├── ratings/
+│   │   ├── reports/
+│   │   ├── settings/
+│   │   └── admin/
+│   │
+│   ├── assets/
+│   │   ├── i18n/
+│   │   │   ├── pt.json
+│   │   │   └── en.json
+│   │   │
+│   │   ├── icons/
+│   │   └── images/
+│   │
+│   ├── environments/
+│   │   ├── environment.ts
+│   │   └── environment.prod.ts
+│   │
+│   ├── styles/
+│   │   ├── base/
+│   │   ├── themes/
+│   │   ├── components/
+│   │   └── pages/
+│   │
+│   ├── app-routing.module.ts
+│   └── app.module.ts
+│
+├── angular.json
+├── tsconfig.json
+└── package.json
+```
+
+---
+
+# 2) Estrutura Final do Backend PHP
+
+```text id="spt7ea"
+backend/
+│
+├── public/
+│   └── index.php
+│
+├── routes/
+│   ├── api.php
+│   └── middleware.php
+│
+├── app/
+│
+│   ├── Controllers/
+│   │   ├── AuthController.php
+│   │   ├── UserController.php
+│   │   ├── MovieController.php
+│   │   ├── RecommendationController.php
+│   │   ├── FavoriteController.php
+│   │   ├── WatchlistController.php
+│   │   ├── RatingController.php
+│   │   ├── ReportController.php
+│   │   └── AdminController.php
+│   │
+│   ├── Services/
+│   │   ├── AuthService.php
+│   │   ├── JwtService.php
+│   │   ├── MovieService.php
+│   │   ├── RecommendationService.php
+│   │   ├── RatingService.php
+│   │   ├── FavoriteService.php
+│   │   ├── WatchlistService.php
+│   │   ├── ReportService.php
+│   │   ├── ExportService.php
+│   │   └── TmdbApiService.php
+│   │
+│   ├── Repositories/
+│   │   ├── UserRepository.php
+│   │   ├── MovieRepository.php
+│   │   ├── GenreRepository.php
+│   │   ├── RatingRepository.php
+│   │   ├── FavoriteRepository.php
+│   │   ├── WatchlistRepository.php
+│   │   ├── RecommendationRepository.php
+│   │   └── ReportRepository.php
+│   │
+│   ├── Models/
+│   │   ├── User.php
+│   │   ├── Movie.php
+│   │   ├── Genre.php
+│   │   ├── Rating.php
+│   │   ├── Favorite.php
+│   │   ├── Watchlist.php
+│   │   └── Recommendation.php
+│   │
+│   ├── Middleware/
+│   │   ├── AuthMiddleware.php
+│   │   ├── AdminMiddleware.php
+│   │   ├── CorsMiddleware.php
+│   │   └── JsonMiddleware.php
+│   │
+│   ├── Validators/
+│   │   ├── AuthValidator.php
+│   │   ├── MovieValidator.php
+│   │   └── RatingValidator.php
+│   │
+│   ├── Helpers/
+│   │   ├── Response.php
+│   │   ├── Request.php
+│   │   ├── Env.php
+│   │   └── Utils.php
+│   │
+│   └── Config/
+│       ├── database.php
+│       ├── app.php
+│       └── jwt.php
+│
+├── database/
+│   ├── migrations/
+│   ├── seeds/
+│   └── schema.sql
+│
+├── storage/
+│   ├── exports/
+│   ├── cache/
+│   └── logs/
+│
+├── vendor/
+├── composer.json
+└── .env
+```
+
+---
+
+# 3) Schema SQL Completo
+
+# 3.1 users
+
+```sql id="50j17j"
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    preferred_language VARCHAR(10) DEFAULT 'pt',
+    theme ENUM('light', 'dark') DEFAULT 'dark',
+    reset_token VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+---
+
+# 3.2 movies
+
+```sql id="ln4vx7"
+CREATE TABLE movies (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    external_tmdb_id INT UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    original_title VARCHAR(255),
+    overview TEXT,
+    poster_path TEXT,
+    backdrop_path TEXT,
+    release_date DATE,
+    runtime INT,
+    vote_average DECIMAL(3,1),
+    popularity DECIMAL(10,2),
+    original_language VARCHAR(10),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+---
+
+# 3.3 genres
+
+```sql id="qsn3wa"
+CREATE TABLE genres (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    external_genre_id INT UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL
+);
+```
+
+---
+
+# 3.4 movie_genres
+
+```sql id="v77n4v"
+CREATE TABLE movie_genres (
+    movie_id INT NOT NULL,
+    genre_id INT NOT NULL,
+
+    PRIMARY KEY(movie_id, genre_id),
+
+    FOREIGN KEY(movie_id)
+    REFERENCES movies(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY(genre_id)
+    REFERENCES genres(id)
+    ON DELETE CASCADE
+);
+```
+
+---
+
+# 3.5 user_ratings
+
+```sql id="ynh1hj"
+CREATE TABLE user_ratings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    rating DECIMAL(2,1) NOT NULL,
+    review_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY(movie_id)
+    REFERENCES movies(id)
+    ON DELETE CASCADE
+);
+```
+
+---
+
+# 3.6 favorites
+
+```sql id="40r91c"
+CREATE TABLE favorites (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY(movie_id)
+    REFERENCES movies(id)
+    ON DELETE CASCADE,
+
+    UNIQUE(user_id, movie_id)
+);
+```
+
+---
+
+# 3.7 watchlists
+
+```sql id="cn6y8h"
+CREATE TABLE watchlists (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY(movie_id)
+    REFERENCES movies(id)
+    ON DELETE CASCADE,
+
+    UNIQUE(user_id, movie_id)
+);
+```
+
+---
+
+# 3.8 recommendations
+
+```sql id="ivsznh"
+CREATE TABLE recommendations (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    score DECIMAL(10,2),
+    reason TEXT,
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY(movie_id)
+    REFERENCES movies(id)
+    ON DELETE CASCADE
+);
+```
+
+---
+
+# 3.9 export_logs
+
+```sql id="9bkqmo"
+CREATE TABLE export_logs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    report_type VARCHAR(100),
+    format ENUM('csv', 'pdf'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+```
+
+---
+
+# 4) Fluxo Real de Recomendação
+
+```text id="fg6ehj"
+User ratings
+     +
+Favorites
+     +
+Watchlist
+     +
+Genres preference
+     ↓
+RecommendationService
+     ↓
+Score generation
+     ↓
+Store recommendations
+     ↓
+Return ranked movies
+```
+
+---
+
+# 5) Algoritmo Inicial de Recomendação
+
+# Objetivo
+
+Criar um algoritmo:
+
+* simples;
+* explicável;
+* rápido;
+* coerente com o nível do lab.
+
+---
+
+# Estratégia recomendada
+
+## Pontuação por:
+
+* géneros favoritos;
+* filmes mais avaliados;
+* popularidade;
+* média TMDb;
+* frequência de interação.
+
+---
+
+# Fórmula inicial
+
+```text id="y2p7vo"
+score =
+(genreAffinity * 0.4)
++
+(userRatingWeight * 0.3)
++
+(moviePopularity * 0.2)
++
+(tmdbAverage * 0.1)
+```
+
+---
+
+# Exemplo
+
+Se utilizador:
+
+* gosta de Sci-Fi;
+* avaliou Interstellar com 5;
+* guardou Arrival nos favoritos;
+
+Então:
+
+* Dune;
+* Blade Runner 2049;
+* The Martian
+
+recebem score maior.
+
+---
+
+# 6) Endpoints REST Finais
+
+# Auth
+
+| Método | Endpoint                  |
+| ------ | ------------------------- |
+| POST   | /api/auth/register        |
+| POST   | /api/auth/login           |
+| POST   | /api/auth/logout          |
+| POST   | /api/auth/forgot-password |
+| POST   | /api/auth/reset-password  |
+
+---
+
+# Users
+
+| Método | Endpoint            |
+| ------ | ------------------- |
+| GET    | /api/users/profile  |
+| PUT    | /api/users/profile  |
+| PUT    | /api/users/theme    |
+| PUT    | /api/users/language |
+
+---
+
+# Movies
+
+| Método | Endpoint              |
+| ------ | --------------------- |
+| GET    | /api/movies           |
+| GET    | /api/movies/{id}      |
+| GET    | /api/movies/search    |
+| GET    | /api/movies/popular   |
+| GET    | /api/movies/top-rated |
+| GET    | /api/movies/trending  |
+| GET    | /api/movies/genres    |
+
+---
+
+# Recommendations
+
+| Método | Endpoint                      |
+| ------ | ----------------------------- |
+| GET    | /api/recommendations          |
+| POST   | /api/recommendations/generate |
+
+---
+
+# Favorites
+
+| Método | Endpoint            |
+| ------ | ------------------- |
+| GET    | /api/favorites      |
+| POST   | /api/favorites      |
+| DELETE | /api/favorites/{id} |
+
+---
+
+# Watchlist
+
+| Método | Endpoint            |
+| ------ | ------------------- |
+| GET    | /api/watchlist      |
+| POST   | /api/watchlist      |
+| DELETE | /api/watchlist/{id} |
+
+---
+
+# Ratings
+
+| Método | Endpoint          |
+| ------ | ----------------- |
+| GET    | /api/ratings      |
+| POST   | /api/ratings      |
+| PUT    | /api/ratings/{id} |
+| DELETE | /api/ratings/{id} |
+
+---
+
+# Reports
+
+| Método | Endpoint                |
+| ------ | ----------------------- |
+| GET    | /api/reports/export/csv |
+| GET    | /api/reports/export/pdf |
+
+---
+
+# Admin
+
+| Método | Endpoint                |
+| ------ | ----------------------- |
+| GET    | /api/admin/users        |
+| GET    | /api/admin/reviews      |
+| DELETE | /api/admin/reviews/{id} |
+
+---
+
+# 7) Estrutura de Navegação
+
+```text id="rkif9l"
+Auth
+ ├── Login
+ ├── Register
+ └── Reset Password
+
+Main
+ ├── Dashboard
+ ├── Movies
+ │    ├── Popular
+ │    ├── Trending
+ │    ├── Search
+ │    └── Details
+ │
+ ├── Recommendations
+ ├── Favorites
+ ├── Watchlist
+ ├── Ratings
+ ├── Reports
+ └── Settings
+```
+
+---
+
+# 8) Componentes Angular Mais Importantes
+
+| Componente        | Objetivo         |
+| ----------------- | ---------------- |
+| movie-card        | Filme individual |
+| movie-grid        | Listagem         |
+| movie-table       | Dados tabulares  |
+| rating-stars      | Avaliação        |
+| genre-chip        | Géneros          |
+| search-bar        | Pesquisa         |
+| loading-spinner   | Loading          |
+| confirm-dialog    | CRUD             |
+| empty-state       | Sem dados        |
+| theme-toggle      | Dark mode        |
+| language-switcher | Idiomas          |
+
+---
+
+# 9) Melhor Estratégia de Cache
+
+# Backend
+
+Guardar:
+
+* filmes populares;
+* trending;
+* géneros;
+* detalhes recentes.
+
+---
+
+# Porque?
+
+Evita:
+
+* rate limit;
+* lentidão;
+* chamadas desnecessárias.
+
+---
+
+# Estratégia
+
+```text id="5x6mcl"
+TMDb API
+   ↓
+PHP Backend Cache
+   ↓
+MySQL
+   ↓
+Angular
+```
+
+---
+
+# 10) Segurança Recomendada
+
+# Backend
+
+* password_hash();
+* password_verify();
+* JWT;
+* prepared statements PDO;
+* validação de inputs;
+* CORS controlado;
+* rate limiting básico.
+
+---
+
+# Frontend
+
+* route guards;
+* interceptor JWT;
+* sanitização;
+* validação de formulários.
+
+---
+
+# 11) Dark Mode
+
+## Estratégia
+
+```text id="72omyn"
+html[data-theme='dark']
+html[data-theme='light']
+```
+
+Persistência:
+
+* localStorage;
+* base de dados.
+
+---
+
+# 12) Multi-idioma
+
+## Biblioteca recomendada
+
+[ngx-translate](https://ngx-translate.org/?utm_source=chatgpt.com)
+
+---
+
+# Estrutura
+
+```text id="n08y2o"
+assets/i18n/
+├── pt.json
+└── en.json
+```
+
+---
+
+# 13) Exportação
+
+# CSV
+
+Exportar:
+
+* ratings;
+* favoritos;
+* watchlist;
+* recomendações.
+
+---
+
+# PDF
+
+Relatório:
+
+* top filmes;
+* géneros favoritos;
+* estatísticas;
+* recomendações.
+
+---
+
+# 14) Integração TMDb
+
+## API oficial
+
+[TMDb API Documentation](https://developer.themoviedb.org/docs/getting-started?utm_source=chatgpt.com)
+
+---
+
+# Endpoints TMDb importantes
+
+| Função          | Endpoint                    |
+| --------------- | --------------------------- |
+| Popular         | /movie/popular              |
+| Trending        | /trending/movie/day         |
+| Search          | /search/movie               |
+| Details         | /movie/{id}                 |
+| Genres          | /genre/movie/list           |
+| Recommendations | /movie/{id}/recommendations |
+
+---
+
+# 15) O que NÃO fazer
+
+## Evitar:
+
+* lógica de recomendação no controller;
+* SQL dentro de views;
+* chamadas TMDb no Angular;
+* componentes gigantes;
+* duplicação de serviços;
+* CSS inline excessivo;
+* código procedural misturado.
+
+---
+
+# 16) Melhor Estratégia para Boa Nota
+
+O lab claramente avalia:
+
+* organização;
+* arquitetura;
+* separação de responsabilidades;
+* reutilização;
+* qualidade estrutural;
+* versionamento consistente. 
+
+Então a melhor estratégia é:
+
+## Fazer:
+
+* poucas features;
+* muito bem acabadas;
+* arquitetura limpa;
+* UX forte;
+* responsividade;
+* API sólida;
+* CRUD consistente;
+* commits pequenos;
+* documentação clara.
+
+---
+
+# 17) Ordem Ideal de Desenvolvimento
+
+# Fase 1
+
+* setup Angular;
+* setup PHP;
+* BD;
+* auth;
+* layouts;
+* dark mode;
+* idiomas.
+
+---
+
+# Fase 2
+
+* integração TMDb;
+* filmes;
+* detalhes;
+* pesquisa;
+* favoritos;
+* watchlist.
+
+---
+
+# Fase 3
+
+* recomendações;
+* ratings;
+* exportação;
+* admin;
+* documentação;
+* refactor final.

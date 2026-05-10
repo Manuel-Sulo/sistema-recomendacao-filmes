@@ -1,0 +1,220 @@
+Com base na análise rigorosa do documento fornecido, apresento a estruturação técnica e arquitetural para o "Sistema de Recomendação de Filmes". A abordagem mantém o foco absoluto na qualidade estrutural, manutenibilidade e separação de responsabilidades , garantindo a entrega do primeiro conjunto até 10 de maio de 2026.
+
+---
+
+### 1. Análise de Requisitos e Essência do Projeto
+
+A essência deste projeto é criar uma plataforma onde os utilizadores possam descobrir filmes e gerir as suas preferências, cumprindo os requisitos obrigatórios de Engenharia de Software.
+
+**Requisitos Obrigatórios Extraídos:**
+
+* 
+**Stack:** Angular no frontend, PHP puro no backend, SQL relacional.
+
+
+* 
+**Comunicação:** Requisições HTTP com respostas em JSON.
+
+
+* 
+**Autenticação:** Registo, Login, Logout, Recuperação de senha.
+
+
+* 
+**Base de Dados:** Mínimo de 3 tabelas e suporte a CRUD.
+
+
+* 
+**Integrações:** Pelo menos uma API Externa.
+
+
+* 
+**Interface:** Responsiva , Light/Dark mode , Multi-idioma (mínimo 2).
+
+
+* 
+**Exportação:** Dados em CSV ou PDF.
+
+
+* 
+**Gestão de Acessos:** Distinção de utilizadores e permissões.
+
+
+* 
+**Código:** GitHub com histórico individual , separação de responsabilidades.
+
+
+
+**Pressupostos Adotados (Informação Ausente no Lab_4):**
+
+* *Dependências PHP:* Presumo a permissão do uso do Composer para bibliotecas estritamente utilitárias (ex: `firebase/php-jwt` para tokens e `mpdf/mpdf` para PDF), sem violar a regra de "PHP puro" (ou seja, sem frameworks como Laravel).
+* *Recuperação de Senha:* Sem um servidor SMTP garantido, a recuperação será implementada gerando um token na base de dados e simulando o envio no frontend ou via um serviço gratuito como o Resend.
+
+---
+
+### 2. Estrutura de Base de Dados (SQL Relacional)
+
+Para cumprir o mínimo de três tabelas, operações CRUD e permissões de utilizadores, utilizaremos a 3ª Forma Normal (3FN):
+
+1. **Tabela `users**` (Autenticação e Perfis)
+* `id` (PK, INT, Auto Increment)
+* `username` (VARCHAR)
+* `email` (VARCHAR, UNIQUE)
+* `password_hash` (VARCHAR)
+* 
+`role` (ENUM: 'admin', 'user') -> Cumpre o requisito de distinção de utilizadores.
+
+
+* `reset_token` (VARCHAR, NULL)
+
+
+2. **Tabela `movies**` (Catálogo Local / Cache)
+* `id` (PK, INT, Auto Increment)
+* `tmdb_id` (INT, UNIQUE) -> *Referência à API Externa.*
+* `title` (VARCHAR)
+* `poster_url` (VARCHAR)
+
+
+3. **Tabela `watchlists**` (Operações CRUD do Utilizador)
+* `id` (PK, INT, Auto Increment)
+* `user_id` (FK, INT) -> *Refere `users.id`.*
+* `movie_id` (FK, INT) -> *Refere `movies.id`.*
+* `status` (ENUM: 'watched', 'plan_to_watch', 'dropped')
+* `rating` (INT, 1 a 5, NULL) -> *Permite ao utilizador avaliar.*
+* `created_at` (TIMESTAMP)
+
+
+
+---
+
+### 3. Arquitetura do Backend (PHP Puro)
+
+A estrutura garante a separação entre lógica de negócio, acesso a dados e endpoints. A arquitetura seguirá o padrão *Front Controller*.
+
+**Organização de Diretórios (Backend):**
+
+```text
+/backend
+ ├── /config
+ │    └── database.php       # Conexão PDO (Singleton)
+ ├── /controllers            # Endpoints da API RESTful
+ │    ├── AuthController.php
+ │    ├── WatchlistController.php
+ │    └── ExportController.php
+ ├── /models                 # Acesso a Dados
+ │    ├── User.php
+ │    ├── Movie.php
+ │    └── Watchlist.php
+ ├── /services               # Lógica de negócio pesada e integrações
+ │    ├── TmdbApiService.php # Comunicação com a API de filmes
+ │    └── ExportService.php  # Geração de CSV/PDF
+ ├── /core                   # Utilitários globais
+ │    ├── Router.php         # Roteador (mapeamento URI -> Controller)
+ │    └── JwtAuth.php        # Validação de Tokens JWT
+ ├── .htaccess               # Redireciona tráfego para index.php
+ └── index.php               # Bootstrap e Front Controller
+
+```
+
+---
+
+### 4. Arquitetura do Frontend (Angular)
+
+Deverá ser evidente o uso de componentes reutilizáveis, organização por módulos e separação entre interface e serviços.
+
+**Organização de Diretórios (Frontend):**
+
+```text
+/frontend/src/app
+ ├── /core                   # Singleton Services, Guards, Interceptors
+ │    ├── /guards            # AuthGuard (protege rotas), AdminGuard
+ │    ├── /interceptors      # JwtInterceptor (injeta o token nas requisições)
+ │    └── /services          # AuthService, ThemeService (Dark/Light), I18nService
+ ├── /shared                 # Componentes de UI puros (Dumb Components)
+ │    ├── /components        # movie-card, navbar, rating-stars, loader
+ │    └── /pipes             # translate, truncate-text
+ ├── /features               # Smart Components (Módulos de Negócio)
+ │    ├── /auth              # login, register, forgot-password
+ │    ├── /discover          # listagem de filmes da API (Home)
+ │    └── /watchlist         # CRUD da lista do utilizador (Gerir filmes)
+ ├── app-routing.module.ts
+ └── app.module.ts
+
+```
+
+**Navegação:**
+
+* **Pública:** Login, Registo.
+* 
+**Privada (User):** Explorar Filmes (via API externa), Minha Watchlist (CRUD), Exportar Minha Lista (CSV/PDF).
+
+
+* 
+**Privada (Admin):** Dashboard com estatísticas de uso e exportação de dados globais do sistema.
+
+
+
+---
+
+### 5. Decisões Estratégicas: APIs, Scraping e IA
+
+**Qual API Externa Usar?**
+
+* **A Abordagem Perfeita: TMDB API (The Movie Database).**
+* *Justificação:* É gratuita, possui limites generosos, retorna JSON limpo e possui *endpoints* nativos de recomendação (`/movie/{movie_id}/recommendations`). Cumpre plenamente o requisito de integração com API externa.
+
+
+
+**Uso de Web Scraping:**
+
+* **Decisão: NÃO UTILIZAR.**
+* 
+*Justificação:* O lab foca em sustentabilidade ao longo do tempo. Scraping é frágil e quebra com mudanças de UI. A TMDB API é robusta, profissional e cumpre os requisitos do projeto de forma muito superior.
+
+
+
+**Uso de Inteligência Artificial no Sistema:**
+
+* 
+**Durante o Desenvolvimento:** Deve ser usada de forma crítica e orientada , para apoiar a criação do código, sendo o grupo responsável pela sua validação.
+
+
+* 
+**No Sistema Final (Opcional):** Para elevar o nível do projeto (se houver tempo até 10 de maio ), pode-se usar a API do Google Gemini ou OpenAI no backend. O sistema envia a lista de filmes com avaliação 5 estrelas do utilizador para o LLM com o prompt: *"Recomenda 3 filmes com base nestes favoritos: [Filme A, Filme B]. Devolve apenas um JSON com os títulos"*.
+
+
+* *Pragmatismo:* Se o tempo for curto, utilize o endpoint nativo de recomendações da API do TMDB para garantir a entrega funcional no prazo, cumprindo as regras sem complexidade excessiva.
+
+---
+
+### 6. Validação do Projeto (Checklist Lab_4)
+
+* [x] Autenticação completa e funcional (JWT).
+
+
+* [x] BD Relacional com 3 tabelas e CRUD (Watchlists).
+
+
+* [x] Integração com API (TMDB).
+
+
+* [x] Responsividade (Angular + CSS/Tailwind).
+
+
+* [x] Light/Dark Mode funcional.
+
+
+* [x] Multi-idioma (Angular i18n ou ngx-translate).
+
+
+* [x] Exportação de lista de filmes (CSV ou PDF via PHP).
+
+
+* [x] Roles de Utilizador (Admin / User).
+
+
+* [x] Organização: MVC no Backend , Componentização no Frontend.
+
+
+
+O projeto está estruturado com total rigor técnico, preparado para ser dividido entre os membros da equipa com os respetivos commits no GitHub.

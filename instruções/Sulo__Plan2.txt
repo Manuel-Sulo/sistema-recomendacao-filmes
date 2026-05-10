@@ -1,0 +1,808 @@
+# Análise do Lab #04 + Estrutura Completa — Sistema de Recomendação de Filmes
+
+---
+
+## PARTE 1 — ANÁLISE DO LAB #04 (aplicada a este sistema)
+
+A análise institucional do Lab #04 é idêntica à anterior (grupo, prazos, stack, critérios). O que muda é a aplicação ao domínio de filmes.
+
+**Sistema escolhido:** `Conjunto 1 → Sistema de Recomendação de Filmes`
+
+### 1.1 Requisitos Obrigatórios — Aplicação ao Domínio
+
+| # | Requisito | Aplicação específica |
+|---|---|---|
+| R1 | Autenticação completa | Registo, login, logout, recuperação de senha |
+| R2 | BD ≥ 3 tabelas + CRUD | Utilizadores, avaliações, watchlist, histórico, listas |
+| R3 | ≥ 1 API externa | TMDB — dados de filmes, géneros, elenco, trailers |
+| R4 | Interface responsiva | Grid de posters adaptável a mobile/tablet/desktop |
+| R5 | Light/dark mode | Tema escuro especialmente adequado ao contexto de cinema |
+| R6 | Multi-idioma ≥ 2 | PT + EN (TMDB suporta `language=pt-PT` nativamente) |
+| R7 | Exportação CSV/PDF | Exportar watchlist, histórico visto, lista de favoritos |
+
+### 1.2 Requisitos Condicionais — Justificação
+
+- **Tipos de utilizador** → ✅ Justificado: `user` (utilizador comum) + `admin` (gestão de conteúdo, moderação de avaliações)
+- **Permissões diferenciadas** → ✅ Admin pode remover avaliações, gerir utilizadores; user gere o seu perfil e listas
+
+### 1.3 Prazos
+
+| Fase | Data | Status |
+|---|---|---|
+| Fase 1 (este sistema) | 10 Mai 2026 | ⚠️ 2 dias restantes |
+| Fase 2 | 17 Mai 2026 | — |
+| Entrega final | 17 Mai 2026 | GitHub + scripts BD + doc ≤ 5 páginas |
+
+---
+
+## PARTE 2 — DECISÕES TÉCNICAS FUNDAMENTAIS
+
+### 2.1 APIs Externas — Análise e Escolha
+
+| API | Plano Gratuito | Auth | Limite Free | Dados | Recomendação |
+|---|---|---|---|---|---|
+| **TMDB** | ✅ Sim | API key gratuita | Sem limite prático (fair use) | Filmes, séries, elenco, trailers, géneros, trending, similar, search, imagens | **⭐ Primária** |
+| OMDB | ✅ Sim | API key gratuita | 1.000 req/dia | Dados básicos + ratings IMDb/RT | Complementar (ratings) |
+| YouTube Data API v3 | ✅ Sim | API key | 10.000 units/dia | Trailers embed | Complementar (trailers) |
+| Streaming Availability (watchmode) | ✅ Plano free | API key | 1.000 req/mês | Onde assistir (Netflix, etc.) | Opcional — limite apertado |
+
+#### Decisão:
+- **TMDB** → fonte principal e única necessária. Cobre: pesquisa, trending, detalhes, géneros, elenco, imagens, trailers (via `videos`), filmes similares/recomendados, ratings, discover por filtros
+- **OMDB** → apenas para enriquecer com ratings IMDb e Rotten Tomatoes onde relevante
+- Trailers: TMDB devolve chaves YouTube → embed direto sem precisar da YouTube API
+
+> O backend PHP actua como proxy: guarda API keys, faz cache dos resultados, respeita rate limits. O Angular nunca chama TMDB directamente.
+
+### 2.2 Web Scraping — Decisão
+
+**Não será utilizado.** TMDB cobre 100% dos dados necessários via API oficial, gratuita e sem restrições de ToS. Scraping de IMDb, Letterboxd ou RT violaria os seus ToS e é tecnicamente frágil.
+
+### 2.3 IA no Sistema — Decisão
+
+O Lab menciona IA como ferramenta de desenvolvimento, não funcionalidade obrigatória. Porém, num sistema de **recomendação**, a IA é o próprio núcleo do problema. Implementar um motor de recomendação real é o que diferencia este sistema de um simples catálogo.
+
+#### Motor de Recomendação — Abordagem Híbrida em PHP
+
+| Estratégia | Descrição | Implementação |
+|---|---|---|
+| **Content-Based Filtering** | Recomendar filmes com géneros/elenco/diretor similares ao que o utilizador avaliou positivamente | PHP: calcular similaridade por géneros (Jaccard similarity) |
+| **Collaborative Filtering simplificado** | "Utilizadores que avaliaram X também gostaram de Y" | PHP: query SQL com correlação entre avaliações |
+| **Popularity-weighted** | Boost para filmes populares dentro dos géneros preferidos | Peso TMDB `popularity` + `vote_average` |
+| **TMDB Similar/Recommended** | Endpoint nativo TMDB `/movie/{id}/similar` | Enriquecimento imediato sem cálculo |
+
+> Abordagem **híbrida**: Content-Based (baseado no perfil do utilizador construído a partir das suas avaliações) + TMDB Similar como fallback para utilizadores novos (cold start). Tudo calculado em PHP com dados da BD local — sem dependência de serviços de ML externos.
+
+**Cold Start** (utilizador sem histórico): mostrar trending TMDB + solicitar géneros favoritos no onboarding.
+
+---
+
+## PARTE 3 — ESTRUTURA COMPLETA DO PROJETO
+
+### 3.1 Organização de Pastas
+
+```
+movie-recommender/
+├── backend/
+│   ├── config/
+│   │   ├── database.php          # Credenciais + instância PDO
+│   │   ├── cors.php              # Headers CORS
+│   │   └── app.php               # Constantes: JWT_SECRET, TMDB_API_KEY, OMDB_API_KEY
+│   │
+│   ├── core/
+│   │   ├── Database.php          # Singleton PDO
+│   │   ├── Router.php            # Roteador HTTP leve (METHOD + URI → Controller)
+│   │   ├── Request.php           # Abstração: body, headers, path params, query
+│   │   ├── Response.php          # json(), error(), notFound(), unauthorized()
+│   │   └── JWTHelper.php         # Encode/decode JWT sem lib externa
+│   │
+│   ├── middleware/
+│   │   ├── AuthMiddleware.php    # Valida JWT → injeta $user
+│   │   └── AdminMiddleware.php   # Verifica role = 'admin'
+│   │
+│   ├── models/                   # DATA ACCESS LAYER — apenas queries SQL via PDO
+│   │   ├── UserModel.php
+│   │   ├── RatingModel.php
+│   │   ├── WatchlistModel.php
+│   │   ├── FavoriteModel.php
+│   │   ├── WatchedModel.php
+│   │   ├── UserGenreModel.php
+│   │   └── PasswordResetModel.php
+│   │
+│   ├── services/                 # BUSINESS LOGIC
+│   │   ├── AuthService.php
+│   │   ├── TMDBService.php       # Proxy para TMDB API (search, detail, trending, etc.)
+│   │   ├── OMDBService.php       # Proxy OMDB (ratings)
+│   │   ├── RecommendationService.php  # Motor de recomendação híbrido
+│   │   ├── WatchlistService.php
+│   │   ├── RatingService.php
+│   │   ├── ProfileService.php    # Perfil de gostos: géneros favoritos inferidos
+│   │   ├── ExportService.php     # CSV + PDF
+│   │   └── EmailService.php      # Recuperação de senha
+│   │
+│   ├── controllers/              # ENDPOINTS — recebe, delega, responde
+│   │   ├── AuthController.php
+│   │   ├── MovieController.php
+│   │   ├── RecommendationController.php
+│   │   ├── WatchlistController.php
+│   │   ├── RatingController.php
+│   │   ├── ProfileController.php
+│   │   ├── ExportController.php
+│   │   └── AdminController.php
+│   │
+│   ├── helpers/
+│   │   ├── ValidationHelper.php
+│   │   ├── CacheHelper.php       # Cache de respostas TMDB (ficheiro ou APCu, TTL 1h)
+│   │   └── SimilarityHelper.php  # Jaccard similarity, cosine para recomendações
+│   │
+│   ├── routes/
+│   │   └── api.php               # Tabela: METHOD + URI → Controller::method
+│   │
+│   ├── exports/                  # Ficheiros CSV/PDF temporários
+│   ├── cache/                    # Cache local das respostas TMDB
+│   ├── logs/
+│   ├── .htaccess                 # RewriteEngine → index.php
+│   └── index.php                 # Bootstrap: config → cors → router
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   │
+│   │   │   ├── core/
+│   │   │   │   ├── services/
+│   │   │   │   │   ├── auth.service.ts
+│   │   │   │   │   ├── movie.service.ts          # Chama backend /api/movies
+│   │   │   │   │   ├── recommendation.service.ts
+│   │   │   │   │   ├── watchlist.service.ts
+│   │   │   │   │   ├── rating.service.ts
+│   │   │   │   │   ├── profile.service.ts
+│   │   │   │   │   ├── theme.service.ts
+│   │   │   │   │   ├── i18n.service.ts
+│   │   │   │   │   └── export.service.ts
+│   │   │   │   ├── guards/
+│   │   │   │   │   ├── auth.guard.ts
+│   │   │   │   │   └── admin.guard.ts
+│   │   │   │   ├── interceptors/
+│   │   │   │   │   ├── auth.interceptor.ts       # Bearer token injection
+│   │   │   │   │   └── error.interceptor.ts      # 401 → logout, toast errors
+│   │   │   │   └── models/
+│   │   │   │       ├── user.model.ts
+│   │   │   │       ├── movie.model.ts            # Mapeado do TMDB response
+│   │   │   │       ├── rating.model.ts
+│   │   │   │       ├── watchlist-item.model.ts
+│   │   │   │       └── api-response.model.ts
+│   │   │   │
+│   │   │   ├── shared/
+│   │   │   │   ├── components/
+│   │   │   │   │   ├── navbar/
+│   │   │   │   │   ├── movie-card/               # Poster + título + rating + ações
+│   │   │   │   │   ├── movie-grid/               # Grelha responsiva de movie-cards
+│   │   │   │   │   ├── star-rating/              # Input de 1-5 estrelas interativo
+│   │   │   │   │   ├── genre-badge/              # Pill com nome do género
+│   │   │   │   │   ├── trailer-modal/            # Modal com embed YouTube
+│   │   │   │   │   ├── search-bar/               # Debounced search input
+│   │   │   │   │   ├── theme-toggle/
+│   │   │   │   │   ├── lang-switcher/
+│   │   │   │   │   ├── loading-skeleton/         # Skeleton loader para posters
+│   │   │   │   │   ├── toast-notification/
+│   │   │   │   │   ├── confirm-dialog/
+│   │   │   │   │   ├── pagination/
+│   │   │   │   │   └── empty-state/              # "Nenhum resultado" ilustrado
+│   │   │   │   ├── pipes/
+│   │   │   │   │   ├── translate.pipe.ts
+│   │   │   │   │   ├── runtime.pipe.ts           # 148min → "2h 28min"
+│   │   │   │   │   ├── year.pipe.ts              # "2023-07-19" → "2023"
+│   │   │   │   │   └── tmdb-image.pipe.ts        # path → URL completa TMDB CDN
+│   │   │   │   └── shared.module.ts
+│   │   │   │
+│   │   │   ├── layouts/
+│   │   │   │   ├── main-layout/                  # Navbar + content + footer
+│   │   │   │   └── auth-layout/                  # Centrado, sem nav
+│   │   │   │
+│   │   │   ├── modules/
+│   │   │   │   │
+│   │   │   │   ├── auth/
+│   │   │   │   │   ├── login/
+│   │   │   │   │   ├── register/
+│   │   │   │   │   ├── forgot-password/
+│   │   │   │   │   ├── reset-password/
+│   │   │   │   │   └── auth.module.ts
+│   │   │   │   │
+│   │   │   │   ├── onboarding/                   # Cold start: escolha de géneros
+│   │   │   │   │   ├── genre-picker/             # Grid de géneros clicáveis
+│   │   │   │   │   └── onboarding.module.ts
+│   │   │   │   │
+│   │   │   │   ├── home/                         # Página principal pós-login
+│   │   │   │   │   ├── components/
+│   │   │   │   │   │   ├── hero-banner/          # Featured movie em destaque
+│   │   │   │   │   │   ├── recommended-row/      # "Para si" — motor de recomendação
+│   │   │   │   │   │   ├── trending-row/         # Trending TMDB
+│   │   │   │   │   │   ├── top-rated-row/        # Top rated TMDB
+│   │   │   │   │   │   └── by-genre-row/         # Row por género favorito do user
+│   │   │   │   │   └── home.module.ts
+│   │   │   │   │
+│   │   │   │   ├── search/
+│   │   │   │   │   ├── search-results/           # Grid com filtros laterais
+│   │   │   │   │   ├── filter-panel/             # Género, ano, rating, ordem
+│   │   │   │   │   └── search.module.ts
+│   │   │   │   │
+│   │   │   │   ├── movie-detail/
+│   │   │   │   │   ├── components/
+│   │   │   │   │   │   ├── movie-hero/           # Backdrop + info principal
+│   │   │   │   │   │   ├── cast-section/         # Fotos + nomes do elenco
+│   │   │   │   │   │   ├── user-rating-form/     # Dar/editar avaliação
+│   │   │   │   │   │   ├── similar-movies/       # Row de filmes similares
+│   │   │   │   │   │   └── external-ratings/     # IMDb / RT via OMDB
+│   │   │   │   │   └── movie-detail.module.ts
+│   │   │   │   │
+│   │   │   │   ├── watchlist/
+│   │   │   │   │   ├── watchlist.component.ts    # "Ver mais tarde"
+│   │   │   │   │   └── watchlist.module.ts
+│   │   │   │   │
+│   │   │   │   ├── favorites/
+│   │   │   │   │   ├── favorites.component.ts
+│   │   │   │   │   └── favorites.module.ts
+│   │   │   │   │
+│   │   │   │   ├── history/
+│   │   │   │   │   ├── history.component.ts      # Filmes marcados como vistos
+│   │   │   │   │   └── history.module.ts
+│   │   │   │   │
+│   │   │   │   ├── my-ratings/
+│   │   │   │   │   ├── ratings.component.ts      # Todas as avaliações do user
+│   │   │   │   │   └── my-ratings.module.ts
+│   │   │   │   │
+│   │   │   │   ├── reports/
+│   │   │   │   │   ├── reports.component.ts      # Exportar listas + avaliações
+│   │   │   │   │   └── reports.module.ts
+│   │   │   │   │
+│   │   │   │   ├── settings/
+│   │   │   │   │   ├── profile/
+│   │   │   │   │   ├── preferences/              # Idioma, tema, géneros favoritos
+│   │   │   │   │   └── settings.module.ts
+│   │   │   │   │
+│   │   │   │   └── admin/
+│   │   │   │       ├── user-management/
+│   │   │   │       ├── rating-moderation/        # Remover avaliações inadequadas
+│   │   │   │       ├── system-stats/
+│   │   │   │       └── admin.module.ts
+│   │   │   │
+│   │   │   ├── app-routing.module.ts
+│   │   │   ├── app.component.ts
+│   │   │   └── app.module.ts
+│   │   │
+│   │   ├── assets/
+│   │   │   ├── i18n/
+│   │   │   │   ├── pt.json
+│   │   │   │   └── en.json
+│   │   │   └── images/
+│   │   │       └── poster-placeholder.svg
+│   │   │
+│   │   ├── environments/
+│   │   │   ├── environment.ts
+│   │   │   └── environment.prod.ts
+│   │   │
+│   │   └── styles/
+│   │       ├── _variables.scss
+│   │       ├── _themes.scss
+│   │       ├── _typography.scss
+│   │       ├── _utilities.scss
+│   │       └── styles.scss
+│   │
+│   ├── angular.json
+│   └── package.json
+│
+├── database/
+│   ├── schema.sql
+│   ├── seed.sql
+│   └── migrations/
+│
+├── docs/
+│   └── technical-document.pdf
+│
+└── README.md
+```
+
+---
+
+### 3.2 Base de Dados — Schema Completo
+
+**7 tabelas**, normalizadas em 3NF:
+
+```sql
+-- ============================================================
+-- SCHEMA: movie_recommender
+-- ============================================================
+
+CREATE DATABASE IF NOT EXISTS movie_recommender
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE movie_recommender;
+
+-- ------------------------------------------------------------
+-- T1: users
+-- ------------------------------------------------------------
+CREATE TABLE users (
+    id             INT          PRIMARY KEY AUTO_INCREMENT,
+    name           VARCHAR(100) NOT NULL,
+    email          VARCHAR(150) UNIQUE NOT NULL,
+    password_hash  VARCHAR(255) NOT NULL,
+    role           ENUM('admin','user') NOT NULL DEFAULT 'user',
+    language       VARCHAR(5)   NOT NULL DEFAULT 'pt',
+    theme          VARCHAR(10)  NOT NULL DEFAULT 'dark',  -- cinema → dark default
+    onboarded      TINYINT(1)   NOT NULL DEFAULT 0,       -- passou pelo onboarding?
+    is_active      TINYINT(1)   NOT NULL DEFAULT 1,
+    created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- ------------------------------------------------------------
+-- T2: password_reset_tokens
+-- ------------------------------------------------------------
+CREATE TABLE password_reset_tokens (
+    id         INT          PRIMARY KEY AUTO_INCREMENT,
+    user_id    INT          NOT NULL,
+    token      VARCHAR(255) UNIQUE NOT NULL,
+    expires_at TIMESTAMP    NOT NULL,
+    used       TINYINT(1)   NOT NULL DEFAULT 0,
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- T3: user_genre_preferences
+-- Géneros escolhidos no onboarding + inferidos via avaliações.
+-- genre_id e genre_name vêm do TMDB (ex: 28 = Action).
+-- ------------------------------------------------------------
+CREATE TABLE user_genre_preferences (
+    id         INT          PRIMARY KEY AUTO_INCREMENT,
+    user_id    INT          NOT NULL,
+    genre_id   INT          NOT NULL,   -- TMDB genre_id
+    genre_name VARCHAR(50)  NOT NULL,
+    source     ENUM('manual','inferred') NOT NULL DEFAULT 'manual',
+    weight     DECIMAL(5,2) NOT NULL DEFAULT 1.00, -- aumenta com avaliações positivas
+    created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_genre (user_id, genre_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- T4: ratings
+-- Avaliação de 1-5 estrelas + review opcional.
+-- Dados do filme guardados localmente (imutáveis pós-avaliação).
+-- ------------------------------------------------------------
+CREATE TABLE ratings (
+    id           INT              PRIMARY KEY AUTO_INCREMENT,
+    user_id      INT              NOT NULL,
+    tmdb_id      INT              NOT NULL,   -- ID do filme no TMDB
+    movie_title  VARCHAR(255)     NOT NULL,
+    poster_path  VARCHAR(255),               -- path relativo TMDB
+    release_year YEAR,
+    rating       TINYINT UNSIGNED NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    review       TEXT,
+    rated_at     TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP        NOT NULL DEFAULT CURRENT_TIMESTAMP
+                                  ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_movie (user_id, tmdb_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- T5: watchlist  ("ver mais tarde")
+-- ------------------------------------------------------------
+CREATE TABLE watchlist (
+    id           INT          PRIMARY KEY AUTO_INCREMENT,
+    user_id      INT          NOT NULL,
+    tmdb_id      INT          NOT NULL,
+    movie_title  VARCHAR(255) NOT NULL,
+    poster_path  VARCHAR(255),
+    release_year YEAR,
+    added_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_movie_wl (user_id, tmdb_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- T6: favorites
+-- ------------------------------------------------------------
+CREATE TABLE favorites (
+    id           INT          PRIMARY KEY AUTO_INCREMENT,
+    user_id      INT          NOT NULL,
+    tmdb_id      INT          NOT NULL,
+    movie_title  VARCHAR(255) NOT NULL,
+    poster_path  VARCHAR(255),
+    release_year YEAR,
+    added_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_movie_fav (user_id, tmdb_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- T7: watch_history  ("já vi")
+-- ------------------------------------------------------------
+CREATE TABLE watch_history (
+    id           INT          PRIMARY KEY AUTO_INCREMENT,
+    user_id      INT          NOT NULL,
+    tmdb_id      INT          NOT NULL,
+    movie_title  VARCHAR(255) NOT NULL,
+    poster_path  VARCHAR(255),
+    release_year YEAR,
+    watched_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_user_movie_hist (user_id, tmdb_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ------------------------------------------------------------
+-- SEED: Admin padrão
+-- ------------------------------------------------------------
+INSERT INTO users (name, email, password_hash, role, onboarded)
+VALUES ('Administrador', 'admin@movierecommender.ao',
+        '$2y$12$...hash_aqui...', 'admin', 1);
+```
+
+**Relacionamentos:**
+```
+users (1) ──< password_reset_tokens  (N)
+users (1) ──< user_genre_preferences (N)
+users (1) ──< ratings                (N)
+users (1) ──< watchlist              (N)
+users (1) ──< favorites              (N)
+users (1) ──< watch_history          (N)
+```
+
+**Nota de design:** `tmdb_id`, `movie_title`, `poster_path`, `release_year` são desnormalizados intencionalmente nas tabelas de utilizador pelas mesmas razões do sistema anterior — dados de identidade do filme são imutáveis no momento do registo, e renderizar listas sem chamar a API é um ganho de performance crítico. Dados de mercado (ratings TMDB, sinopse) vêm sempre da API. 3NF respeitada dentro do domínio.
+
+---
+
+### 3.3 Endpoints da API REST (Backend)
+
+```
+# AUTH
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout              [Auth]
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password
+
+# PERFIL
+GET    /api/user/profile             [Auth]
+PUT    /api/user/profile             [Auth]
+PUT    /api/user/password            [Auth]
+
+# ONBOARDING
+POST   /api/user/genres              [Auth]  body: { genre_ids: [28, 35, 18] }
+GET    /api/user/genres              [Auth]
+
+# FILMES (proxy TMDB — com cache)
+GET    /api/movies/trending          [Auth]  ?page=1
+GET    /api/movies/top-rated         [Auth]  ?page=1
+GET    /api/movies/popular           [Auth]  ?page=1
+GET    /api/movies/search            [Auth]  ?q=inception&page=1
+GET    /api/movies/discover          [Auth]  ?genre=28&year=2023&sort=rating&page=1
+GET    /api/movies/genres            [Auth]  lista completa de géneros TMDB
+GET    /api/movies/{tmdb_id}         [Auth]  detalhes + elenco + trailers + OMDB ratings
+GET    /api/movies/{tmdb_id}/similar [Auth]
+
+# RECOMENDAÇÕES
+GET    /api/recommendations          [Auth]  motor híbrido: content-based + TMDB similar
+GET    /api/recommendations/by-genre/{genre_id} [Auth]
+
+# AVALIAÇÕES
+GET    /api/ratings                  [Auth]  avaliações do utilizador autenticado
+POST   /api/ratings                  [Auth]
+PUT    /api/ratings/{tmdb_id}        [Auth]
+DELETE /api/ratings/{tmdb_id}        [Auth]
+
+# WATCHLIST
+GET    /api/watchlist                [Auth]
+POST   /api/watchlist                [Auth]
+DELETE /api/watchlist/{tmdb_id}      [Auth]
+
+# FAVORITOS
+GET    /api/favorites                [Auth]
+POST   /api/favorites                [Auth]
+DELETE /api/favorites/{tmdb_id}      [Auth]
+
+# HISTÓRICO
+GET    /api/history                  [Auth]
+POST   /api/history                  [Auth]
+DELETE /api/history/{tmdb_id}        [Auth]
+
+# EXPORTAÇÃO
+GET    /api/export/watchlist?format=csv    [Auth]
+GET    /api/export/favorites?format=csv    [Auth]
+GET    /api/export/history?format=csv      [Auth]
+GET    /api/export/ratings?format=csv      [Auth]
+GET    /api/export/ratings?format=pdf      [Auth]
+
+# ADMIN
+GET    /api/admin/users              [Auth + Admin]
+PUT    /api/admin/users/{id}         [Auth + Admin]
+DELETE /api/admin/users/{id}         [Auth + Admin]
+GET    /api/admin/ratings            [Auth + Admin]  todas as avaliações
+DELETE /api/admin/ratings/{id}       [Auth + Admin]  moderação
+GET    /api/admin/stats              [Auth + Admin]
+```
+
+---
+
+### 3.4 Motor de Recomendação — Detalhe Técnico
+
+```php
+// RecommendationService.php
+
+class RecommendationService {
+
+    // 1. Construir perfil do utilizador
+    // a) Géneros com peso: manual (onboarding) + inferred (via avaliações ≥ 4★)
+    // b) tmdb_ids já vistos/avaliados → excluir das recomendações
+
+    // 2. Content-Based Filtering
+    // Para cada género favorito com peso > 0.5:
+    //   → TMDB /discover/movie?with_genres={id}&sort_by=vote_average.desc
+    //   → filtrar os já vistos/avaliados/em watchlist
+    //   → pontuar: weight_género × vote_average_tmdb × popularidade_normalizada
+
+    // 3. Collaborative Filtering simplificado (BD local)
+    // Query:
+    //   "Utilizadores que avaliaram com ≥4★ os mesmos filmes que eu,
+    //    que outros filmes avaliaram com ≥4★ que eu ainda não vi?"
+    // SQL:
+    SELECT DISTINCT r2.tmdb_id, r2.movie_title, COUNT(*) as overlap_score
+    FROM ratings r1
+    JOIN ratings r2 ON r1.user_id != r2.user_id
+                    AND r1.tmdb_id = (SELECT tmdb_id FROM ratings WHERE user_id = :uid)
+                    AND r1.rating >= 4 AND r2.rating >= 4
+    WHERE r2.tmdb_id NOT IN (SELECT tmdb_id FROM watch_history WHERE user_id = :uid)
+      AND r2.tmdb_id NOT IN (SELECT tmdb_id FROM ratings WHERE user_id = :uid)
+    GROUP BY r2.tmdb_id
+    ORDER BY overlap_score DESC
+    LIMIT 20;
+
+    // 4. TMDB Similar (cold start / enriquecimento)
+    // Para os últimos 3 filmes avaliados com ≥4★:
+    //   → GET /movie/{id}/similar → adicionar ao pool filtrado
+
+    // 5. Merge + deduplicação + ranking final
+    // Score final = (content_score × 0.5) + (collaborative_score × 0.3) + (tmdb_similar × 0.2)
+    // Ordenar por score desc, devolver top 20
+
+    // 6. Atualizar user_genre_preferences (inferred)
+    // Após avaliação ≥4★: incrementar weight do género em +0.1 (cap 2.0)
+    // Após avaliação ≤2★: decrementar weight em -0.05 (floor 0.0)
+}
+```
+
+---
+
+### 3.5 Sistema de Navegação Angular
+
+```typescript
+const routes: Routes = [
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+
+  // Auth layout
+  {
+    path: 'auth',
+    component: AuthLayoutComponent,
+    children: [
+      { path: 'login',            loadChildren: () => import('./modules/auth/auth.module') },
+      { path: 'register',         loadChildren: ... },
+      { path: 'forgot-password',  loadChildren: ... },
+      { path: 'reset-password/:token', loadChildren: ... },
+    ]
+  },
+
+  // Onboarding (pós-registo, pré-home)
+  {
+    path: 'onboarding',
+    component: AuthLayoutComponent,
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./modules/onboarding/onboarding.module')
+  },
+
+  // Main layout — protegido
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'home',       loadChildren: () => import('./modules/home/...')         },
+      { path: 'search',     loadChildren: () => import('./modules/search/...')       },
+      { path: 'movie/:id',  loadChildren: () => import('./modules/movie-detail/...') },
+      { path: 'watchlist',  loadChildren: () => import('./modules/watchlist/...')    },
+      { path: 'favorites',  loadChildren: () => import('./modules/favorites/...')    },
+      { path: 'history',    loadChildren: () => import('./modules/history/...')      },
+      { path: 'ratings',    loadChildren: () => import('./modules/my-ratings/...')   },
+      { path: 'reports',    loadChildren: () => import('./modules/reports/...')      },
+      { path: 'settings',   loadChildren: () => import('./modules/settings/...')     },
+      {
+        path: 'admin',
+        canActivate: [AdminGuard],
+        loadChildren: () => import('./modules/admin/...')
+      },
+    ]
+  },
+
+  { path: '**', redirectTo: '/home' }
+];
+```
+
+**Fluxo de navegação pós-registo:**
+```
+Registo → (onboarded = 0) → /onboarding (escolha de géneros) → /home
+Login   → (onboarded = 1) → /home directamente
+Login   → (onboarded = 0) → /onboarding (edge case: saiu antes de completar)
+```
+
+---
+
+### 3.6 Separação de Responsabilidades
+
+**Backend (PHP puro):**
+
+| Camada | Responsabilidade | Exemplo concreto |
+|---|---|---|
+| `index.php` | Bootstrap: config, cors, router | Entry point único |
+| `Router` | METHOD + URI → Controller | `GET /api/movies/trending → MovieController::getTrending` |
+| `Controller` | Valida input, chama Service, devolve JSON | Sem lógica de negócio |
+| `Service` | Orquestração, cálculos, chamadas TMDB/OMDB | `RecommendationService::getForUser($userId)` |
+| `Model` | Apenas queries PDO parametrizadas | `RatingModel::findByUser($userId)` |
+| `Middleware` | Auth JWT, admin check | Cross-cutting antes do controller |
+| `CacheHelper` | Cache ficheiro das respostas TMDB (TTL 1h) | Evita rate limit e melhora performance |
+| `SimilarityHelper` | Algoritmos Jaccard, scoring, merge | Funções puras sem dependências |
+
+**Frontend (Angular):**
+
+| Camada | Responsabilidade |
+|---|---|
+| `Component` | Template + interação UI. Zero lógica de negócio |
+| `Service` | HTTP calls, BehaviorSubject para estado partilhado |
+| `Guard` | Auth e Admin route protection |
+| `Interceptor` | Token injection, error handling global (401 → logout) |
+| `Model/Interface` | Contratos TypeScript mapeados do JSON do backend |
+| `Pipe` | `tmdb-image`, `runtime`, `year`, `translate` — formatação reutilizável |
+| `SharedModule` | `movie-card`, `movie-grid`, `star-rating`, `trailer-modal` — zero lógica |
+
+---
+
+### 3.7 Funcionalidades por Módulo
+
+| Módulo | Funcionalidades | Requisitos Lab satisfeitos |
+|---|---|---|
+| **Auth** | Registo, Login, Logout, Recuperar senha | R1 |
+| **Onboarding** | Selecionar géneros favoritos (grid visual) | — (cold start do motor) |
+| **Home** | Hero banner, "Para si" (recomendações), Trending, Top Rated, Por género | R3 + Motor IA |
+| **Search** | Pesquisa full-text + filtros (género, ano, rating, ordenação) | R3 |
+| **Movie Detail** | Info completa, elenco, trailer, avaliação do user, similares, ratings externos | R2 (CRUD ratings) + R3 |
+| **Watchlist** | Add/remover "ver mais tarde", grid com posters | R2 (CRUD) |
+| **Favorites** | Add/remover favoritos | R2 (CRUD) |
+| **History** | Marcar como visto, ver histórico | R2 (CRUD) |
+| **My Ratings** | Ver/editar/apagar todas as avaliações pessoais | R2 (CRUD) |
+| **Reports** | Exportar watchlist, favoritos, histórico, avaliações em CSV/PDF | R7 |
+| **Settings** | Tema R5, idioma R6, géneros favoritos, perfil, password | R5, R6 |
+| **Admin** | Gerir utilizadores, moderar avaliações, stats | Req. condicional |
+
+---
+
+### 3.8 Implementação de Requisitos Transversais
+
+**Modo claro/escuro (R5) — orientado ao contexto de cinema:**
+```scss
+// _themes.scss
+[data-theme="dark"] {          // DEFAULT para este sistema
+  --bg-primary:   #0a0a0f;
+  --bg-secondary: #12121a;
+  --card-bg:      #1a1a2e;
+  --text-primary: #e8e8f0;
+  --text-muted:   #8888aa;
+  --accent:       #e50914;    // vermelho Netflix-like
+  --accent-hover: #f40d1a;
+  --star-color:   #f5c518;    // amarelo IMDb
+  --border:       #2a2a3e;
+}
+[data-theme="light"] {
+  --bg-primary:   #f5f5f7;
+  --bg-secondary: #ffffff;
+  --card-bg:      #ffffff;
+  --text-primary: #1a1a2e;
+  --text-muted:   #666680;
+  --accent:       #c0392b;
+  --star-color:   #e6a817;
+  --border:       #e0e0e8;
+}
+```
+
+**Multi-idioma (R6) — integração com TMDB:**
+```php
+// TMDBService.php — usa language do utilizador
+$lang = $user['language'] === 'pt' ? 'pt-PT' : 'en-US';
+$url = "https://api.themoviedb.org/3/movie/{$id}?api_key={$key}&language={$lang}";
+// TMDB suporta nativamente pt-PT → títulos e sinopses em português
+```
+```json
+// pt.json
+{
+  "nav.home": "Início",
+  "nav.watchlist": "Para Ver",
+  "nav.favorites": "Favoritos",
+  "movie.rating": "A tua avaliação",
+  "recommendation.title": "Recomendado para ti"
+}
+// en.json
+{
+  "nav.home": "Home",
+  "nav.watchlist": "Watchlist",
+  "nav.favorites": "Favorites",
+  "movie.rating": "Your rating",
+  "recommendation.title": "Recommended for you"
+}
+```
+
+**Exportação PDF (R7) — FPDF (PHP, sem Composer):**
+
+> **Suposição explicitamente rotulada** (idêntica ao sistema anterior): "PHP puro" = sem frameworks, não proíbe libs auxiliares de ficheiro único como FPDF. Se inválido: geração PDF no Angular com `jsPDF`.
+
+```php
+// ExportService.php — exemplo PDF de avaliações
+public function exportRatingsPDF(int $userId): void {
+    $ratings = $this->ratingModel->findByUser($userId);
+    $pdf = new FPDF('P', 'mm', 'A4');
+    $pdf->AddPage();
+    $pdf->SetFont('Arial', 'B', 16);
+    $pdf->Cell(0, 10, 'As minhas avaliações', 0, 1, 'C');
+    foreach ($ratings as $r) {
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(0, 8, $r['movie_title'] . ' (' . $r['release_year'] . ') - ' . $r['rating'] . '/5', 0, 1);
+    }
+    $pdf->Output('D', 'avaliacoes_' . date('Y-m-d') . '.pdf');
+}
+```
+
+---
+
+## PARTE 4 — VERIFICAÇÃO FINAL
+
+### Checklist de conformidade com Lab #04
+
+| Requisito | Status | Como implementado |
+|---|---|---|
+| R1 — Auth completa | ✅ | Módulo auth + JWT + recuperação senha por email |
+| R2 — BD ≥ 3 tabelas + CRUD | ✅ | 7 tabelas; CRUD em ratings, watchlist, favorites, history |
+| R3 — API externa | ✅ | TMDB (primária) + OMDB (ratings externos) |
+| R4 — Interface responsiva | ✅ | Angular + SCSS grid responsivo para posters |
+| R5 — Light/dark mode | ✅ | CSS custom properties + ThemeService + dark default |
+| R6 — Multi-idioma ≥ 2 | ✅ | PT + EN; TMDB suporta `language=pt-PT` nativamente |
+| R7 — Exportação CSV/PDF | ✅ | ExportService PHP, endpoints dedicados |
+| Cond. — Tipos de utilizador | ✅ | ENUM('admin','user') |
+| Cond. — Permissões diferenciadas | ✅ | AdminMiddleware + AdminGuard + moderação de avaliações |
+| Stack Angular | ✅ | Frontend 100% Angular, lazy loading, SharedModule |
+| Stack PHP puro | ✅ | Sem frameworks; Router, Core, Middleware próprios |
+| Stack SQL relacional | ✅ | MySQL/MariaDB, 7 tabelas, 3NF |
+| Comunicação HTTP + JSON | ✅ | Todos os endpoints devolvem JSON |
+| Componentes reutilizáveis | ✅ | 12+ componentes no SharedModule |
+| Módulos Angular | ✅ | 11 feature modules com lazy loading |
+| Sep. interface/lógica/serviços | ✅ | Component / Service / Guard / Interceptor / Pipe separados |
+| Sep. negócio/dados/endpoints | ✅ | Controller / Service / Model no backend |
+| GitHub + commits progressivos | ⚠️ | Estrutura definida; execução é do programador |
+| Web scraping | ✅ (não usado) | TMDB cobre 100% dos dados sem scraping |
+| Motor de Recomendação (IA) | ✅ | Híbrido: Content-Based + Collaborative + TMDB Similar |
+| Cold start | ✅ | Onboarding de géneros + fallback TMDB trending |
+
+### Extrapolações indevidas — Nenhuma detectada
+Todos os itens estão sustentados pelo Lab #04 ou explicitamente rotulados como suposições.
+
+### Diferenças estruturais relevantes face ao Sistema de Criptomoedas
+
+| Aspecto | Criptomoedas | Filmes |
+|---|---|---|
+| Natureza dos dados | Tempo-real (preços) | Relativamente estável (filmes não mudam) |
+| Cache | Curta (1-5 min para preços) | Longa (1h+ para detalhes, 6h para trending) |
+| Complexidade BD | Foco em séries temporais | Foco em preferências e listas do utilizador |
+| Algoritmo central | Cálculo financeiro (P&L, MA) | Motor de recomendação (scoring híbrido) |
+| API principal | CoinGecko + CoinCap WS | TMDB (muito mais rico em metadados) |
+| Módulo extra | — | Onboarding (cold start obrigatório) |
+| Tema visual | Laranja/verde financeiro | Vermelho escuro cinematográfico |
+
+---
+
+**Próximo passo:** Indica por onde queres começar a implementação — schema SQL + seed, backend Auth completo, TMDBService + cache, motor de recomendação em PHP, ou o setup Angular com tema e i18n.
