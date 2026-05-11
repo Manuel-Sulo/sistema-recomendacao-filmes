@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { AuthService } from '../../core/services/auth.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -100,7 +100,8 @@ export class OnboardingComponent implements OnInit {
     private api: ApiService,
     private auth: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -119,15 +120,17 @@ export class OnboardingComponent implements OnInit {
 
   save(): void {
     this.saving = true;
-    const genreIds = Array.from(this.selectedIds);
-    this.api.setUserGenres(genreIds).subscribe({
+    const genreObjects = this.genres
+      .filter(g => this.selectedIds.has(g.id))
+      .map(g => ({ id: g.id, name: g.name }));
+    this.api.setUserGenres(genreObjects).subscribe({
       next: () => {
         const user = this.auth.currentUser;
         if (user) { user.onboarded = 1; this.auth.updateUser(user); }
-        this.toast.success('Preferências guardadas! 🎬');
+        this.toast.success(this.translate.instant('feedback.preferencesSaved'));
         this.router.navigate(['/home']);
       },
-      error: () => { this.saving = false; this.toast.error('Erro ao guardar preferências'); },
+      error: () => { this.saving = false; this.toast.error(this.translate.instant('feedback.errorPreferences')); },
     });
   }
 }

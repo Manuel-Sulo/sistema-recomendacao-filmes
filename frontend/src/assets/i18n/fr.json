@@ -15,33 +15,33 @@
   "auth": {
     "login": "Connexion",
     "register": "Créer un compte",
-    "email": "E-mail",
+    "email": "Email",
     "password": "Mot de passe",
     "name": "Nom",
     "forgotPassword": "Mot de passe oublié ?",
-    "resetPassword": "Réinitialiser",
+    "resetPassword": "Réinitialiser le mot de passe",
     "hasAccount": "Vous avez déjà un compte ?",
-    "noAccount": "Pas de compte ?",
+    "noAccount": "Pas encore de compte ?",
     "loginSuccess": "Connexion réussie !",
     "registerSuccess": "Compte créé !",
     "logoutSuccess": "Déconnecté",
     "fillAllFields": "Veuillez remplir tous les champs",
     "namePlaceholder": "Votre nom",
-    "emailPlaceholder": "email@exemple.com",
+    "emailPlaceholder": "email@exemple.fr",
     "minPassword": "Minimum 6 caractères",
-    "invalidCredentials": "Email ou mot de passe incorrect",
-    "accountCreated": "Compte créé avec succès ! 🎬",
+    "invalidCredentials": "Email ou mot de passe invalide",
+    "accountCreated": "Compte créé avec succès ! Connectez-vous pour continuer.",
     "errorCreateAccount": "Erreur lors de la création du compte"
   },
   "movies": {
     "trending": "Tendances",
     "popular": "Populaires",
-    "topRated": "Mieux notés",
+    "topRated": "Les mieux notés",
     "recommended": "Recommandés",
     "similar": "Films similaires",
-    "details": "Voir détails",
+    "details": "Voir les détails",
     "search": "Rechercher des films...",
-    "noResults": "Aucun résultat",
+    "noResults": "Aucun résultat trouvé",
     "cast": "Distribution",
     "overview": "Synopsis",
     "releaseDate": "Date de sortie",
@@ -55,7 +55,7 @@
     "removeFavorite": "Retirer des favoris",
     "addWatchlist": "Ajouter à la liste",
     "removeWatchlist": "Retirer de la liste",
-    "markWatched": "Marquer vu",
+    "markWatched": "Marquer comme vu",
     "rate": "Évaluer",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -64,7 +64,8 @@
     "back": "Retour",
     "retry": "Réessayer",
     "export": "Exporter",
-    "remove": "Retirer"
+    "remove": "Retirer",
+    "writeReview": "Écrivez votre avis (optionnel)"
   },
   "settings": {
     "title": "Paramètres",
@@ -81,43 +82,72 @@
   },
   "onboarding": {
     "title": "Choisissez vos genres préférés",
-    "subtitle": "Sélectionnez au moins 3 pour personnaliser",
-    "continue": "Continuer"
+    "subtitle": "Sélectionnez au moins 3 pour personnaliser vos recommandations",
+    "continue": "Continuer",
+    "selected": "sélectionnés"
   },
-  "export": { "title": "Exporter les données" },
+  "export": {
+    "title": "Exporter les données",
+    "reportsTitle": "Rapports et Export",
+    "subtitle": "Exportez vos données dans différents formats",
+    "exportList": "Exporter la liste de",
+    "reportOf": "Rapport de",
+    "exportAll": "Exporter toutes les",
+    "preparing": "Préparation de l'export..."
+  },
   "home": {
-    "madeForYou": "FAIT POUR VOUS",
-    "trendingTitle": "TENDANCES",
-    "popularTitle": "POPULAIRES",
-    "topRatedTitle": "MIEUX NOTÉS"
+    "madeForYou": "Pour Vous",
+    "trendingTitle": "Tendances",
+    "popularTitle": "Populaires",
+    "topRatedTitle": "Les Mieux Notés"
   },
   "favorites": {
-    "myFavorites": "MES FAVORIS",
+    "myFavorites": "Mes Favoris",
     "moviesSaved": "films enregistrés",
-    "noFavorites": "Aucun favori pour le moment",
+    "noFavorites": "Pas encore de favoris",
     "addMovies": "Ajoutez des films aux favoris pour les voir ici"
   },
   "watchlistPage": {
-    "toWatch": "À VOIR",
+    "toWatch": "À Voir",
     "moviesInList": "films dans la liste",
     "emptyWatchlist": "Liste vide",
-    "addMovies": "Ajoutez des films à regarder plus tard"
+    "addMovies": "Ajoutez des films à voir plus tard"
   },
   "search": {
-    "exploreMovies": "EXPLORER LES FILMS",
+    "exploreMovies": "Explorer les Films",
     "tryAnother": "Essayez un autre terme de recherche",
     "previous": "Précédent",
     "next": "Suivant"
   },
+  "ratings": {
+    "myRatings": "Mes Évaluations",
+    "moviesRated": "films évalués",
+    "noRatings": "Pas encore d'évaluations",
+    "rateMovies": "Évaluez des films pour les voir ici",
+    "selectRating": "Sélectionnez une note",
+    "saved": "Évaluation enregistrée !",
+    "updated": "Évaluation mise à jour !",
+    "deleted": "Évaluation supprimée",
+    "errorLoad": "Erreur lors du chargement des évaluations",
+    "errorSave": "Erreur lors de l'enregistrement",
+    "errorUpdate": "Erreur lors de la mise à jour",
+    "communityReviews": "Avis de la Communauté"
+  },
   "feedback": {
-    "addedFavorite": "Ajouté aux favoris ! ♥",
+    "addedFavorite": "Ajouté aux favoris !",
     "removedFavorite": "Retiré des favoris",
-    "addedWatchlist": "Ajouté à la liste ! 📋",
+    "addedWatchlist": "Ajouté à la liste !",
     "removedWatchlist": "Retiré de la liste",
+    "markedWatched": "Marqué comme vu !",
+    "removedHistory": "Retiré de l'historique",
     "errorLoad": "Erreur de chargement",
-    "errorRemove": "Erreur lors de la suppression",
+    "errorRemove": "Erreur lors du retrait",
+    "errorAdd": "Erreur lors de l'ajout",
     "errorLoadMovies": "Erreur lors du chargement des tendances",
-    "reloading": "Rechargement..."
+    "errorLoadDetails": "Erreur lors du chargement des détails",
+    "reloading": "Rechargement...",
+    "preferencesSaved": "Préférences enregistrées !",
+    "errorPreferences": "Erreur lors de l'enregistrement des préférences"
   },
   "footer": {
     "description": "Votre plateforme de recommandation de films par IA.",
@@ -129,5 +159,11 @@
     "about": "À propos",
     "rights": "Tous droits réservés."
   },
-  "common": { "loading": "Chargement...", "error": "Erreur", "success": "Succès", "noData": "Aucune donnée", "all": "Tous" }
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "noData": "Aucune donnée",
+    "all": "Tous"
+  }
 }

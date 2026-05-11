@@ -30,7 +30,7 @@
     "emailPlaceholder": "email@exemplo.com",
     "minPassword": "Mínimo 6 caracteres",
     "invalidCredentials": "Email ou password incorretos",
-    "accountCreated": "Conta criada com sucesso! 🎬",
+    "accountCreated": "Conta criada com sucesso! Faça login para continuar.",
     "errorCreateAccount": "Erro ao criar conta"
   },
   "movies": {
@@ -64,7 +64,8 @@
     "back": "Voltar",
     "retry": "Tentar novamente",
     "export": "Exportar",
-    "remove": "Remover"
+    "remove": "Remover",
+    "writeReview": "Escreva a sua opinião (opcional)"
   },
   "settings": {
     "title": "Definições",
@@ -82,44 +83,71 @@
   "onboarding": {
     "title": "Escolha os seus géneros favoritos",
     "subtitle": "Selecione pelo menos 3 para personalizarmos as recomendações",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "selected": "selecionados"
   },
   "export": {
-    "title": "Exportar Dados"
+    "title": "Exportar Dados",
+    "reportsTitle": "Relatórios e Exportação",
+    "subtitle": "Exporte os seus dados em diferentes formatos",
+    "exportList": "Exportar lista de",
+    "reportOf": "Relatório de",
+    "exportAll": "Exportar todas as",
+    "preparing": "A preparar exportação..."
   },
   "home": {
-    "madeForYou": "FEITO PARA TI",
-    "trendingTitle": "EM ALTA",
-    "popularTitle": "POPULARES",
-    "topRatedTitle": "MELHOR AVALIADOS"
+    "madeForYou": "Feito para Ti",
+    "trendingTitle": "Em Alta",
+    "popularTitle": "Populares",
+    "topRatedTitle": "Melhor Avaliados"
   },
   "favorites": {
-    "myFavorites": "MEUS FAVORITOS",
+    "myFavorites": "Meus Favoritos",
     "moviesSaved": "filmes guardados",
     "noFavorites": "Sem favoritos ainda",
     "addMovies": "Adicione filmes aos favoritos para os ver aqui"
   },
   "watchlistPage": {
-    "toWatch": "PARA VER",
+    "toWatch": "Para Ver",
     "moviesInList": "filmes na lista",
     "emptyWatchlist": "Watchlist vazia",
     "addMovies": "Adicione filmes para ver mais tarde"
   },
   "search": {
-    "exploreMovies": "EXPLORAR FILMES",
+    "exploreMovies": "Explorar Filmes",
     "tryAnother": "Tente outro termo de pesquisa",
     "previous": "Anterior",
     "next": "Seguinte"
   },
+  "ratings": {
+    "myRatings": "Minhas Avaliações",
+    "moviesRated": "filmes avaliados",
+    "noRatings": "Sem avaliações ainda",
+    "rateMovies": "Avalie filmes para os ver aqui",
+    "selectRating": "Selecione uma avaliação",
+    "saved": "Avaliação guardada!",
+    "updated": "Avaliação atualizada!",
+    "deleted": "Avaliação eliminada",
+    "errorLoad": "Erro ao carregar avaliações",
+    "errorSave": "Erro ao guardar avaliação",
+    "errorUpdate": "Erro ao atualizar avaliação",
+    "communityReviews": "Avaliações da Comunidade"
+  },
   "feedback": {
-    "addedFavorite": "Adicionado aos favoritos! ♥",
+    "addedFavorite": "Adicionado aos favoritos!",
     "removedFavorite": "Removido dos favoritos",
-    "addedWatchlist": "Adicionado à watchlist! 📋",
+    "addedWatchlist": "Adicionado à watchlist!",
     "removedWatchlist": "Removido da watchlist",
+    "markedWatched": "Marcado como visto!",
+    "removedHistory": "Removido do histórico",
     "errorLoad": "Erro ao carregar",
     "errorRemove": "Erro ao remover",
+    "errorAdd": "Erro ao adicionar",
     "errorLoadMovies": "Erro ao carregar filmes em alta",
-    "reloading": "A recarregar..."
+    "errorLoadDetails": "Erro ao carregar detalhes do filme",
+    "reloading": "A recarregar...",
+    "preferencesSaved": "Preferências guardadas!",
+    "errorPreferences": "Erro ao guardar preferências"
   },
   "footer": {
     "description": "A sua plataforma de recomendação de filmes com inteligência artificial.",

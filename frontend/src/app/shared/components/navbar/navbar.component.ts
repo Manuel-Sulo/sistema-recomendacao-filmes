@@ -109,9 +109,9 @@ import { ApiService } from '../../../core/services/api.service';
       transition: transform 0.3s ease;
       &:hover { transform: scale(1.03); opacity: 1; }
     }
-    .brand-logo { height: 34px; }
+    .brand-logo { height: 44px; }
     .brand-name {
-      font-size: 22px; font-weight: 900; letter-spacing: -0.03em;
+      font-size: 26px; font-weight: 900; letter-spacing: -0.03em;
       color: var(--accent); font-family: var(--font-display);
     }
     .nav-links {

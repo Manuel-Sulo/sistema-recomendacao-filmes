@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { environment } from '../../../environments/environment';
@@ -13,9 +13,9 @@ import { environment } from '../../../environments/environment';
   template: `
     <div class="page container">
       <div class="page-header animate-fade-up">
-        <span class="section-label">⭐ {{ 'nav.ratings' | translate }}</span>
-        <h1 class="text-h1">MINHAS AVALIAÇÕES</h1>
-        <p class="text-muted mt-2">{{ ratings.length }} filmes avaliados</p>
+        <span class="section-label">{{ 'nav.ratings' | translate }}</span>
+        <h1 class="text-h1">{{ 'ratings.myRatings' | translate }}</h1>
+        <p class="text-muted mt-2">{{ ratings.length }} {{ 'ratings.moviesRated' | translate }}</p>
       </div>
       <div class="ratings-list mt-8" *ngIf="ratings.length">
         <div *ngFor="let r of ratings; let i = index" class="rating-card card-glass animate-fade-up" [style.animation-delay]="(i * 0.05) + 's'">
@@ -31,13 +31,13 @@ import { environment } from '../../../environments/environment';
             </div>
             <p class="rating-review mt-2" *ngIf="r.review">{{ r.review }}</p>
           </div>
-          <button class="delete-btn btn-icon" (click)="deleteRating(r)" title="Eliminar">🗑</button>
+          <button class="delete-btn btn-icon" (click)="deleteRating(r)" [title]="'actions.delete' | translate">🗑</button>
         </div>
       </div>
       <div *ngIf="!ratings.length && !loading" class="empty-state text-center mt-16 animate-fade-up">
         <p style="font-size:56px">⭐</p>
-        <p class="text-h3 mt-4">Sem avaliações ainda</p>
-        <p class="text-muted mt-2">Avalie filmes para os ver aqui</p>
+        <p class="text-h3 mt-4">{{ 'ratings.noRatings' | translate }}</p>
+        <p class="text-muted mt-2">{{ 'ratings.rateMovies' | translate }}</p>
       </div>
       <div *ngIf="loading" class="ratings-list mt-8">
         <div *ngFor="let i of [1,2,3]" class="skeleton" style="height:100px;border-radius:var(--radius-lg)"></div>
@@ -74,12 +74,12 @@ export class RatingsComponent implements OnInit {
   ratings: any[] = [];
   loading = true;
 
-  constructor(private api: ApiService, private toast: ToastService) {}
+  constructor(private api: ApiService, private toast: ToastService, private t: TranslateService) {}
 
   ngOnInit(): void {
     this.api.getRatings().subscribe({
       next: (res: any) => { this.ratings = res?.data || []; this.loading = false; },
-      error: () => { this.loading = false; this.toast.error('Erro ao carregar avaliações'); },
+      error: () => { this.loading = false; this.toast.error(this.t.instant('ratings.errorLoad')); },
     });
   }
 
@@ -87,9 +87,9 @@ export class RatingsComponent implements OnInit {
     this.api.deleteRating(r.tmdb_id).subscribe({
       next: () => {
         this.ratings = this.ratings.filter(x => x.tmdb_id !== r.tmdb_id);
-        this.toast.success('Avaliação eliminada');
+        this.toast.success(this.t.instant('ratings.deleted'));
       },
-      error: () => this.toast.error('Erro ao eliminar'),
+      error: () => this.toast.error(this.t.instant('feedback.errorRemove')),
     });
   }
 }

@@ -107,4 +107,15 @@ class RatingModel
         $stmt = $this->db->query('SELECT COUNT(*) as total FROM ratings');
         return (int) $stmt->fetch()['total'];
     }
+
+    public function findByMovie(int $tmdbId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT r.rating, r.review, r.rated_at, u.name as user_name
+             FROM ratings r JOIN users u ON u.id = r.user_id
+             WHERE r.tmdb_id = ? ORDER BY r.rated_at DESC'
+        );
+        $stmt->execute([$tmdbId]);
+        return $stmt->fetchAll();
+    }
 }

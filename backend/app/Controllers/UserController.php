@@ -26,7 +26,7 @@ class UserController
         $updates = [];
         if (isset($body['name']))  $updates['name']  = htmlspecialchars($body['name']);
         if (isset($body['theme'])) $updates['theme'] = in_array($body['theme'], ['light','dark']) ? $body['theme'] : 'dark';
-        if (isset($body['preferred_language'])) $updates['preferred_language'] = in_array($body['preferred_language'], ['pt','en']) ? $body['preferred_language'] : 'pt';
+        if (isset($body['preferred_language'])) $updates['preferred_language'] = in_array($body['preferred_language'], ['pt','en','de','fr','it','ru','ko']) ? $body['preferred_language'] : 'pt';
 
         if (empty($updates)) Response::error('Nada para atualizar');
 

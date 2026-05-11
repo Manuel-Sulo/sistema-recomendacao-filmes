@@ -82,7 +82,7 @@
   --glass-border: rgba(255, 255, 255, 0.15);
   --glass-shadow: 0 8px 32px 0 rgba(10, 10, 12, 0.8);
   --glass-bg-solid: rgba(28, 17, 11, 0.88);
-  --bg-primary-rgb: rgba(28, 17, 11, 0.95);
+  --bg-primary-rgb: 28, 17, 11;
 }
 
 /* === LIGHT MODE === */
@@ -112,7 +112,7 @@
   --glass-border: rgba(0, 0, 0, 0.1);
   --glass-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   --glass-bg-solid: rgba(255, 255, 255, 0.92);
-  --bg-primary-rgb: rgba(251, 247, 244, 0.95);
+  --bg-primary-rgb: 251, 247, 244;
 }
 
 /* === RESET & BASE === */

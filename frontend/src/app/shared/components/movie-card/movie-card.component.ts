@@ -12,7 +12,7 @@ import { environment } from '../../../../environments/environment';
       <div class="card-poster">
         <img
           *ngIf="movie.poster_path"
-          [src]="imgUrl + '/w342' + movie.poster_path"
+          [src]="imgUrl + '/w342' + posterPath"
           [alt]="movie.title || movie.movie_title"
           class="poster-img"
           loading="lazy">
@@ -123,6 +123,12 @@ import { environment } from '../../../../environments/environment';
 export class MovieCardComponent {
   @Input() movie: any = {};
   imgUrl = environment.tmdbImageUrl;
+
+  get posterPath(): string {
+    const p = this.movie.poster_path || '';
+    if (!p) return '';
+    return p.startsWith('/') ? p : '/' + p;
+  }
 
   getYear(): string {
     const date = this.movie.release_date || this.movie.release_year;

@@ -1,7 +1,7 @@
 {
   "nav": {
     "home": "Startseite",
-    "search": "Suchen",
+    "search": "Suche",
     "favorites": "Favoriten",
     "watchlist": "Merkliste",
     "ratings": "Bewertungen",
@@ -21,16 +21,16 @@
     "forgotPassword": "Passwort vergessen?",
     "resetPassword": "Passwort zurücksetzen",
     "hasAccount": "Haben Sie bereits ein Konto?",
-    "noAccount": "Kein Konto?",
+    "noAccount": "Noch kein Konto?",
     "loginSuccess": "Anmeldung erfolgreich!",
     "registerSuccess": "Konto erstellt!",
     "logoutSuccess": "Abgemeldet",
-    "fillAllFields": "Bitte alle Felder ausfüllen",
+    "fillAllFields": "Bitte füllen Sie alle Felder aus",
     "namePlaceholder": "Ihr Name",
-    "emailPlaceholder": "email@beispiel.com",
+    "emailPlaceholder": "email@beispiel.de",
     "minPassword": "Mindestens 6 Zeichen",
     "invalidCredentials": "Ungültige E-Mail oder Passwort",
-    "accountCreated": "Konto erfolgreich erstellt! 🎬",
+    "accountCreated": "Konto erfolgreich erstellt! Bitte melden Sie sich an.",
     "errorCreateAccount": "Fehler beim Erstellen des Kontos"
   },
   "movies": {
@@ -43,7 +43,7 @@
     "search": "Filme suchen...",
     "noResults": "Keine Ergebnisse gefunden",
     "cast": "Besetzung",
-    "overview": "Übersicht",
+    "overview": "Handlung",
     "releaseDate": "Erscheinungsdatum",
     "runtime": "Laufzeit",
     "genres": "Genres",
@@ -64,13 +64,14 @@
     "back": "Zurück",
     "retry": "Erneut versuchen",
     "export": "Exportieren",
-    "remove": "Entfernen"
+    "remove": "Entfernen",
+    "writeReview": "Schreiben Sie Ihre Meinung (optional)"
   },
   "settings": {
     "title": "Einstellungen",
-    "appearance": "Erscheinungsbild",
+    "appearance": "Darstellung",
     "language": "Sprache",
-    "theme": "Thema",
+    "theme": "Design",
     "dark": "Dunkel",
     "light": "Hell",
     "profile": "Profil",
@@ -81,46 +82,75 @@
   },
   "onboarding": {
     "title": "Wählen Sie Ihre Lieblingsgenres",
-    "subtitle": "Wählen Sie mindestens 3 zur Personalisierung",
-    "continue": "Weiter"
+    "subtitle": "Wählen Sie mindestens 3 aus, um Ihre Empfehlungen zu personalisieren",
+    "continue": "Weiter",
+    "selected": "ausgewählt"
   },
-  "export": { "title": "Daten exportieren" },
+  "export": {
+    "title": "Daten exportieren",
+    "reportsTitle": "Berichte & Export",
+    "subtitle": "Exportieren Sie Ihre Daten in verschiedenen Formaten",
+    "exportList": "Liste exportieren von",
+    "reportOf": "Bericht von",
+    "exportAll": "Alle exportieren",
+    "preparing": "Export wird vorbereitet..."
+  },
   "home": {
-    "madeForYou": "FÜR DICH GEMACHT",
-    "trendingTitle": "IM TREND",
-    "popularTitle": "BELIEBT",
-    "topRatedTitle": "BESTBEWERTET"
+    "madeForYou": "Für Sie",
+    "trendingTitle": "Im Trend",
+    "popularTitle": "Beliebt",
+    "topRatedTitle": "Bestbewertet"
   },
   "favorites": {
-    "myFavorites": "MEINE FAVORITEN",
+    "myFavorites": "Meine Favoriten",
     "moviesSaved": "Filme gespeichert",
     "noFavorites": "Noch keine Favoriten",
     "addMovies": "Fügen Sie Filme zu Favoriten hinzu"
   },
   "watchlistPage": {
-    "toWatch": "ZUM ANSEHEN",
+    "toWatch": "Zum Ansehen",
     "moviesInList": "Filme in der Liste",
     "emptyWatchlist": "Merkliste ist leer",
     "addMovies": "Fügen Sie Filme zum späteren Ansehen hinzu"
   },
   "search": {
-    "exploreMovies": "FILME ENTDECKEN",
+    "exploreMovies": "Filme entdecken",
     "tryAnother": "Versuchen Sie einen anderen Suchbegriff",
     "previous": "Zurück",
     "next": "Weiter"
   },
+  "ratings": {
+    "myRatings": "Meine Bewertungen",
+    "moviesRated": "Filme bewertet",
+    "noRatings": "Noch keine Bewertungen",
+    "rateMovies": "Bewerten Sie Filme, um sie hier zu sehen",
+    "selectRating": "Wählen Sie eine Bewertung",
+    "saved": "Bewertung gespeichert!",
+    "updated": "Bewertung aktualisiert!",
+    "deleted": "Bewertung gelöscht",
+    "errorLoad": "Fehler beim Laden der Bewertungen",
+    "errorSave": "Fehler beim Speichern der Bewertung",
+    "errorUpdate": "Fehler beim Aktualisieren der Bewertung",
+    "communityReviews": "Community-Bewertungen"
+  },
   "feedback": {
-    "addedFavorite": "Zu Favoriten hinzugefügt! ♥",
+    "addedFavorite": "Zu Favoriten hinzugefügt!",
     "removedFavorite": "Aus Favoriten entfernt",
-    "addedWatchlist": "Zur Merkliste hinzugefügt! 📋",
+    "addedWatchlist": "Zur Merkliste hinzugefügt!",
     "removedWatchlist": "Von Merkliste entfernt",
+    "markedWatched": "Als gesehen markiert!",
+    "removedHistory": "Aus Verlauf entfernt",
     "errorLoad": "Fehler beim Laden",
     "errorRemove": "Fehler beim Entfernen",
+    "errorAdd": "Fehler beim Hinzufügen",
     "errorLoadMovies": "Fehler beim Laden der Trendfilme",
-    "reloading": "Wird neu geladen..."
+    "errorLoadDetails": "Fehler beim Laden der Filmdetails",
+    "reloading": "Wird neu geladen...",
+    "preferencesSaved": "Einstellungen gespeichert!",
+    "errorPreferences": "Fehler beim Speichern der Einstellungen"
   },
   "footer": {
-    "description": "Ihre KI-gestützte Film-Empfehlungsplattform.",
+    "description": "Ihre KI-gestützte Filmempfehlungsplattform.",
     "navigation": "Navigation",
     "resources": "Ressourcen",
     "legal": "Rechtliches",
@@ -129,5 +159,11 @@
     "about": "Über uns",
     "rights": "Alle Rechte vorbehalten."
   },
-  "common": { "loading": "Laden...", "error": "Fehler", "success": "Erfolg", "noData": "Keine Daten", "all": "Alle" }
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "noData": "Keine Daten",
+    "all": "Alle"
+  }
 }

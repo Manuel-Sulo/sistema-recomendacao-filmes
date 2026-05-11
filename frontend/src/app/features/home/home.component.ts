@@ -60,7 +60,7 @@ import { environment } from '../../../environments/environment';
         <section class="movie-section" *ngIf="recommendations.length">
           <div class="section-header">
             <div>
-              <span class="section-label">✨ {{ 'movies.recommended' | translate }}</span>
+              <span class="section-label">{{ 'movies.recommended' | translate }}</span>
               <h2 class="text-h2">{{ 'home.madeForYou' | translate }}</h2>
             </div>
           </div>
@@ -73,7 +73,7 @@ import { environment } from '../../../environments/environment';
         <section class="movie-section">
           <div class="section-header">
             <div>
-              <span class="section-label">🔥 {{ 'movies.trending' | translate }}</span>
+              <span class="section-label">{{ 'movies.trending' | translate }}</span>
               <h2 class="text-h2">{{ 'home.trendingTitle' | translate }}</h2>
             </div>
           </div>
@@ -86,7 +86,7 @@ import { environment } from '../../../environments/environment';
         <section class="movie-section">
           <div class="section-header">
             <div>
-              <span class="section-label">🎬 {{ 'movies.popular' | translate }}</span>
+              <span class="section-label">{{ 'movies.popular' | translate }}</span>
               <h2 class="text-h2">{{ 'home.popularTitle' | translate }}</h2>
             </div>
           </div>
@@ -99,7 +99,7 @@ import { environment } from '../../../environments/environment';
         <section class="movie-section mb-16">
           <div class="section-header">
             <div>
-              <span class="section-label">⭐ {{ 'movies.topRated' | translate }}</span>
+              <span class="section-label">{{ 'movies.topRated' | translate }}</span>
               <h2 class="text-h2">{{ 'home.topRatedTitle' | translate }}</h2>
             </div>
           </div>
@@ -124,7 +124,7 @@ import { environment } from '../../../environments/environment';
     .hero-overlay {
       position: absolute; inset: 0;
       background:
-        linear-gradient(to right, rgba(28, 17, 11, 0.97) 0%, rgba(28, 17, 11, 0.7) 50%, rgba(28, 17, 11, 0.2) 100%),
+        linear-gradient(to right, var(--bg-primary) 0%, rgba(var(--bg-primary-rgb), 0.7) 50%, rgba(var(--bg-primary-rgb), 0.2) 100%),
         linear-gradient(to top, var(--bg-primary) 0%, transparent 35%);
       display: flex; align-items: flex-end; padding-bottom: var(--space-16);
     }

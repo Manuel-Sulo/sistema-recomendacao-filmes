@@ -50,13 +50,7 @@ export class AuthService {
   }
 
   register(name: string, email: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, { name, email, password }).pipe(
-      tap(res => {
-        if (res.success) {
-          this.setSession(res.data.token, res.data.user);
-        }
-      })
-    );
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, { name, email, password });
   }
 
   logout(): void {

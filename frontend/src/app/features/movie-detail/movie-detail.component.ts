@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 import { MovieCardComponent } from '../../shared/components/movie-card/movie-card.component';
@@ -32,11 +33,11 @@ import { environment } from '../../../environments/environment';
               <p class="overview mt-4">{{ movie.overview }}</p>
               <div class="actions mt-6">
                 <button class="btn btn-icon action-btn" [class.active]="movie.is_favorite" (click)="toggleFav()"
-                  [title]="movie.is_favorite ? 'Remover favorito' : 'Adicionar favorito'">♥</button>
+                  [title]="movie.is_favorite ? t('actions.removeFavorite') : t('actions.addFavorite')">♥</button>
                 <button class="btn btn-icon action-btn" [class.active]="movie.in_watchlist" (click)="toggleWatchlist()"
-                  [title]="movie.in_watchlist ? 'Remover watchlist' : 'Adicionar watchlist'">📋</button>
+                  [title]="movie.in_watchlist ? t('actions.removeWatchlist') : t('actions.addWatchlist')">📋</button>
                 <button class="btn btn-icon action-btn" [class.active]="movie.is_watched" (click)="toggleWatched()"
-                  [title]="movie.is_watched ? 'Não visto' : 'Marcar como visto'">✓</button>
+                  [title]="movie.is_watched ? t('feedback.removedHistory') : t('actions.markWatched')">✓</button>
                 <a *ngIf="trailerKey" [href]="'https://youtube.com/watch?v=' + trailerKey" target="_blank"
                    class="btn btn-primary trailer-btn">▶ Trailer</a>
               </div>
@@ -58,6 +59,26 @@ import { environment } from '../../../environments/environment';
           </div>
           <textarea class="input mt-4" [(ngModel)]="userReview" [placeholder]="'actions.writeReview' | translate" rows="3" style="height:auto"></textarea>
           <button class="btn btn-primary mt-4" (click)="submitRating()">{{ 'actions.save' | translate }}</button>
+        </section>
+
+        <!-- Public Ratings -->
+        <section class="mt-8" *ngIf="publicRatings.length">
+          <h2 class="text-h2 mb-4">{{ 'ratings.communityReviews' | translate }}</h2>
+          <div class="public-ratings-list">
+            <div *ngFor="let pr of publicRatings" class="public-rating card-glass">
+              <div class="pr-header">
+                <span class="pr-avatar">{{ pr.user_name?.charAt(0)?.toUpperCase() || '?' }}</span>
+                <div class="pr-meta">
+                  <span class="pr-name">{{ pr.user_name }}</span>
+                  <div class="pr-stars">
+                    <span *ngFor="let s of [1,2,3,4,5]" class="star-sm" [class.filled]="s <= pr.rating">★</span>
+                  </div>
+                </div>
+                <span class="pr-date">{{ pr.rated_at | slice:0:10 }}</span>
+              </div>
+              <p class="pr-review" *ngIf="pr.review">{{ pr.review }}</p>
+            </div>
+          </div>
         </section>
 
         <!-- Cast -->
@@ -95,7 +116,8 @@ import { environment } from '../../../environments/environment';
     .hero-backdrop { width: 100%; min-height: 520px; background-size: cover; background-position: center top; position: relative; }
     .hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(28, 17, 11, 0.97), rgba(28, 17, 11, 0.75) 50%, rgba(28, 17, 11, 0.4));
+      background: linear-gradient(to right, var(--bg-primary) 0%, rgba(var(--bg-primary-rgb), 0.75) 50%, rgba(var(--bg-primary-rgb), 0.4) 100%),
+                  linear-gradient(to top, var(--bg-primary) 0%, transparent 35%);
       display: flex; align-items: flex-end; padding-bottom: var(--space-12);
     }
     .hero-grid { display: flex; gap: var(--space-8); align-items: flex-end; }
@@ -120,9 +142,7 @@ import { environment } from '../../../environments/environment';
     .overview { color: var(--text-secondary); line-height: 1.8; max-width: 600px; font-size: 14px; }
     .actions { display: flex; gap: var(--space-3); align-items: center; }
     .action-btn { font-size: 18px; }
-    .trailer-btn {
-      padding: 10px 24px; font-size: 14px;
-    }
+    .trailer-btn { padding: 10px 24px; font-size: 14px; }
     .star-rating { display: flex; gap: 6px; }
     .star {
       font-size: 32px; cursor: pointer; color: var(--border);
@@ -130,6 +150,25 @@ import { environment } from '../../../environments/environment';
     }
     .star.filled { color: var(--accent); }
     .star:hover { color: var(--accent); transform: scale(1.25) rotate(5deg); }
+
+    /* Public Ratings */
+    .public-ratings-list { display: flex; flex-direction: column; gap: var(--space-3); }
+    .public-rating { padding: var(--space-4); }
+    .pr-header { display: flex; align-items: center; gap: var(--space-3); }
+    .pr-avatar {
+      width: 36px; height: 36px; border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--accent), #fb923c);
+      color: white; font-weight: 700; font-size: 14px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pr-meta { flex: 1; }
+    .pr-name { font-size: 14px; font-weight: 600; color: var(--text-primary); display: block; }
+    .pr-stars { display: flex; gap: 1px; margin-top: 2px; }
+    .star-sm { font-size: 14px; color: var(--border); }
+    .star-sm.filled { color: var(--accent); }
+    .pr-date { font-size: 12px; color: var(--text-muted); }
+    .pr-review { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-top: var(--space-2); }
+
     .cast-row { display: flex; gap: var(--space-5); overflow-x: auto; padding-bottom: var(--space-4); }
     .cast-item { text-align: center; min-width: 100px; flex-shrink: 0; }
     .cast-img-wrapper {
@@ -151,15 +190,17 @@ import { environment } from '../../../environments/environment';
     }
   `],
 })
-export class MovieDetailComponent implements OnInit {
+export class MovieDetailComponent implements OnInit, OnDestroy {
   imgUrl = environment.tmdbImageUrl;
   movie: any = null;
   cast: any[] = [];
   similar: any[] = [];
+  publicRatings: any[] = [];
   trailerKey = '';
   userRating = 0;
   hoverRating = 0;
   userReview = '';
+  private routeSub!: Subscription;
 
   constructor(
     private api: ApiService,
@@ -169,7 +210,25 @@ export class MovieDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.routeSub = this.route.paramMap.subscribe(params => {
+      const id = Number(params.get('id'));
+      if (id) this.loadMovie(id);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub?.unsubscribe();
+  }
+
+  t(key: string): string { return this.translate.instant(key); }
+
+  private loadMovie(id: number): void {
+    this.movie = null;
+    this.userRating = 0;
+    this.userReview = '';
+    this.publicRatings = [];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     this.api.getMovieDetails(id).subscribe({
       next: (res: any) => {
         this.movie = res?.data || res;
@@ -184,25 +243,38 @@ export class MovieDetailComponent implements OnInit {
         }
       },
       error: () => {
-        this.toast.error('Erro ao carregar detalhes do filme');
+        this.toast.error(this.t('feedback.errorLoadDetails'));
       }
+    });
+
+    // Load public ratings
+    this.api.getMovieRatings(id).subscribe({
+      next: (res: any) => { this.publicRatings = res?.data || []; },
+      error: () => {}
     });
   }
 
   setRating(val: number): void { this.userRating = val; }
 
   submitRating(): void {
-    if (!this.userRating) { this.toast.warning('Selecione uma avaliação'); return; }
+    if (!this.userRating) { this.toast.warning(this.t('ratings.selectRating')); return; }
     const data = { tmdb_id: this.movie.id, movie_title: this.movie.title, poster_path: this.movie.poster_path, release_year: this.movie.release_date?.slice(0,4), rating: this.userRating, review: this.userReview };
     if (this.movie.user_rating) {
       this.api.updateRating(this.movie.id, { rating: this.userRating, review: this.userReview }).subscribe({
-        next: () => this.toast.success('Avaliação atualizada! ⭐'),
-        error: () => this.toast.error('Erro ao atualizar avaliação'),
+        next: () => {
+          this.toast.success(this.t('ratings.updated'));
+          this.api.getMovieRatings(this.movie.id).subscribe({ next: (res: any) => { this.publicRatings = res?.data || []; } });
+        },
+        error: () => this.toast.error(this.t('ratings.errorUpdate')),
       });
     } else {
       this.api.addRating(data).subscribe({
-        next: () => { this.movie.user_rating = data; this.toast.success('Avaliação guardada! ⭐'); },
-        error: () => this.toast.error('Erro ao guardar avaliação'),
+        next: () => {
+          this.movie.user_rating = data;
+          this.toast.success(this.t('ratings.saved'));
+          this.api.getMovieRatings(this.movie.id).subscribe({ next: (res: any) => { this.publicRatings = res?.data || []; } });
+        },
+        error: () => this.toast.error(this.t('ratings.errorSave')),
       });
     }
   }
@@ -210,13 +282,13 @@ export class MovieDetailComponent implements OnInit {
   toggleFav(): void {
     if (this.movie.is_favorite) {
       this.api.removeFavorite(this.movie.id).subscribe({
-        next: () => { this.movie.is_favorite = false; this.toast.info('Removido dos favoritos'); },
-        error: () => this.toast.error('Erro ao remover favorito'),
+        next: () => { this.movie.is_favorite = false; this.toast.info(this.t('feedback.removedFavorite')); },
+        error: () => this.toast.error(this.t('feedback.errorRemove')),
       });
     } else {
       this.api.addFavorite({ tmdb_id: this.movie.id, movie_title: this.movie.title, poster_path: this.movie.poster_path, release_year: this.movie.release_date?.slice(0,4) }).subscribe({
-        next: () => { this.movie.is_favorite = true; this.toast.success('Adicionado aos favoritos! ♥'); },
-        error: () => this.toast.error('Erro ao adicionar favorito'),
+        next: () => { this.movie.is_favorite = true; this.toast.success(this.t('feedback.addedFavorite')); },
+        error: () => this.toast.error(this.t('feedback.errorAdd')),
       });
     }
   }
@@ -224,13 +296,13 @@ export class MovieDetailComponent implements OnInit {
   toggleWatchlist(): void {
     if (this.movie.in_watchlist) {
       this.api.removeFromWatchlist(this.movie.id).subscribe({
-        next: () => { this.movie.in_watchlist = false; this.toast.info('Removido da watchlist'); },
-        error: () => this.toast.error('Erro ao remover da watchlist'),
+        next: () => { this.movie.in_watchlist = false; this.toast.info(this.t('feedback.removedWatchlist')); },
+        error: () => this.toast.error(this.t('feedback.errorRemove')),
       });
     } else {
       this.api.addToWatchlist({ tmdb_id: this.movie.id, movie_title: this.movie.title, poster_path: this.movie.poster_path, release_year: this.movie.release_date?.slice(0,4) }).subscribe({
-        next: () => { this.movie.in_watchlist = true; this.toast.success('Adicionado à watchlist! 📋'); },
-        error: () => this.toast.error('Erro ao adicionar à watchlist'),
+        next: () => { this.movie.in_watchlist = true; this.toast.success(this.t('feedback.addedWatchlist')); },
+        error: () => this.toast.error(this.t('feedback.errorAdd')),
       });
     }
   }
@@ -238,13 +310,13 @@ export class MovieDetailComponent implements OnInit {
   toggleWatched(): void {
     if (this.movie.is_watched) {
       this.api.removeFromHistory(this.movie.id).subscribe({
-        next: () => { this.movie.is_watched = false; this.toast.info('Removido do histórico'); },
-        error: () => this.toast.error('Erro ao remover do histórico'),
+        next: () => { this.movie.is_watched = false; this.toast.info(this.t('feedback.removedHistory')); },
+        error: () => this.toast.error(this.t('feedback.errorRemove')),
       });
     } else {
       this.api.addToHistory({ tmdb_id: this.movie.id, movie_title: this.movie.title, poster_path: this.movie.poster_path, release_year: this.movie.release_date?.slice(0,4) }).subscribe({
-        next: () => { this.movie.is_watched = true; this.toast.success('Marcado como visto! ✓'); },
-        error: () => this.toast.error('Erro ao marcar como visto'),
+        next: () => { this.movie.is_watched = true; this.toast.success(this.t('feedback.markedWatched')); },
+        error: () => this.toast.error(this.t('feedback.errorAdd')),
       });
     }
   }

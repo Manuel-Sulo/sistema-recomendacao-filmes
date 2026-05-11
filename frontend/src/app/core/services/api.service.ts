@@ -34,6 +34,7 @@ export class ApiService {
 
   // Ratings
   getRatings(): Observable<any> { return this.http.get(`${this.apiUrl}/ratings`); }
+  getMovieRatings(tmdbId: number): Observable<any> { return this.http.get(`${this.apiUrl}/ratings/movie/${tmdbId}`); }
   addRating(data: any): Observable<any> { return this.http.post(`${this.apiUrl}/ratings`, data); }
   updateRating(tmdbId: number, data: any): Observable<any> { return this.http.put(`${this.apiUrl}/ratings/${tmdbId}`, data); }
   deleteRating(tmdbId: number): Observable<any> { return this.http.delete(`${this.apiUrl}/ratings/${tmdbId}`); }
@@ -52,8 +53,30 @@ export class ApiService {
 
   // Export
   exportData(type: string, format = 'csv'): void {
-    const token = localStorage.getItem('token');
-    window.open(`${this.apiUrl}/export/${type}?format=${format}&token=${token}`, '_blank');
+    this.http.get(`${this.apiUrl}/export/${type}?format=${format}`, {
+      responseType: 'blob',
+      observe: 'response'
+    }).subscribe({
+      next: (response) => {
+        const blob = response.body!;
+        const filename = `${type}_${new Date().toISOString().slice(0,10)}.${format === 'csv' ? 'csv' : 'html'}`;
+        if (format === 'csv') {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = filename; a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          // PDF-like: open HTML in new window and trigger print
+          const reader = new FileReader();
+          reader.onload = () => {
+            const win = window.open('', '_blank');
+            if (win) { win.document.write(reader.result as string); win.document.close(); win.print(); }
+          };
+          reader.readAsText(blob);
+        }
+      },
+      error: () => {}
+    });
   }
 
   // Admin

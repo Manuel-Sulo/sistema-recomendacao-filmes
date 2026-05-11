@@ -36,6 +36,7 @@ $router->get('/api/recommendations/by-genre/{genre_id}','RecommendationControlle
 
 // === RATINGS ===
 $router->get('/api/ratings',             'RatingController', 'index',   $auth);
+$router->get('/api/ratings/movie/{tmdb_id}', 'RatingController', 'getByMovie', $auth);
 $router->post('/api/ratings',            'RatingController', 'store',   $auth);
 $router->put('/api/ratings/{tmdb_id}',   'RatingController', 'update',  $auth);
 $router->delete('/api/ratings/{tmdb_id}','RatingController', 'destroy', $auth);

@@ -99,4 +99,11 @@ class RatingController
             }
         }
     }
+
+    public function getByMovie(Request $request): void
+    {
+        $tmdbId = (int) $request->getParam('tmdb_id');
+        $ratings = $this->model->findByMovie($tmdbId);
+        Response::success($ratings);
+    }
 }

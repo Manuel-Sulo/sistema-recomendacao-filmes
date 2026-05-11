@@ -90,7 +90,7 @@ export class RegisterComponent {
       next: () => {
         this.loading = false;
         this.toast.success(this.t.instant('auth.accountCreated'));
-        this.router.navigate(['/onboarding']);
+        this.router.navigate(['/auth/login']);
       },
       error: (err) => {
         this.loading = false;

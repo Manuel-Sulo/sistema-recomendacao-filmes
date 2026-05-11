@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../core/services/api.service';
 import { ToastService } from '../../core/services/toast.service';
 
@@ -11,41 +11,41 @@ import { ToastService } from '../../core/services/toast.service';
   template: `
     <div class="page container">
       <div class="page-header animate-fade-up">
-        <span class="section-label">📊 {{ 'export.title' | translate }}</span>
-        <h1 class="text-h1">RELATÓRIOS & EXPORTAÇÃO</h1>
-        <p class="text-muted mt-2">Exporte os seus dados em diferentes formatos</p>
+        <span class="section-label">{{ 'export.title' | translate }}</span>
+        <h1 class="text-h1">{{ 'export.reportsTitle' | translate }}</h1>
+        <p class="text-muted mt-2">{{ 'export.subtitle' | translate }}</p>
       </div>
 
       <div class="export-grid mt-8">
         <div class="export-card card-glass animate-fade-up" (click)="exportData('favorites', 'csv')">
           <span class="export-icon">♥</span>
-          <h3 class="text-h4 mt-3">Favoritos CSV</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Exportar lista de favoritos</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.favorites' | translate }} CSV</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.exportList' | translate }} {{ 'nav.favorites' | translate | lowercase }}</p>
         </div>
         <div class="export-card card-glass animate-fade-up" style="animation-delay:0.05s" (click)="exportData('favorites', 'pdf')">
           <span class="export-icon">♥</span>
-          <h3 class="text-h4 mt-3">Favoritos PDF</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Relatório de favoritos em PDF</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.favorites' | translate }} PDF</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.reportOf' | translate }} {{ 'nav.favorites' | translate | lowercase }}</p>
         </div>
         <div class="export-card card-glass animate-fade-up" style="animation-delay:0.1s" (click)="exportData('ratings', 'csv')">
           <span class="export-icon">⭐</span>
-          <h3 class="text-h4 mt-3">Avaliações CSV</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Exportar todas as avaliações</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.ratings' | translate }} CSV</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.exportAll' | translate }} {{ 'nav.ratings' | translate | lowercase }}</p>
         </div>
         <div class="export-card card-glass animate-fade-up" style="animation-delay:0.15s" (click)="exportData('ratings', 'pdf')">
           <span class="export-icon">⭐</span>
-          <h3 class="text-h4 mt-3">Avaliações PDF</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Relatório de avaliações em PDF</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.ratings' | translate }} PDF</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.reportOf' | translate }} {{ 'nav.ratings' | translate | lowercase }}</p>
         </div>
         <div class="export-card card-glass animate-fade-up" style="animation-delay:0.2s" (click)="exportData('watchlist', 'csv')">
           <span class="export-icon">📋</span>
-          <h3 class="text-h4 mt-3">Watchlist CSV</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Exportar watchlist</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.watchlist' | translate }} CSV</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.exportList' | translate }} {{ 'nav.watchlist' | translate | lowercase }}</p>
         </div>
         <div class="export-card card-glass animate-fade-up" style="animation-delay:0.25s" (click)="exportData('history', 'csv')">
           <span class="export-icon">🎬</span>
-          <h3 class="text-h4 mt-3">Histórico CSV</h3>
-          <p class="text-muted mt-1" style="font-size:13px">Exportar histórico de visualização</p>
+          <h3 class="text-h4 mt-3">{{ 'nav.history' | translate }} CSV</h3>
+          <p class="text-muted mt-1" style="font-size:13px">{{ 'export.exportList' | translate }} {{ 'nav.history' | translate | lowercase }}</p>
         </div>
       </div>
     </div>
@@ -67,10 +67,10 @@ import { ToastService } from '../../core/services/toast.service';
   `],
 })
 export class ReportsComponent {
-  constructor(private api: ApiService, private toast: ToastService) {}
+  constructor(private api: ApiService, private toast: ToastService, private t: TranslateService) {}
 
   exportData(type: string, format: string): void {
-    this.toast.info('A preparar exportação...');
+    this.toast.info(this.t.instant('export.preparing'));
     this.api.exportData(type, format);
   }
 }
