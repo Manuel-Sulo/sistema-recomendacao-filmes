@@ -32,26 +32,26 @@ O sistema está dividido em duas partes distintas (Arquitetura Cliente-Servidor 
 
 ```mermaid
 graph TD
-    subgraph Frontend [🌐 Frontend (Angular 17+)]
-        UI[User Interface] --> Services[API Services]
-        Services --> i18n[Ngx-Translate]
+    subgraph Frontend ["🌐 Frontend — Angular 17+"]
+        UI["User Interface"] --> Services["API Services"]
+        Services --> i18n["Ngx-Translate"]
     end
 
-    subgraph Backend [⚙️ Backend (PHP Nativo)]
-        API[API Router] --> Middleware[JWT / Auth]
-        Middleware --> Controllers[Controllers]
-        Controllers --> Models[Models (PDO/MySQL)]
-        Controllers --> External[External Services]
+    subgraph Backend ["⚙️ Backend — PHP Nativo"]
+        API["API Router"] --> Middleware["JWT / Auth"]
+        Middleware --> Controllers["Controllers"]
+        Controllers --> Models["Models — PDO/MySQL"]
+        Controllers --> External["External Services"]
     end
 
-    subgraph APIs Externas [🌍 APIs Externas]
-        TMDB[TMDB API (Filmes)]
-        OMDB[OMDB API (Extra)]
-        GROQ[Groq API (Llama 3)]
+    subgraph APIsExternas ["🌍 APIs Externas"]
+        TMDB["TMDB API — Filmes"]
+        OMDB["OMDB API — Extra"]
+        GROQ["Groq API — Llama 3"]
     end
 
-    Frontend -- Pedidos HTTP (JSON) --> Backend
-    External <-- Fetch --> Backend
+    Frontend -- "Pedidos HTTP / JSON" --> Backend
+    External <-- "Fetch" --> APIsExternas
 ```
 
 ### Fluxo de Dados e Caching
