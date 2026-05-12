@@ -51,7 +51,7 @@
 
   /* Layout */
   --max-width: 1280px;
-  --navbar-height: 64px;
+  --navbar-height: 104px;
 }
 
 /* === DARK MODE (DEFAULT) — Cinema Chocolate === */
@@ -145,6 +145,12 @@ a {
   text-decoration: none;
   transition: color var(--duration-fast) ease, opacity var(--duration-fast) ease;
   &:hover { color: var(--accent-hover); opacity: 0.9; }
+}
+
+/* Prevent a:hover from overriding button colors */
+a.btn-primary, a.btn-primary:hover {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
 }
 
 img { max-width: 100%; height: auto; display: block; }

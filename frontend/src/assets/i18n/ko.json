@@ -9,6 +9,7 @@
     "reports": "보고서",
     "settings": "설정",
     "admin": "관리자",
+    "stats": "통계",
     "logout": "로그아웃",
     "login": "로그인"
   },
@@ -74,6 +75,7 @@
     "theme": "테마",
     "dark": "다크",
     "light": "라이트",
+    "switchTo": "전환:",
     "profile": "프로필",
     "changePassword": "비밀번호 변경",
     "saved": "설정이 저장되었습니다!",
@@ -114,10 +116,32 @@
     "addMovies": "나중에 볼 영화를 추가하세요"
   },
   "search": {
-    "exploreMovies": "영화 탐색",
+    "exploreMovies": "영화 및 시리즈 탐색",
     "tryAnother": "다른 검색어를 시도하세요",
     "previous": "이전",
-    "next": "다음"
+    "next": "다음",
+    "placeholder": "영화 또는 시리즈 검색 (KO 또는 EN)...",
+    "yearPlaceholder": "연도 (예: 2024)",
+    "bilingualHint": "💡 한국어 또는 영어로 검색 가능합니다."
+  },
+  "ai": {
+    "title": "당신의 시네마 나침반",
+    "subtitle": "오늘 보고 싶은 걸 알려주세요. 친근하고 수천 편의 영화와 시리즈를 알고 있어요.",
+    "welcome": "안녕하세요! 👋 저는 SULO, 당신의 시네마 매치메이커예요. 영화나 시리즈를 추천하거나, 정확한 제목을 알려드리거나, 영화에 대해 가볍게 이야기할 수 있어요. 오늘 뭐 볼까요?",
+    "placeholder": "예: 인터스텔라 같은 영화 추천해주세요...",
+    "send": "전송",
+    "series": "시리즈",
+    "foundMovies": "추천작입니다 🎬",
+    "notFound": "정확한 결과를 찾지 못했어요. 좀 더 자세히 알려주실래요?",
+    "connectionError": "AI 연결에 문제가 있어요. 잠시 후 다시 시도해주세요."
+  },
+  "actor": {
+    "biography": "전기",
+    "biographyFallback": "영어에서 번역된 전기입니다 (이 언어로는 제공되지 않음).",
+    "noBiography": "전기 정보 없음.",
+    "filmography": "주요 작품",
+    "readMore": "더 보기",
+    "readLess": "접기"
   },
   "ratings": {
     "myRatings": "내 평가",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "영화 상세 로딩 오류",
     "reloading": "다시 로딩 중...",
     "preferencesSaved": "설정이 저장되었습니다!",
-    "errorPreferences": "설정 저장 오류"
+    "errorPreferences": "설정 저장 오류",
+    "darkEnabled": "다크 모드 활성화 🌙",
+    "lightEnabled": "라이트 모드 활성화 ☀️"
   },
   "footer": {
     "description": "AI 기반 영화 추천 플랫폼.",

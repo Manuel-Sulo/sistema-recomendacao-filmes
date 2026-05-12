@@ -52,6 +52,7 @@ require_once $basePath . '/app/Controllers/HistoryController.php';
 require_once $basePath . '/app/Controllers/RecommendationController.php';
 require_once $basePath . '/app/Controllers/ExportController.php';
 require_once $basePath . '/app/Controllers/AdminController.php';
+require_once $basePath . '/app/Controllers/AiController.php';
 
 // Apply CORS
 CorsMiddleware::handle();

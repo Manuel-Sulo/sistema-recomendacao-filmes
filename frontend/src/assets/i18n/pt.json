@@ -9,6 +9,7 @@
     "reports": "Relatórios",
     "settings": "Definições",
     "admin": "Admin",
+    "stats": "Estatísticas",
     "logout": "Sair",
     "login": "Entrar"
   },
@@ -74,6 +75,7 @@
     "theme": "Tema",
     "dark": "Escuro",
     "light": "Claro",
+    "switchTo": "Mudar para",
     "profile": "Perfil",
     "changePassword": "Alterar Password",
     "saved": "Definições guardadas!",
@@ -114,10 +116,32 @@
     "addMovies": "Adicione filmes para ver mais tarde"
   },
   "search": {
-    "exploreMovies": "Explorar Filmes",
+    "exploreMovies": "Explorar Filmes e Séries",
     "tryAnother": "Tente outro termo de pesquisa",
     "previous": "Anterior",
-    "next": "Seguinte"
+    "next": "Seguinte",
+    "placeholder": "Pesquisar filmes ou séries (em PT ou EN)...",
+    "yearPlaceholder": "Ano (ex: 2024)",
+    "bilingualHint": "💡 Pode pesquisar em português ou inglês — encontramos o filme/série em ambos os idiomas."
+  },
+  "ai": {
+    "title": "A tua Bússola Cinematográfica",
+    "subtitle": "Conta-me o que te apetece ver hoje. Sou amigo, conheço milhares de filmes e séries.",
+    "welcome": "Olá! 👋 Sou o SULO, o teu Matchmaker Cinematográfico. Posso recomendar filmes ou séries, sugerir títulos exatos, ou simplesmente conversar sobre cinema. O que vamos ver hoje?",
+    "placeholder": "Ex: Recomenda-me filmes como Interstellar...",
+    "send": "Enviar",
+    "series": "Série",
+    "foundMovies": "Aqui estão as minhas sugestões 🎬",
+    "notFound": "Não encontrei nada exato. Podes dar-me mais contexto?",
+    "connectionError": "Houve um problema a falar com a IA. Tenta novamente daqui a pouco."
+  },
+  "actor": {
+    "biography": "Biografia",
+    "biographyFallback": "Biografia traduzida do inglês (não disponível neste idioma).",
+    "noBiography": "Biografia não disponível.",
+    "filmography": "Filmografia Conhecida",
+    "readMore": "Ler mais",
+    "readLess": "Ler menos"
   },
   "ratings": {
     "myRatings": "Minhas Avaliações",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "Erro ao carregar detalhes do filme",
     "reloading": "A recarregar...",
     "preferencesSaved": "Preferências guardadas!",
-    "errorPreferences": "Erro ao guardar preferências"
+    "errorPreferences": "Erro ao guardar preferências",
+    "darkEnabled": "Modo escuro ativado 🌙",
+    "lightEnabled": "Modo claro ativado ☀️"
   },
   "footer": {
     "description": "A sua plataforma de recomendação de filmes com inteligência artificial.",

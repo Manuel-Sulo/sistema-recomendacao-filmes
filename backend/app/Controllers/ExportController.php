@@ -20,6 +20,12 @@ class ExportController
 
         if (empty($data)) Response::error('Sem dados para exportar');
 
+        // Clean data for export
+        $data = array_map(function ($row) {
+            unset($row['id'], $row['user_id'], $row['poster_path']);
+            return $row;
+        }, $data);
+
         // Log export
         $db = Database::getInstance();
         $db->prepare('INSERT INTO export_logs (user_id, report_type, format) VALUES (?, ?, ?)')->execute([$user['id'], $type, $format]);

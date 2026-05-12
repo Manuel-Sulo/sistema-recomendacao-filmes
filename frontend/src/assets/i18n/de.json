@@ -9,6 +9,7 @@
     "reports": "Berichte",
     "settings": "Einstellungen",
     "admin": "Admin",
+    "stats": "Statistiken",
     "logout": "Abmelden",
     "login": "Anmelden"
   },
@@ -74,6 +75,7 @@
     "theme": "Design",
     "dark": "Dunkel",
     "light": "Hell",
+    "switchTo": "Wechseln zu",
     "profile": "Profil",
     "changePassword": "Passwort ändern",
     "saved": "Einstellungen gespeichert!",
@@ -114,10 +116,32 @@
     "addMovies": "Fügen Sie Filme zum späteren Ansehen hinzu"
   },
   "search": {
-    "exploreMovies": "Filme entdecken",
+    "exploreMovies": "Filme & Serien entdecken",
     "tryAnother": "Versuchen Sie einen anderen Suchbegriff",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "placeholder": "Filme oder Serien suchen (DE oder EN)...",
+    "yearPlaceholder": "Jahr (z. B. 2024)",
+    "bilingualHint": "💡 Suche auf Deutsch oder Englisch — wir finden den Titel in beiden Sprachen."
+  },
+  "ai": {
+    "title": "Dein Cinema-Kompass",
+    "subtitle": "Erzähl mir, worauf du heute Lust hast. Ich bin freundlich und kenne tausende Filme und Serien.",
+    "welcome": "Hi! 👋 Ich bin SULO, dein Film-Matchmaker. Ich empfehle Filme oder Serien, schlage exakte Titel vor oder plaudere einfach über Kino. Was schauen wir heute?",
+    "placeholder": "z. B. Empfehle mir Filme wie Interstellar...",
+    "send": "Senden",
+    "series": "Serie",
+    "foundMovies": "Hier sind meine Empfehlungen 🎬",
+    "notFound": "Ich konnte nichts Genaues finden. Kannst du mehr Kontext geben?",
+    "connectionError": "Es gab ein Problem mit der KI-Verbindung. Bitte versuche es gleich noch einmal."
+  },
+  "actor": {
+    "biography": "Biografie",
+    "biographyFallback": "Biografie aus dem Englischen übersetzt (in dieser Sprache nicht verfügbar).",
+    "noBiography": "Keine Biografie verfügbar.",
+    "filmography": "Bekannte Filmografie",
+    "readMore": "Mehr lesen",
+    "readLess": "Weniger anzeigen"
   },
   "ratings": {
     "myRatings": "Meine Bewertungen",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "Fehler beim Laden der Filmdetails",
     "reloading": "Wird neu geladen...",
     "preferencesSaved": "Einstellungen gespeichert!",
-    "errorPreferences": "Fehler beim Speichern der Einstellungen"
+    "errorPreferences": "Fehler beim Speichern der Einstellungen",
+    "darkEnabled": "Dunkler Modus aktiviert 🌙",
+    "lightEnabled": "Heller Modus aktiviert ☀️"
   },
   "footer": {
     "description": "Ihre KI-gestützte Filmempfehlungsplattform.",

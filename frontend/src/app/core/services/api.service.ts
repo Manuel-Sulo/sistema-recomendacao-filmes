@@ -1,26 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private translate: TranslateService) {}
+
+  private get langParam(): string {
+    return this.translate.currentLang || 'pt';
+  }
 
   // Movies
-  getTrending(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/trending?page=${page}`); }
-  getPopular(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/popular?page=${page}`); }
-  getTopRated(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/top-rated?page=${page}`); }
-  searchMovies(q: string, page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/search?q=${encodeURIComponent(q)}&page=${page}`); }
-  getMovieDetails(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/movies/${id}`); }
-  getSimilarMovies(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/movies/${id}/similar`); }
-  getGenres(): Observable<any> { return this.http.get(`${this.apiUrl}/movies/genres`); }
-  discoverMovies(genre: number, page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/discover?genre=${genre}&page=${page}`); }
+  getTrending(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/trending?page=${page}&lang=${this.langParam}`); }
+  getPopular(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/popular?page=${page}&lang=${this.langParam}`); }
+  getTopRated(page = 1): Observable<any> { return this.http.get(`${this.apiUrl}/movies/top-rated?page=${page}&lang=${this.langParam}`); }
+  searchMovies(q: string, year?: string, page = 1, type: 'movie' | 'multi' = 'multi'): Observable<any> {
+    let url = `${this.apiUrl}/movies/search?q=${encodeURIComponent(q)}&page=${page}&lang=${this.langParam}&type=${type}`;
+    if (year) url += `&year=${year}`;
+    return this.http.get(url);
+  }
+  getMovieDetails(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/movies/${id}?lang=${this.langParam}`); }
+  getSimilarMovies(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/movies/${id}/similar?lang=${this.langParam}`); }
+  getGenres(): Observable<any> { return this.http.get(`${this.apiUrl}/movies/genres?lang=${this.langParam}`); }
+  discoverMovies(genre: number, page = 1, sort: string = 'popularity.desc'): Observable<any> {
+    return this.http.get(`${this.apiUrl}/movies/discover?genre=${genre}&page=${page}&sort=${sort}&lang=${this.langParam}`);
+  }
 
   // Recommendations
-  getRecommendations(): Observable<any> { return this.http.get(`${this.apiUrl}/recommendations`); }
+  getRecommendations(): Observable<any> { return this.http.get(`${this.apiUrl}/recommendations?lang=${this.langParam}`); }
 
   // Favorites
   getFavorites(): Observable<any> { return this.http.get(`${this.apiUrl}/favorites`); }
@@ -50,6 +61,16 @@ export class ApiService {
   updatePassword(data: any): Observable<any> { return this.http.put(`${this.apiUrl}/user/password`, data); }
   getUserGenres(): Observable<any> { return this.http.get(`${this.apiUrl}/user/genres`); }
   setUserGenres(genres: any[]): Observable<any> { return this.http.post(`${this.apiUrl}/user/genres`, { genres }); }
+  getStats(): Observable<any> { return this.http.get(`${this.apiUrl}/user/stats`); }
+
+  // Person
+  getPerson(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/person/${id}?lang=${this.langParam}`); }
+  getPersonCredits(id: number): Observable<any> { return this.http.get(`${this.apiUrl}/person/${id}/movie_credits?lang=${this.langParam}`); }
+
+  // AI
+  aiMatch(prompt: string, history: { role: 'user' | 'assistant', content: string }[] = []): Observable<any> {
+    return this.http.post(`${this.apiUrl}/ai/match?lang=${this.langParam}`, { prompt, history });
+  }
 
   // Export
   exportData(type: string, format = 'csv'): void {

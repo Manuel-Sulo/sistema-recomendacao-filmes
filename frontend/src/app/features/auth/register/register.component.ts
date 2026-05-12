@@ -58,9 +58,15 @@ import { ToastService } from '../../../core/services/toast.service';
     }
     .auth-content { max-width: 440px; width: 100%; }
     .auth-branding { text-align: center; margin-bottom: var(--space-8); }
-    .auth-brand-logo { height: 50px; margin: 0 auto var(--space-4); }
-    .auth-brand-title { font-size: 36px; font-weight: 900; letter-spacing: -0.03em; color: var(--accent); }
-    .auth-brand-subtitle { font-size: 14px; color: var(--text-muted); margin-top: var(--space-2); letter-spacing: 0.05em; text-transform: uppercase; font-weight: 500; }
+    .auth-brand-logo {
+      height: 220px; width: auto; margin: 0 auto var(--space-5); display: block;
+      filter: drop-shadow(0 12px 36px rgba(249, 115, 22, 0.45));
+      animation: logoFloat 4s ease-in-out infinite;
+    }
+    @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .auth-brand-title { font-size: 64px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; color: var(--accent); text-shadow: 0 6px 28px rgba(249, 115, 22, 0.35); }
+    .auth-brand-subtitle { font-size: 15px; color: var(--text-muted); margin-top: var(--space-3); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+    @media (max-width: 480px) { .auth-brand-logo { height: 160px; } .auth-brand-title { font-size: 46px; } }
     .auth-card { padding: var(--space-10); border-radius: var(--radius-xl); }
     .auth-form { display: flex; flex-direction: column; gap: var(--space-5); }
     .form-group { display: flex; flex-direction: column; gap: var(--space-2); }

@@ -9,6 +9,7 @@
     "reports": "Rapports",
     "settings": "Paramètres",
     "admin": "Admin",
+    "stats": "Statistiques",
     "logout": "Déconnexion",
     "login": "Connexion"
   },
@@ -74,6 +75,7 @@
     "theme": "Thème",
     "dark": "Sombre",
     "light": "Clair",
+    "switchTo": "Passer en",
     "profile": "Profil",
     "changePassword": "Changer le mot de passe",
     "saved": "Paramètres enregistrés !",
@@ -114,10 +116,32 @@
     "addMovies": "Ajoutez des films à voir plus tard"
   },
   "search": {
-    "exploreMovies": "Explorer les Films",
+    "exploreMovies": "Explorer Films & Séries",
     "tryAnother": "Essayez un autre terme de recherche",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "placeholder": "Rechercher films ou séries (FR ou EN)...",
+    "yearPlaceholder": "Année (ex: 2024)",
+    "bilingualHint": "💡 Vous pouvez rechercher en français ou en anglais."
+  },
+  "ai": {
+    "title": "Votre Boussole Cinéma",
+    "subtitle": "Dites-moi ce que vous avez envie de regarder. Je suis sympa et je connais des milliers de films et séries.",
+    "welcome": "Salut ! 👋 Je suis SULO, votre Matchmaker Cinéma. Je peux recommander films ou séries, suggérer des titres précis, ou simplement discuter cinéma. Que regarde-t-on ?",
+    "placeholder": "ex: Recommande-moi des films comme Interstellar...",
+    "send": "Envoyer",
+    "series": "Série",
+    "foundMovies": "Voici mes suggestions 🎬",
+    "notFound": "Je n'ai rien trouvé d'exact. Peux-tu me donner plus de contexte ?",
+    "connectionError": "Problème de connexion avec l'IA. Réessaie dans un instant."
+  },
+  "actor": {
+    "biography": "Biographie",
+    "biographyFallback": "Biographie traduite de l'anglais (indisponible dans cette langue).",
+    "noBiography": "Biographie non disponible.",
+    "filmography": "Filmographie connue",
+    "readMore": "Lire la suite",
+    "readLess": "Réduire"
   },
   "ratings": {
     "myRatings": "Mes Évaluations",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "Erreur lors du chargement des détails",
     "reloading": "Rechargement...",
     "preferencesSaved": "Préférences enregistrées !",
-    "errorPreferences": "Erreur lors de l'enregistrement des préférences"
+    "errorPreferences": "Erreur lors de l'enregistrement des préférences",
+    "darkEnabled": "Mode sombre activé 🌙",
+    "lightEnabled": "Mode clair activé ☀️"
   },
   "footer": {
     "description": "Votre plateforme de recommandation de films par IA.",

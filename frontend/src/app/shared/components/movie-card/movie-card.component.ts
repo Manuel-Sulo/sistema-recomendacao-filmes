@@ -8,15 +8,18 @@ import { environment } from '../../../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterLink],
   template: `
-    <a [routerLink]="['/movie', movie.id || movie.tmdb_id]" class="movie-card">
+    <a [routerLink]="['/movie', movie.tmdb_id || movie.id]" class="movie-card">
       <div class="card-poster">
         <img
           *ngIf="movie.poster_path"
           [src]="imgUrl + '/w342' + posterPath"
-          [alt]="movie.title || movie.movie_title"
+          [alt]="getTitle()"
           class="poster-img"
           loading="lazy">
         <div *ngIf="!movie.poster_path" class="poster-placeholder">🎬</div>
+
+        <!-- Media-type badge (TV vs Movie) -->
+        <div *ngIf="movie.media_type === 'tv'" class="type-badge">📺</div>
 
         <!-- Overlay on hover -->
         <div class="card-overlay">
@@ -33,7 +36,7 @@ import { environment } from '../../../../environments/environment';
       </div>
 
       <div class="card-info">
-        <h3 class="card-title">{{ movie.title || movie.movie_title }}</h3>
+        <h3 class="card-title">{{ getTitle() }}</h3>
         <span class="card-year" *ngIf="getYear()">{{ getYear() }}</span>
       </div>
     </a>
@@ -68,7 +71,7 @@ import { environment } from '../../../../environments/environment';
     }
     .card-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, var(--bg-primary-rgb, rgba(28, 17, 11, 0.95)) 0%, transparent 60%);
+      background: linear-gradient(to top, rgba(var(--bg-primary-rgb), 0.95) 0%, transparent 60%);
       opacity: 0; transition: opacity 0.4s ease;
       display: flex; align-items: flex-end; justify-content: center;
       padding-bottom: 60px;
@@ -96,6 +99,12 @@ import { environment } from '../../../../environments/environment';
     }
     .rating-star { color: var(--accent); }
     .rating-value { color: white; }
+    .type-badge {
+      position: absolute; top: 10px; right: 10px;
+      padding: 4px 8px; border-radius: var(--radius-full);
+      background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(10px);
+      font-size: 12px;
+    }
 
     /* Stitch-style slide-up info reveal */
     .card-info {
@@ -130,8 +139,12 @@ export class MovieCardComponent {
     return p.startsWith('/') ? p : '/' + p;
   }
 
+  getTitle(): string {
+    return this.movie.title || this.movie.name || this.movie.movie_title || '';
+  }
+
   getYear(): string {
-    const date = this.movie.release_date || this.movie.release_year;
+    const date = this.movie.release_date || this.movie.first_air_date || this.movie.release_year;
     if (!date) return '';
     return String(date).slice(0, 4);
   }

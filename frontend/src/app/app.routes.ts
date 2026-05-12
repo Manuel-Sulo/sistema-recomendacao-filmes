@@ -67,6 +67,21 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadComponent: () => import('./features/reports/reports.component').then(m => m.ReportsComponent),
   },
+  {
+    path: 'ai-matchmaker',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/ai-matchmaker/ai-matchmaker.component').then(m => m.AiMatchmakerComponent),
+  },
+  {
+    path: 'stats',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/stats/stats.component').then(m => m.StatsComponent),
+  },
+  {
+    path: 'actor/:id',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/actor-detail/actor-detail.component').then(m => m.ActorDetailComponent),
+  },
 
   // Fallback
   { path: '**', redirectTo: '/home' },

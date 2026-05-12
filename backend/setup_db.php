@@ -1,13 +1,17 @@
 <?php
 /**
  * Database Setup Script — Run this once to create the database and tables
- * Access via: http://localhost/EngSof-lab4/backend/setup_db.php
+ * Access via: http://localhost/srf-movies/backend/setup_db.php
  */
 
-$host = 'localhost';
-$port = '3307';
-$user = 'root';
-$pass = '';
+// Load .env
+require_once __DIR__ . '/core/Env.php';
+Env::load(__DIR__ . '/.env');
+
+$host = Env::get('DB_HOST', 'localhost');
+$port = Env::get('DB_PORT', '3306');
+$user = Env::get('DB_USER', 'root');
+$pass = Env::get('DB_PASS', '');
 
 try {
     // Connect without database

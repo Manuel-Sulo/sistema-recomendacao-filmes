@@ -10,3 +10,8 @@ backend/vendor/
 node_modules/
 dist/
 .angular/
+
+# Test / debug scripts (may contain hardcoded API keys)
+test_*.php
+test_*.json
+*_test.php

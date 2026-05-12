@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { ApiService } from '../../../core/services/api.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-navbar',
@@ -24,6 +25,8 @@ import { ApiService } from '../../../core/services/api.service';
             <a routerLink="/search" routerLinkActive="active" class="nav-link">{{ 'nav.search' | translate }}</a>
             <a routerLink="/favorites" routerLinkActive="active" class="nav-link">{{ 'nav.favorites' | translate }}</a>
             <a routerLink="/watchlist" routerLinkActive="active" class="nav-link">{{ 'nav.watchlist' | translate }}</a>
+            <a routerLink="/history" routerLinkActive="active" class="nav-link">{{ 'nav.history' | translate }}</a>
+            <a routerLink="/ai-matchmaker" routerLinkActive="active" class="nav-link" style="color: var(--accent);">✨ IA Matchmaker</a>
           </div>
         </div>
 
@@ -42,8 +45,9 @@ import { ApiService } from '../../../core/services/api.service';
           </div>
 
           <!-- Theme Toggle -->
-          <button class="btn-icon theme-toggle" (click)="toggleTheme()" [title]="theme.isDark ? 'Light mode' : 'Dark mode'">
-            {{ theme.isDark ? '☀️' : '🌙' }}
+          <button class="btn-icon theme-toggle" (click)="toggleTheme()"
+                  [title]="('settings.switchTo' | translate) + ' ' + ((theme.isDark ? 'settings.light' : 'settings.dark') | translate)">
+            {{ theme.isDark ? '🌙' : '☀️' }}
           </button>
 
           <!-- User Menu -->
@@ -59,7 +63,8 @@ import { ApiService } from '../../../core/services/api.service';
               <div class="dropdown-divider"></div>
               <a routerLink="/history" class="dropdown-item" (click)="showMenu = false">🎬 {{ 'nav.history' | translate }}</a>
               <a routerLink="/ratings" class="dropdown-item" (click)="showMenu = false">⭐ {{ 'nav.ratings' | translate }}</a>
-              <a routerLink="/reports" class="dropdown-item" (click)="showMenu = false">📊 {{ 'export.title' | translate }}</a>
+              <a routerLink="/stats" class="dropdown-item" (click)="showMenu = false">📊 {{ 'nav.stats' | translate }}</a>
+              <a routerLink="/reports" class="dropdown-item" (click)="showMenu = false">📄 {{ 'export.title' | translate }}</a>
               <a routerLink="/settings" class="dropdown-item" (click)="showMenu = false">⚙️ {{ 'nav.settings' | translate }}</a>
               <div class="dropdown-divider"></div>
               <button class="dropdown-item text-error" (click)="logout()">🚪 {{ 'nav.logout' | translate }}</button>
@@ -81,6 +86,9 @@ import { ApiService } from '../../../core/services/api.service';
         <a routerLink="/watchlist" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">{{ 'nav.watchlist' | translate }}</a>
         <a routerLink="/history" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">{{ 'nav.history' | translate }}</a>
         <a routerLink="/ratings" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">{{ 'nav.ratings' | translate }}</a>
+        <a routerLink="/ai-matchmaker" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false" style="color: var(--accent);">✨ IA Matchmaker</a>
+        <a routerLink="/stats" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">📊 As Minhas Estatísticas</a>
+        <a routerLink="/reports" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">📄 Exportar Dados</a>
         <a routerLink="/settings" routerLinkActive="active" class="mobile-link" (click)="mobileOpen = false">{{ 'nav.settings' | translate }}</a>
         <button class="mobile-link text-error" (click)="logout()">{{ 'nav.logout' | translate }}</button>
       </div>
@@ -105,14 +113,21 @@ import { ApiService } from '../../../core/services/api.service';
     }
     .nav-left { display: flex; align-items: center; gap: 32px; }
     .brand {
-      display: flex; align-items: center; gap: 10px; text-decoration: none;
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
       transition: transform 0.3s ease;
       &:hover { transform: scale(1.03); opacity: 1; }
     }
-    .brand-logo { height: 44px; }
+    .brand-logo {
+      height: 84px; width: auto;
+      filter: drop-shadow(0 3px 12px rgba(249, 115, 22, 0.35));
+    }
     .brand-name {
-      font-size: 26px; font-weight: 900; letter-spacing: -0.03em;
+      font-size: 38px; font-weight: 900; letter-spacing: -0.03em;
       color: var(--accent); font-family: var(--font-display);
+    }
+    @media (max-width: 767px) {
+      .brand-logo { height: 56px; }
+      .brand-name { font-size: 28px; }
     }
     .nav-links {
       display: flex; gap: 6px;
@@ -215,6 +230,7 @@ export class NavbarComponent {
     public theme: ThemeService,
     private translate: TranslateService,
     private api: ApiService,
+    private toast: ToastService,
     private router: Router
   ) {
     const user = this.auth.currentUser;
@@ -240,6 +256,8 @@ export class NavbarComponent {
   toggleTheme(): void {
     this.theme.toggle();
     this.api.updateProfile({ theme: this.theme.currentTheme }).subscribe();
+    const key = this.theme.isDark ? 'feedback.darkEnabled' : 'feedback.lightEnabled';
+    this.toast.info(this.translate.instant(key));
   }
 
   logout(): void {

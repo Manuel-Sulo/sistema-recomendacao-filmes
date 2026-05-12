@@ -19,8 +19,13 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
         <div class="search-bar mt-4">
           <span class="search-icon">🔍</span>
           <input type="text" class="input search-input" [(ngModel)]="query"
-                 (ngModelChange)="onSearch($event)" [placeholder]="'movies.search' | translate">
+                 (ngModelChange)="onSearch()" [placeholder]="'search.placeholder' | translate">
+          <input type="number" class="input year-input" [(ngModel)]="searchYear"
+                 (ngModelChange)="onSearch()" [placeholder]="'search.yearPlaceholder' | translate">
         </div>
+        <p class="text-caption mt-2" style="color: var(--text-muted);">
+          {{ 'search.bilingualHint' | translate }}
+        </p>
       </div>
 
       <!-- Genre Chips -->
@@ -58,9 +63,10 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
   styles: [`
     .search-page { padding-top: var(--space-10); padding-bottom: var(--space-10); }
     .section-label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
-    .search-bar { position: relative; max-width: 560px; }
+    .search-bar { display: flex; gap: 12px; max-width: 640px; position: relative; }
     .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); font-size: 16px; z-index: 1; }
-    .search-input { padding-left: 48px; border-radius: var(--radius-full); height: 52px; font-size: 15px; }
+    .search-input { flex: 1; padding-left: 48px; border-radius: var(--radius-full); height: 52px; font-size: 15px; min-width: 200px; }
+    .year-input { width: 180px; border-radius: var(--radius-full); height: 52px; font-size: 15px; text-align: center; }
     .genre-chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .genre-chip {
       padding: 6px 16px; border-radius: var(--radius-full); font-size: 13px; font-weight: 600;
@@ -78,6 +84,7 @@ import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 })
 export class SearchComponent implements OnInit {
   query = '';
+  searchYear: string = '';
   results: any[] = [];
   genres: any[] = [];
   selectedGenre: number | null = null;
@@ -85,47 +92,80 @@ export class SearchComponent implements OnInit {
   searched = false;
   page = 1;
   totalPages = 1;
-  private searchSubject = new Subject<string>();
+  private searchSubject = new Subject<void>();
 
   constructor(private api: ApiService, private route: ActivatedRoute) {
-    this.searchSubject.pipe(debounceTime(400), distinctUntilChanged()).subscribe(q => this.doSearch(q));
+    this.searchSubject.pipe(debounceTime(400)).subscribe(() => this.doSearch());
   }
 
   ngOnInit(): void {
-    this.api.getGenres().subscribe((res: any) => {
-      this.genres = res?.data?.genres || [];
+    this.api.getGenres().subscribe({
+      next: (res: any) => {
+        this.genres = res?.data?.genres || this.getFallbackGenres();
+      },
+      error: () => {
+        // Fallback para quando a API TMDB falhar
+        this.genres = this.getFallbackGenres();
+      }
     });
     const q = this.route.snapshot.queryParamMap.get('q');
-    if (q) { this.query = q; this.doSearch(q); }
+    if (q) { this.query = q; this.doSearch(); }
   }
 
-  onSearch(q: string): void { this.page = 1; this.searchSubject.next(q); }
+  private getFallbackGenres(): any[] {
+    return [
+      { id: 28, name: "Ação" }, { id: 12, name: "Aventura" }, { id: 16, name: "Animação" },
+      { id: 35, name: "Comédia" }, { id: 80, name: "Crime" }, { id: 99, name: "Documentário" },
+      { id: 18, name: "Drama" }, { id: 10751, name: "Família" }, { id: 14, name: "Fantasia" },
+      { id: 36, name: "História" }, { id: 27, name: "Terror" }, { id: 10402, name: "Música" },
+      { id: 9648, name: "Mistério" }, { id: 10749, name: "Romance" }, { id: 878, name: "Ficção Científica" },
+      { id: 10770, name: "Cinema TV" }, { id: 53, name: "Thriller" }, { id: 10752, name: "Guerra" },
+      { id: 37, name: "Faroeste" }
+    ];
+  }
+
+  onSearch(): void { this.page = 1; this.searchSubject.next(); }
 
   selectGenre(id: number | null): void {
     this.selectedGenre = id;
     this.page = 1;
-    if (this.query) { this.doSearch(this.query); }
-    else if (id) { this.discoverByGenre(); }
-    else { this.results = []; this.searched = false; }
+    if (this.query || this.searchYear) {
+      this.doSearch();
+    } else if (id) {
+      this.discoverByGenre();
+    } else {
+      // "Todos" sem termo de pesquisa: mostrar filmes populares por defeito
+      this.loadPopular();
+    }
   }
 
   changePage(p: number): void {
     this.page = p;
-    if (this.query) this.doSearch(this.query);
+    if (this.query || this.searchYear) this.doSearch();
     else if (this.selectedGenre) this.discoverByGenre();
+    else this.loadPopular();
   }
 
-  private doSearch(q: string): void {
-    if (!q || q.length < 2) { this.results = []; return; }
+  private doSearch(): void {
+    if (!this.query || this.query.length < 2) {
+      this.results = [];
+      return;
+    }
     this.loading = true; this.searched = true;
-    this.api.searchMovies(q, this.page).subscribe({
+    this.api.searchMovies(this.query, this.searchYear, this.page, 'multi').subscribe({
       next: (res: any) => {
-        let movies = res?.data?.results || [];
+        let movies = (res?.data?.results || [])
+          .filter((m: any) => (m.media_type ? m.media_type !== 'person' : true));
         this.totalPages = res?.data?.total_pages || 1;
         if (this.selectedGenre) {
           movies = movies.filter((m: any) => m.genre_ids?.includes(this.selectedGenre));
         }
-        this.results = movies;
+        // Normalize so movie-card renders titles whether it's a movie or a series
+        this.results = movies.map((m: any) => ({
+          ...m,
+          title: m.title || m.name,
+          release_date: m.release_date || m.first_air_date,
+        }));
         this.loading = false;
       },
       error: () => { this.loading = false; },
@@ -135,6 +175,18 @@ export class SearchComponent implements OnInit {
   private discoverByGenre(): void {
     this.loading = true; this.searched = true;
     this.api.discoverMovies(this.selectedGenre!, this.page).subscribe({
+      next: (res: any) => {
+        this.results = res?.data?.results || [];
+        this.totalPages = res?.data?.total_pages || 1;
+        this.loading = false;
+      },
+      error: () => { this.loading = false; },
+    });
+  }
+
+  private loadPopular(): void {
+    this.loading = true; this.searched = true;
+    this.api.getPopular(this.page).subscribe({
       next: (res: any) => {
         this.results = res?.data?.results || [];
         this.totalPages = res?.data?.total_pages || 1;

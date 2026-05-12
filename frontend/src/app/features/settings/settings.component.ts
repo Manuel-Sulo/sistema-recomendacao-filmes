@@ -25,9 +25,16 @@ import { ToastService } from '../../core/services/toast.service';
       <!-- Appearance -->
       <section class="card-glass p-6 mt-4 animate-fade-up" style="animation-delay: 0.1s;">
         <h2 class="text-h3 mb-4">{{ 'settings.appearance' | translate }}</h2>
-        <div class="flex gap-4 items-center">
+        <div class="flex gap-4 items-center" style="flex-wrap: wrap;">
           <label>{{ 'settings.theme' | translate }}:</label>
-          <button class="btn btn-secondary" (click)="toggleTheme()">{{ theme.isDark ? ('settings.light' | translate) : ('settings.dark' | translate) }}</button>
+          <span class="theme-current">
+            {{ theme.isDark ? ('settings.dark' | translate) : ('settings.light' | translate) }}
+            {{ theme.isDark ? '🌙' : '☀️' }}
+          </span>
+          <button class="btn btn-secondary" (click)="toggleTheme()">
+            {{ 'settings.switchTo' | translate }}
+            {{ theme.isDark ? ('settings.light' | translate) : ('settings.dark' | translate) }}
+          </button>
         </div>
         <div class="flex gap-4 items-center mt-4">
           <label>{{ 'settings.language' | translate }}:</label>
@@ -56,6 +63,7 @@ import { ToastService } from '../../core/services/toast.service';
     .settings-page { padding-top: var(--space-10); padding-bottom: var(--space-10); max-width: 600px; }
     .form-group { display: flex; flex-direction: column; gap: var(--space-2); }
     .form-group label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .theme-current { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-full); background: var(--glass-bg); border: 1px solid var(--glass-border); font-size: 13px; font-weight: 600; color: var(--accent); }
   `],
 })
 export class SettingsComponent implements OnInit {
@@ -87,7 +95,8 @@ export class SettingsComponent implements OnInit {
   toggleTheme(): void {
     this.theme.toggle();
     this.api.updateProfile({ theme: this.theme.currentTheme }).subscribe();
-    this.toast.info(this.theme.isDark ? 'Modo escuro ativado 🌙' : 'Modo claro ativado ☀️');
+    const key = this.theme.isDark ? 'feedback.darkEnabled' : 'feedback.lightEnabled';
+    this.toast.info(this.translate.instant(key));
   }
 
   changeLang(lang: string): void {

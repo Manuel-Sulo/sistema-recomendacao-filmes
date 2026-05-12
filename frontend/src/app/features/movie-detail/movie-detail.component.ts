@@ -14,7 +14,18 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, TranslateModule, MovieCardComponent],
   template: `
-    <div class="detail-page" *ngIf="movie">
+    <!-- Error state -->
+    <div *ngIf="loadError" class="container" style="padding-top: var(--space-16); text-align: center;">
+      <div class="card-glass p-8 animate-fade-up" style="max-width: 500px; margin: 0 auto;">
+        <p style="font-size:56px">🎬</p>
+        <h2 class="text-h2 mt-4">{{ 'feedback.errorLoadDetails' | translate }}</h2>
+        <p class="text-muted mt-2">{{ loadError }}</p>
+        <button class="btn btn-primary mt-6" (click)="retry()">{{ 'actions.retry' | translate }}</button>
+        <a routerLink="/home" class="btn btn-secondary mt-2" style="margin-left:8px;">{{ 'nav.home' | translate }}</a>
+      </div>
+    </div>
+
+    <div class="detail-page" *ngIf="movie && !loadingLanguage && !loadError">
       <div class="hero-backdrop" [style.backgroundImage]="'url(' + imgUrl + '/w1280' + movie.backdrop_path + ')'">
         <div class="hero-overlay">
           <div class="container hero-grid">
@@ -38,6 +49,7 @@ import { environment } from '../../../environments/environment';
                   [title]="movie.in_watchlist ? t('actions.removeWatchlist') : t('actions.addWatchlist')">📋</button>
                 <button class="btn btn-icon action-btn" [class.active]="movie.is_watched" (click)="toggleWatched()"
                   [title]="movie.is_watched ? t('feedback.removedHistory') : t('actions.markWatched')">✓</button>
+                <button class="btn btn-icon action-btn" (click)="shareMovie()" title="Partilhar Filme">📤</button>
                 <a *ngIf="trailerKey" [href]="'https://youtube.com/watch?v=' + trailerKey" target="_blank"
                    class="btn btn-primary trailer-btn">▶ Trailer</a>
               </div>
@@ -85,11 +97,11 @@ import { environment } from '../../../environments/environment';
         <section class="mt-8" *ngIf="cast.length">
           <h2 class="text-h2 mb-4">{{ 'movies.cast' | translate }}</h2>
           <div class="cast-row">
-            <div *ngFor="let c of cast" class="cast-item">
+            <div *ngFor="let c of cast" class="cast-item" [routerLink]="['/actor', c.id]" style="cursor: pointer;">
               <div class="cast-img-wrapper">
                 <img [src]="c.profile_path ? imgUrl + '/w185' + c.profile_path : 'assets/images/logo.png'" [alt]="c.name" class="cast-img">
               </div>
-              <p class="cast-name">{{ c.name }}</p>
+              <p class="cast-name hover-accent" style="transition: color 0.2s;">{{ c.name }}</p>
               <p class="text-caption">{{ c.character }}</p>
             </div>
           </div>
@@ -106,7 +118,7 @@ import { environment } from '../../../environments/environment';
     </div>
 
     <!-- Loading skeleton -->
-    <div *ngIf="!movie" class="container" style="padding-top: var(--space-10);">
+    <div *ngIf="!movie && !loadError" class="container" style="padding-top: var(--space-10);">
       <div class="skeleton" style="height: 400px; width: 100%; margin-bottom: var(--space-6);"></div>
       <div class="skeleton" style="height: 24px; width: 60%; margin-bottom: var(--space-4);"></div>
       <div class="skeleton" style="height: 16px; width: 40%;"></div>
@@ -169,15 +181,11 @@ import { environment } from '../../../environments/environment';
     .pr-date { font-size: 12px; color: var(--text-muted); }
     .pr-review { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-top: var(--space-2); }
 
-    .cast-row { display: flex; gap: var(--space-5); overflow-x: auto; padding-bottom: var(--space-4); }
-    .cast-item { text-align: center; min-width: 100px; flex-shrink: 0; }
-    .cast-img-wrapper {
-      width: 88px; height: 88px; border-radius: var(--radius-full);
-      overflow: hidden; margin: 0 auto var(--space-2);
-      border: 2px solid var(--border);
-      transition: border-color 0.3s ease;
-    }
+    .cast-row { display: flex; gap: var(--space-4); overflow-x: auto; padding-bottom: var(--space-4); margin: 0 calc(-1 * var(--space-4)); padding-inline: var(--space-4); }
+    .cast-item { width: 140px; flex-shrink: 0; text-align: center; }
+    .cast-img-wrapper { width: 100px; height: 100px; margin: 0 auto var(--space-2); border-radius: 50%; overflow: hidden; background: var(--bg-secondary); border: 2px solid var(--border); transition: border-color 0.2s; }
     .cast-item:hover .cast-img-wrapper { border-color: var(--accent); }
+    .cast-item:hover .hover-accent { color: var(--accent) !important; }
     .cast-img { width: 100%; height: 100%; object-fit: cover; }
     .cast-name { font-size: 13px; font-weight: 600; }
     .movie-row { display: flex; gap: var(--space-4); overflow-x: auto; padding-bottom: var(--space-4); }
@@ -200,7 +208,11 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
   userRating = 0;
   hoverRating = 0;
   userReview = '';
+  loadingLanguage = false;
+  loadError = '';
   private routeSub!: Subscription;
+  private langSub!: Subscription;
+  private currentId = 0;
 
   constructor(
     private api: ApiService,
@@ -212,12 +224,19 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
-      if (id) this.loadMovie(id);
+      if (id) { this.currentId = id; this.loadMovie(id); }
+    });
+    this.langSub = this.translate.onLangChange.subscribe(() => {
+      if (this.currentId) {
+        this.loadingLanguage = true;
+        this.loadMovie(this.currentId);
+      }
     });
   }
 
   ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
+    this.langSub?.unsubscribe();
   }
 
   t(key: string): string { return this.translate.instant(key); }
@@ -227,12 +246,19 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
     this.userRating = 0;
     this.userReview = '';
     this.publicRatings = [];
+    this.loadError = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     this.api.getMovieDetails(id).subscribe({
       next: (res: any) => {
-        this.movie = res?.data || res;
-        this.cast = (this.movie.credits?.cast || []).slice(0, 10);
+        const data = res?.data || res;
+        if (!data || !data.id) {
+          this.loadError = this.t('feedback.errorLoadDetails');
+          return;
+        }
+        this.movie = data;
+        this.loadingLanguage = false;
+        this.cast = (this.movie.credits?.cast || []).slice(0, 12);
         this.similar = (this.movie.similar?.results || []).slice(0, 10);
         const videos = this.movie.videos?.results || [];
         const trailer = videos.find((v: any) => v.type === 'Trailer' && v.site === 'YouTube');
@@ -242,16 +268,39 @@ export class MovieDetailComponent implements OnInit, OnDestroy {
           this.userReview = this.movie.user_rating.review || '';
         }
       },
-      error: () => {
-        this.toast.error(this.t('feedback.errorLoadDetails'));
+      error: (err) => {
+        this.loadingLanguage = false;
+        const msg = err?.error?.message || this.t('feedback.errorLoadDetails');
+        this.loadError = msg;
+        this.toast.error(msg);
       }
     });
 
-    // Load public ratings
     this.api.getMovieRatings(id).subscribe({
       next: (res: any) => { this.publicRatings = res?.data || []; },
       error: () => {}
     });
+  }
+
+  retry(): void {
+    if (this.currentId) {
+      this.loadError = '';
+      this.loadMovie(this.currentId);
+    }
+  }
+
+  shareMovie() {
+    if (navigator.share) {
+      navigator.share({
+        title: this.movie?.title || 'Sulo Movies',
+        text: `Vê este filme fantástico: ${this.movie?.title}`,
+        url: window.location.href
+      }).catch(err => console.log('Partilha cancelada ou falhou', err));
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        this.toast.success('Link do filme copiado para a área de transferência!');
+      });
+    }
   }
 
   setRating(val: number): void { this.userRating = val; }

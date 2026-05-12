@@ -19,6 +19,7 @@ $router->put('/api/user/profile',   'UserController', 'updateProfile',  $auth);
 $router->put('/api/user/password',  'UserController', 'updatePassword', $auth);
 $router->get('/api/user/genres',    'UserController', 'getGenres',      $auth);
 $router->post('/api/user/genres',   'UserController', 'setGenres',      $auth);
+$router->get('/api/user/stats',     'UserController', 'getStats',       $auth);
 
 // === MOVIES (TMDB Proxy) ===
 $router->get('/api/movies/trending',            'MovieController', 'trending',  $auth);
@@ -58,6 +59,13 @@ $router->delete('/api/history/{tmdb_id}', 'HistoryController', 'destroy', $auth)
 
 // === EXPORT ===
 $router->get('/api/export/{type}', 'ExportController', 'export', $auth);
+
+// === ACTORS / PERSONS ===
+$router->get('/api/person/{id}', 'MovieController', 'person', $auth);
+$router->get('/api/person/{id}/movie_credits', 'MovieController', 'personCredits', $auth);
+
+// === AI MATCHMAKER ===
+$router->post('/api/ai/match', 'AiController', 'match', $auth);
 
 // === ADMIN ===
 $router->get('/api/admin/users',          'AdminController', 'users',        $admin);

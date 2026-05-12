@@ -9,6 +9,7 @@
     "reports": "Rapporti",
     "settings": "Impostazioni",
     "admin": "Admin",
+    "stats": "Statistiche",
     "logout": "Esci",
     "login": "Accedi"
   },
@@ -74,6 +75,7 @@
     "theme": "Tema",
     "dark": "Scuro",
     "light": "Chiaro",
+    "switchTo": "Passa a",
     "profile": "Profilo",
     "changePassword": "Cambia Password",
     "saved": "Impostazioni salvate!",
@@ -114,10 +116,32 @@
     "addMovies": "Aggiungi film da vedere più tardi"
   },
   "search": {
-    "exploreMovies": "Esplora Film",
+    "exploreMovies": "Esplora Film e Serie",
     "tryAnother": "Prova un altro termine di ricerca",
     "previous": "Precedente",
-    "next": "Successivo"
+    "next": "Successivo",
+    "placeholder": "Cerca film o serie (IT o EN)...",
+    "yearPlaceholder": "Anno (es. 2024)",
+    "bilingualHint": "💡 Puoi cercare in italiano o inglese — troveremo il titolo in entrambe le lingue."
+  },
+  "ai": {
+    "title": "La tua Bussola Cinematografica",
+    "subtitle": "Dimmi cosa vuoi vedere oggi. Sono amichevole e conosco migliaia di film e serie.",
+    "welcome": "Ciao! 👋 Sono SULO, il tuo Matchmaker Cinematografico. Posso consigliare film o serie, suggerire titoli precisi, o semplicemente chiacchierare di cinema. Che si guarda oggi?",
+    "placeholder": "es: Consigliami film come Interstellar...",
+    "send": "Invia",
+    "series": "Serie",
+    "foundMovies": "Ecco i miei consigli 🎬",
+    "notFound": "Non ho trovato nulla di preciso. Puoi darmi più contesto?",
+    "connectionError": "C'è stato un problema con l'IA. Riprova fra poco."
+  },
+  "actor": {
+    "biography": "Biografia",
+    "biographyFallback": "Biografia tradotta dall'inglese (non disponibile in questa lingua).",
+    "noBiography": "Biografia non disponibile.",
+    "filmography": "Filmografia conosciuta",
+    "readMore": "Leggi di più",
+    "readLess": "Leggi meno"
   },
   "ratings": {
     "myRatings": "Le Mie Valutazioni",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "Errore nel caricamento dei dettagli del film",
     "reloading": "Ricaricamento...",
     "preferencesSaved": "Preferenze salvate!",
-    "errorPreferences": "Errore nel salvataggio delle preferenze"
+    "errorPreferences": "Errore nel salvataggio delle preferenze",
+    "darkEnabled": "Modalità scura attivata 🌙",
+    "lightEnabled": "Modalità chiara attivata ☀️"
   },
   "footer": {
     "description": "La tua piattaforma di raccomandazione film con IA.",

@@ -9,6 +9,7 @@
     "reports": "Reports",
     "settings": "Settings",
     "admin": "Admin",
+    "stats": "Statistics",
     "logout": "Logout",
     "login": "Login"
   },
@@ -74,6 +75,7 @@
     "theme": "Theme",
     "dark": "Dark",
     "light": "Light",
+    "switchTo": "Switch to",
     "profile": "Profile",
     "changePassword": "Change Password",
     "saved": "Settings saved!",
@@ -114,10 +116,32 @@
     "addMovies": "Add movies to watch later"
   },
   "search": {
-    "exploreMovies": "Explore Movies",
+    "exploreMovies": "Explore Movies & Series",
     "tryAnother": "Try a different search term",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "placeholder": "Search movies or series (PT or EN)...",
+    "yearPlaceholder": "Year (e.g. 2024)",
+    "bilingualHint": "💡 You can search in English or Portuguese — we'll find the title either way."
+  },
+  "ai": {
+    "title": "Your Cinematic Compass",
+    "subtitle": "Tell me what you feel like watching today. I'm friendly and I know thousands of films and series.",
+    "welcome": "Hi! 👋 I'm SULO, your Cinematic Matchmaker. I can recommend films or series, suggest exact titles, or just chat about cinema. What are we watching today?",
+    "placeholder": "e.g. Recommend me movies like Interstellar...",
+    "send": "Send",
+    "series": "Series",
+    "foundMovies": "Here are my picks 🎬",
+    "notFound": "I couldn't find an exact match. Can you give me a bit more context?",
+    "connectionError": "There was a problem reaching the AI. Try again in a moment."
+  },
+  "actor": {
+    "biography": "Biography",
+    "biographyFallback": "Biography translated from English (not available in this language).",
+    "noBiography": "No biography available.",
+    "filmography": "Known Filmography",
+    "readMore": "Read more",
+    "readLess": "Read less"
   },
   "ratings": {
     "myRatings": "My Ratings",
@@ -147,7 +171,9 @@
     "errorLoadDetails": "Error loading movie details",
     "reloading": "Reloading...",
     "preferencesSaved": "Preferences saved!",
-    "errorPreferences": "Error saving preferences"
+    "errorPreferences": "Error saving preferences",
+    "darkEnabled": "Dark mode enabled 🌙",
+    "lightEnabled": "Light mode enabled ☀️"
   },
   "footer": {
     "description": "Your AI-powered movie recommendation platform.",
